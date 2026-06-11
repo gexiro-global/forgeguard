@@ -1,0 +1,117 @@
+{
+  "tool": {
+    "name": "ForgeGuard",
+    "brand": "by Gexiro",
+    "version": "0.2.0",
+    "schema": "forgeguard.scan-result.v0.2",
+    "positioning": "Read-only security posture and supply-chain visibility for self-hosted Gitea/Forgejo."
+  },
+  "scan_id": "fg_example_pre_update",
+  "target": {
+    "url": "https://git.example.com",
+    "forge": "gitea",
+    "version": "1.25.3",
+    "authorized": true,
+    "scope": "own-instance"
+  },
+  "score": {
+    "value": 66,
+    "grade": "C",
+    "max": 100,
+    "sub": {
+      "patch": 80,
+      "registry": 86,
+      "auth": 100,
+      "runner": 100
+    }
+  },
+  "findings": [
+    {
+      "id": "FG-VER",
+      "title": "Vulnerable version: patch-currency gap",
+      "severity": "high",
+      "status": "fail",
+      "evidence": {
+        "version": "1.25.3",
+        "fixed_in": "1.26.2"
+      },
+      "rationale": "Running 1.25.3 < 1.26.2: the code-level fix for CVE-2026-27771 is missing.",
+      "remediation": "Update Gitea to >= 1.26.2.",
+      "references": [
+        "CVE-2026-27771"
+      ],
+      "cwe": null
+    },
+    {
+      "id": "FG-CVE-27771",
+      "title": "CVE-2026-27771 exposure posture",
+      "severity": "critical",
+      "status": "warn",
+      "evidence": {
+        "version": "1.25.3",
+        "anon_v2_http": 403,
+        "signin_required_inferred": true,
+        "registry_anon_open": false
+      },
+      "rationale": "Mitigated posture: vulnerable version remains, but anonymous /v2/ access is denied or sign-in is enforced.",
+      "remediation": "Update Gitea to >= 1.26.2; keep REQUIRE_SIGNIN_VIEW=true until patched.",
+      "references": [
+        "CVE-2026-27771",
+        "https://blog.gitea.com/release-of-1.26.2/"
+      ],
+      "cwe": "CWE-285"
+    },
+    {
+      "id": "FG-SIGNIN",
+      "title": "Anonymous access requires sign-in",
+      "severity": "info",
+      "status": "pass",
+      "evidence": {
+        "anon_api": 403,
+        "anon_explore": 302
+      },
+      "rationale": "REQUIRE_SIGNIN_VIEW appears enforced; anonymous browsing/API access is denied.",
+      "remediation": "",
+      "references": [],
+      "cwe": null
+    },
+    {
+      "id": "FG-REG",
+      "title": "Container registry not anonymously reachable",
+      "severity": "info",
+      "status": "pass",
+      "evidence": {
+        "anon_v2_http": 403
+      },
+      "rationale": "Anonymous /v2/ access is denied.",
+      "remediation": "",
+      "references": [],
+      "cwe": null
+    },
+    {
+      "id": "FG-ANON",
+      "title": "No anonymously readable surfaces detected",
+      "severity": "info",
+      "status": "pass",
+      "evidence": {
+        "probed": [
+          "/api/v1/repos/search?limit=1",
+          "/explore/repos",
+          "/api/v1/users/search?limit=1"
+        ]
+      },
+      "rationale": "Probed endpoints all require authentication.",
+      "remediation": "",
+      "references": [],
+      "cwe": null
+    }
+  ],
+  "summary": {
+    "critical": 1,
+    "high": 1,
+    "medium": 0,
+    "low": 0,
+    "info": 0,
+    "pass": 3
+  }
+}

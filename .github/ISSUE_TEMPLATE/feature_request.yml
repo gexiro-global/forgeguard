@@ -1,0 +1,26 @@
+name: Feature request
+description: Suggest a ForgeGuard improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: checkboxes
+    id: authorization
+    attributes:
+      label: Authorization
+      options:
+        - label: I confirm this concerns my own or an authorized instance.
+          required: true
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case
+      description: What operator workflow would this improve?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and guardrails
+      description: Describe how the feature remains read-only and authorization-scoped.
+    validations:
+      required: true

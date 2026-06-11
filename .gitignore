@@ -6,3 +6,11 @@ build/
 *.egg-info/
 reports/
 *.local
+
+# Internal release/process evidence — never publish
+RELEASE_READINESS_REPORT.md
+OPSEC_SCAN_RESULTS.md
+PUBLICATION_CHECKLIST.md
+GITHUB_PUSH_PLAN.md
+ARCHITECT_VERIFICATION.md
+*_RELEASE_EVIDENCE.md

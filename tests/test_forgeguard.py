@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 
+import pytest
 from typer.testing import CliRunner
 
 from forgeguard.checks import (
@@ -19,6 +20,7 @@ from forgeguard.checks import (
 from forgeguard.cli import app
 from forgeguard.models import Finding, ScanResult, Score, Severity, Status, Target
 from forgeguard.report import render_markdown
+from forgeguard.safety import SAFE_GET_PATHS
 from forgeguard.scoring import WARN_FACTOR, grade_for, priority_key, score_findings
 
 
@@ -85,6 +87,7 @@ def test_cve_vulnerable_and_exposed_is_fail() -> None:
     assert finding.severity == Severity.critical
     assert finding.evidence["registry_anon_open"] is True
     assert "Active exposure" in finding.rationale
+    assert "immediately" in finding.remediation
 
 
 def test_cve_vulnerable_with_denied_v2_and_signin_is_warn() -> None:
@@ -95,6 +98,7 @@ def test_cve_vulnerable_with_denied_v2_and_signin_is_warn() -> None:
     assert finding.severity == Severity.critical
     assert finding.evidence["signin_required_inferred"] is True
     assert "Mitigated posture" in finding.rationale
+    assert finding.remediation == "Update Gitea to >= 1.26.2; keep sign-in enforcement until patched."
 
 
 def test_cve_patched_is_pass() -> None:
@@ -175,7 +179,7 @@ def test_markdown_report_rendering_collapses_version_and_cve_action() -> None:
         Finding(id="FG-CVE-27771", title="CVE-2026-27771 exposure posture",
                 severity=Severity.critical, status=Status.WARN,
                 rationale="Mitigated posture: vulnerable version remains.",
-                remediation="Update Gitea to >= 1.26.2; keep REQUIRE_SIGNIN_VIEW=true until patched."),
+                remediation="Update Gitea to >= 1.26.2; keep sign-in enforcement until patched."),
     ]
     result = ScanResult(scan_id="test", target=Target(url="https://forge.example", version="1.25.3"),
                         score=score_findings(findings), findings=findings,
@@ -246,3 +250,48 @@ def test_unauth_probes_are_limited_to_safe_allowlist() -> None:
     run(run_all_checks(client))
     unauth_paths = [path for path, auth in client.requests if not auth]
     assert set(unauth_paths).issubset(set(SAFE_ANON_PATHS))
+
+
+# --- Pre-public hardening: runtime allowlist guard + state-dependent remediation ---
+
+
+def test_client_refuses_non_allowlisted_path() -> None:
+    from forgeguard.client import ForgeClient
+
+    client = ForgeClient("https://forge.example")
+    try:
+        with pytest.raises(ValueError):
+            run(client.get("/v2/private/manifests/latest"))
+    finally:
+        run(client.aclose())
+
+
+def test_safe_get_paths_alias_matches() -> None:
+    assert set(SAFE_ANON_PATHS) == set(SAFE_GET_PATHS)
+
+
+def test_cve_patched_pass_has_empty_remediation() -> None:
+    client = RecordingClient({"/v2/": FakeResponse(403), "/": FakeResponse(403)})
+    finding = run(check_cve_27771(client, Target(url=client.base, version="1.26.2")))[0]
+    assert finding.status == Status.PASS
+    assert finding.remediation == ""
+
+
+def test_patched_markdown_has_no_cve_action_line() -> None:
+    findings = run(check_cve_27771(
+        RecordingClient({"/v2/": FakeResponse(403), "/": FakeResponse(403)}),
+        Target(url="https://forge.example", version="1.26.2")))
+    result = ScanResult(scan_id="t", target=Target(url="https://forge.example", version="1.26.2"),
+                        score=score_findings(findings), findings=findings, summary={})
+    markdown = render_markdown(result)
+    assert "CVE-2026-27771 exposure posture" in markdown
+    assert "**Action:**" not in markdown
+    assert "Update Gitea" not in markdown
+
+
+def test_patched_json_cve_remediation_empty() -> None:
+    findings = run(check_cve_27771(
+        RecordingClient({"/v2/": FakeResponse(403), "/": FakeResponse(403)}),
+        Target(url="https://forge.example", version="1.26.2")))
+    cve = by_id(findings, "FG-CVE-27771")
+    assert cve.remediation == ""

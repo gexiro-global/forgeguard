@@ -42,7 +42,6 @@ Read-only security posture and supply-chain visibility for self-hosted Gitea/For
 ### FG-CVE-27771 - CVE-2026-27771 exposure posture
 **State:** PASS - patched  
 **Rationale:** Patched: 1.26.2 is at or above 1.26.2.  
-**Action:** Update Gitea to >= 1.26.2; keep REQUIRE_SIGNIN_VIEW=true until patched.  
 **Refs:** CVE-2026-27771, https://blog.gitea.com/release-of-1.26.2/  
 **Evidence:** `{'version': '1.26.2', 'anon_v2_http': 403, 'signin_required_inferred': True, 'registry_anon_open': False}`
 

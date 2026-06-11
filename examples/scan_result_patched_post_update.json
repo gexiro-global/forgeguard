@@ -52,7 +52,7 @@
         "registry_anon_open": false
       },
       "rationale": "Patched: 1.26.2 is at or above 1.26.2.",
-      "remediation": "Update Gitea to >= 1.26.2; keep REQUIRE_SIGNIN_VIEW=true until patched.",
+      "remediation": "",
       "references": [
         "CVE-2026-27771",
         "https://blog.gitea.com/release-of-1.26.2/"

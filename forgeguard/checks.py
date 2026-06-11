@@ -4,16 +4,11 @@ import re
 
 from .client import ForgeClient
 from .models import Finding, Severity, Status, Target
+from .safety import SAFE_GET_PATHS
 
 FIXED_VERSION = "1.26.2"
-SAFE_ANON_PATHS = (
-    "/api/v1/version",
-    "/v2/",
-    "/",
-    "/api/v1/repos/search?limit=1",
-    "/explore/repos",
-    "/api/v1/users/search?limit=1",
-)
+# Back-compat alias; the canonical read-only allowlist lives in forgeguard.safety.
+SAFE_ANON_PATHS = SAFE_GET_PATHS
 
 
 def _semver(version: str | None) -> tuple[int, int, int] | None:
@@ -84,33 +79,38 @@ async def check_cve_27771(client: ForgeClient, target: Target) -> list[Finding]:
         "signin_required_inferred": signin_required,
         "registry_anon_open": registry_anon_open,
     }
+    # State-dependent remediation: a patched instance carries no update action.
     if vulnerable_version is False:
-        status, severity, rationale = (
+        status, severity, rationale, remediation = (
             Status.PASS,
             Severity.info,
             f"Patched: {target.version} is at or above {FIXED_VERSION}.",
+            "",
         )
     elif vulnerable_version is None:
-        status, severity, rationale = (
+        status, severity, rationale, remediation = (
             Status.INFO,
             Severity.medium,
             "Version unknown; CVE-2026-27771 exposure posture cannot be assessed.",
+            "Re-run with --token or --known-version to assess patch currency.",
         )
     elif registry_anon_open and not signin_required:
-        status, severity, rationale = (
+        status, severity, rationale, remediation = (
             Status.FAIL,
             Severity.critical,
             "Active exposure: vulnerable version plus anonymous /v2/ access and no sign-in enforcement signal.",
+            f"Update Gitea to >= {FIXED_VERSION} immediately and enforce authenticated registry access.",
         )
     else:
-        status, severity, rationale = (
+        status, severity, rationale, remediation = (
             Status.WARN,
             Severity.critical,
             "Mitigated posture: vulnerable version remains, but anonymous /v2/ access is denied or sign-in is enforced.",
+            f"Update Gitea to >= {FIXED_VERSION}; keep sign-in enforcement until patched.",
         )
     return [Finding(id="FG-CVE-27771", title="CVE-2026-27771 exposure posture",
                     severity=severity, status=status, evidence=evidence, rationale=rationale,
-                    remediation=f"Update Gitea to >= {FIXED_VERSION}; keep REQUIRE_SIGNIN_VIEW=true until patched.",
+                    remediation=remediation,
                     references=["CVE-2026-27771", "https://blog.gitea.com/release-of-1.26.2/"], cwe="CWE-285")]
 
 

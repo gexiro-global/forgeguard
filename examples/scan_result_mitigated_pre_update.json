@@ -54,7 +54,7 @@
         "registry_anon_open": false
       },
       "rationale": "Mitigated posture: vulnerable version remains, but anonymous /v2/ access is denied or sign-in is enforced.",
-      "remediation": "Update Gitea to >= 1.26.2; keep REQUIRE_SIGNIN_VIEW=true until patched.",
+      "remediation": "Update Gitea to >= 1.26.2; keep sign-in enforcement until patched.",
       "references": [
         "CVE-2026-27771",
         "https://blog.gitea.com/release-of-1.26.2/"

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import re
 
 import pytest
 from typer.testing import CliRunner
@@ -22,6 +23,8 @@ from forgeguard.models import Finding, ScanResult, Score, Severity, Status, Targ
 from forgeguard.report import render_markdown
 from forgeguard.safety import SAFE_GET_PATHS
 from forgeguard.scoring import WARN_FACTOR, grade_for, priority_key, score_findings
+
+_ANSI = re.compile(r"\x1b\[[0-9;]*m")
 
 
 class FakeResponse:
@@ -204,12 +207,13 @@ def test_cli_default_requires_authorized_and_has_no_write_path() -> None:
     runner = CliRunner()
     denied = runner.invoke(app, ["scan", "--url", "https://forge.example"])
     assert denied.exit_code == 2
-    assert "REFUSED" in denied.output
+    assert "REFUSED" in _ANSI.sub("", denied.output)
 
-    help_result = runner.invoke(app, ["scan", "--help"])
+    help_result = runner.invoke(app, ["scan", "--help"], env={"COLUMNS": "200", "NO_COLOR": "1", "TERM": "dumb"})
     assert help_result.exit_code == 0
-    assert "--authorized" in help_result.output
-    assert "--emit-issue" not in help_result.output
+    help_text = _ANSI.sub("", help_result.output)
+    assert "--authorized" in help_text
+    assert "--emit-issue" not in help_text
 
 
 def test_cve_check_performs_no_blob_or_manifest_requests() -> None:

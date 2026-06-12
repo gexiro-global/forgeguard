@@ -49,18 +49,35 @@ forgeguard scan --url https://git.example.com --authorized --known-version 1.26.
 
 ## Sample Output
 
-Synthetic pre-update example:
+A before/after on a synthetic instance, showing the CVE-2026-27771 patch-currency gap closing after a Gitea update.
+
+**Before** - Gitea `1.25.3` (mitigated, but the code-level fix is missing):
 
 ```text
 # ForgeGuard by Gexiro - https://git.example.com
-
-Read-only security posture and supply-chain visibility for self-hosted Gitea/Forgejo.
-
 Forge: gitea 1.25.3 | Score: 66/100 (C)
 Summary: critical 1 | high 1 | medium 0 | low 0 | pass 3
+Top action: P1 - Update Gitea to >=1.26.2
+  (CVE-2026-27771 window present, mitigation active, code-level fix missing)
 ```
 
-See `examples/scan_report_mitigated_pre_update.md` and `examples/scan_report_patched_post_update.md` for complete synthetic reports.
+**After** - Gitea `1.26.2` (patched):
+
+```text
+# ForgeGuard by Gexiro - https://git.example.com
+Forge: gitea 1.26.2 | Score: 100/100 (A)
+Summary: critical 0 | high 0 | medium 0 | low 0 | pass 5
+Top action: None - all checks pass.
+```
+
+| Finding | Before (1.25.3) | After (1.26.2) |
+|---|---|---|
+| FG-VER - patch currency | FAIL / HIGH | **PASS** |
+| FG-CVE-27771 - exposure posture | WARN / CRITICAL (mitigated) | **PASS** |
+| FG-SIGNIN / FG-REG / FG-ANON | PASS | PASS |
+| **Score** | **66/100 (C)** | **100/100 (A)** |
+
+The update closes the code-level patch-currency gap; the posture checks were already passing. Full synthetic reports: [`examples/scan_report_mitigated_pre_update.md`](examples/scan_report_mitigated_pre_update.md) and [`examples/scan_report_patched_post_update.md`](examples/scan_report_patched_post_update.md).
 
 ## Scoring
 

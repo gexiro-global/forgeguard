@@ -25,6 +25,14 @@ ForgeGuard helps operators of self-hosted Gitea/Forgejo instances understand pat
 
 ## Install
 
+> A PyPI release is coming soon. Until then, install the latest from source:
+
+```bash
+python -m pip install "git+https://github.com/gexiro-global/forgeguard.git"
+```
+
+Once published to PyPI:
+
 ```bash
 python -m pip install forgeguard
 ```
@@ -32,6 +40,8 @@ python -m pip install forgeguard
 For local development:
 
 ```bash
+git clone https://github.com/gexiro-global/forgeguard.git
+cd forgeguard
 python -m pip install -e ".[dev]"
 ```
 

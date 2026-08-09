@@ -1,9 +1,9 @@
-# ForgeGuard by Gexiro
+# forgeguard
 
 [![CI](https://github.com/gexiro-global/forgeguard/actions/workflows/ci.yml/badge.svg)](https://github.com/gexiro-global/forgeguard/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/forgeguard.svg)](https://pypi.org/project/forgeguard/)
 [![Python](https://img.shields.io/pypi/pyversions/forgeguard.svg)](https://pypi.org/project/forgeguard/)
-[![License](https://img.shields.io/pypi/l/forgeguard.svg)](https://github.com/gexiro-global/forgeguard/blob/main/LICENSE)
+[![License: Apache-2.0](https://img.shields.io/pypi/l/forgeguard.svg)](https://github.com/gexiro-global/forgeguard/blob/main/LICENSE)
 
 Read-only security posture self-check for self-hosted Gitea and Forgejo.
 
@@ -17,7 +17,7 @@ ForgeGuard helps operators of self-hosted Gitea/Forgejo instances understand pat
 - Sign-in and anonymous access posture.
 - Basic registry exposure.
 
-## What It Does NOT Do
+## What it does not do
 
 - No mass scanning.
 - No exploit PoC.
@@ -58,11 +58,11 @@ Use `--known-version` when your version endpoint is intentionally hidden:
 forgeguard scan --url https://git.example.com --authorized --known-version 1.26.2 --format md,json --out ./reports/scan_report.md
 ```
 
-## Sample Output
+## Sample output
 
 A before/after on a synthetic instance, showing the CVE-2026-27771 patch-currency gap closing after a Gitea update.
 
-**Before** - Gitea `1.25.3` (mitigated, but the code-level fix is missing):
+**Before** — Gitea `1.25.3` (mitigated, but the code-level fix is missing):
 
 ```text
 # ForgeGuard by Gexiro - https://git.example.com
@@ -72,7 +72,7 @@ Top action: P1 - Update Gitea to >=1.26.2
   (CVE-2026-27771 window present, mitigation active, code-level fix missing)
 ```
 
-**After** - Gitea `1.26.2` (patched):
+**After** — Gitea `1.26.2` (patched):
 
 ```text
 # ForgeGuard by Gexiro - https://git.example.com
@@ -94,11 +94,11 @@ The update closes the code-level patch-currency gap; the posture checks were alr
 
 ForgeGuard scoring is deterministic and does not use AI. Findings subtract fixed penalties from 100: critical -40, high -20, medium -10, low -4. Warning findings use `WARN_FACTOR = 0.35`, so a critical warning subtracts 14 points. Grades are A at 90+, B at 75+, C at 60+, D at 40+, and F below 40.
 
-## Security And Ethics
+## Security and ethics
 
 Run ForgeGuard only on instances you own or are explicitly authorized to assess. ForgeGuard v0.2 uses read-only HTTP GET checks and stops at posture signals; it does not request package contents or registry artifacts. Reports are posture evidence, not proof of compromise.
 
-See `AUTHORIZED_USE.md` and `SECURITY.md`.
+See [Authorized Use](AUTHORIZED_USE.md) and [Security Policy](SECURITY.md).
 
 ## Roadmap
 
@@ -107,9 +107,17 @@ See `AUTHORIZED_USE.md` and `SECURITY.md`.
 - v1: supply-chain, SBOM, and OSV enrichment.
 - Later: semantic code intelligence.
 
-## Responsible Disclosure
+## Responsible disclosure
 
-To report a vulnerability in ForgeGuard itself, see `SECURITY.md`.
+To report a vulnerability in ForgeGuard itself, see [Security Policy](SECURITY.md).
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).
+
+Built and maintained by [Gexiro Global Enterprises Ltd](https://gexiro.com).
+
+Part of the [Gexiro open-source toolkit](https://github.com/gexiro-global).
 
 ForgeGuard by Gexiro
 

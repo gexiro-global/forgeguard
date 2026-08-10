@@ -6,7 +6,7 @@ The format is based on Keep a Changelog, and this project adheres to semantic ve
 
 ## [Unreleased]
 
-- No unreleased changes.
+- Pin CI actions, restrict CI permissions, and ship explicit typing/license metadata.
 
 ## [0.2.0] - 2026-06-12
 

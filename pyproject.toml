@@ -9,6 +9,7 @@ description = "Read-only security posture self-check for self-hosted Gitea and F
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [
   {name = "Gexiro Global Enterprises Ltd"}
 ]
@@ -31,3 +32,6 @@ dev = ["pytest>=8", "build>=1"]
 
 [tool.setuptools.packages.find]
 include = ["forgeguard*"]
+
+[tool.setuptools.package-data]
+forgeguard = ["py.typed"]

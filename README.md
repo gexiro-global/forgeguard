@@ -49,6 +49,7 @@ python -m pip install -e ".[dev]"
 ## Quickstart
 
 ```bash
+mkdir -p reports
 forgeguard scan --url https://git.example.com --authorized --out ./reports/scan_report.md
 ```
 

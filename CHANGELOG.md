@@ -6,6 +6,10 @@ The format is based on Keep a Changelog, and this project adheres to semantic ve
 
 ## [Unreleased]
 
+- No unreleased changes.
+
+## [0.2.1] - 2026-08-10
+
 - Pin CI actions, restrict CI permissions, and ship explicit typing/license metadata.
 - Bound every runtime, build, and development dependency to a tested next-major ceiling and
   add complete license, audience, Python, security-topic, and typed-package classifiers.

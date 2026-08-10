@@ -7,6 +7,8 @@ The format is based on Keep a Changelog, and this project adheres to semantic ve
 ## [Unreleased]
 
 - Pin CI actions, restrict CI permissions, and ship explicit typing/license metadata.
+- Bound every runtime, build, and development dependency to a tested next-major ceiling and
+  add complete license, audience, Python, security-topic, and typed-package classifiers.
 
 ## [0.2.0] - 2026-06-12
 

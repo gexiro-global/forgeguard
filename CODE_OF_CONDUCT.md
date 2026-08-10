@@ -36,7 +36,7 @@ This Code of Conduct applies within all community spaces and also applies when a
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to `security@gexiro.com`. All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to `admin@gexiro.com`. All complaints will be reviewed and investigated promptly and fairly.
 
 ## Enforcement Guidelines
 

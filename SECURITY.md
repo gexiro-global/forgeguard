@@ -6,7 +6,7 @@ ForgeGuard v0.x is experimental. Security fixes are handled on the latest v0.x r
 
 ## Reporting A Vulnerability
 
-If GitHub private vulnerability reporting is available for the repository, use it. Otherwise, email `security@gexiro.com`.
+If GitHub private vulnerability reporting is available for the repository, use it. Otherwise, email `admin@gexiro.com`.
 
 Please include:
 

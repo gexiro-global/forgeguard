@@ -2,13 +2,13 @@
 
 Read-only security posture and supply-chain visibility for self-hosted Gitea.
 
-**Product:** gitea 1.26.2  |  **Score:** 100/100 (A)
-**Scope:** own-instance | authorized | read-only | single target | **Scan:** fg_example_patched_post_update
+**Product:** gitea 1.26.1  |  **Score:** 60/100 (C)
+**Scope:** own-instance | authorized | read-only | single target | **Scan:** fg_example_affected_pre_update
 
-**Summary:** critical 0 | high 0 | medium 0 | low 0 | pass 5
+**Summary:** critical 0 | high 2 | medium 0 | low 0 | pass 3
 
 ## Top actions
-- None - no FAIL or WARN findings.
+- **P1 - Upgrade Gitea to >=1.26.2** - the installed version is within the affected range for CVE-2026-27771; this version result does not prove exploitability.
 
 ## Interpretation
 - FG-VER and FG-CVE-27771 report Gitea version posture against the first fixed release.
@@ -18,16 +18,25 @@ Read-only security posture and supply-chain visibility for self-hosted Gitea.
 ## Sub-scores
 | Domain | Score |
 |--------|------:|
-| patch | 100 |
-| registry | 100 |
+| patch | 80 |
+| registry | 80 |
 | auth | 100 |
 | runner | 100 |
 
 ## Findings
-### FG-VER - Gitea version is at or above the first fixed release
-- **State:** PASS - at or above first fixed release
-- **Rationale:** Installed Gitea 1.26.2 is at or above 1.26.2.
-- **Evidence:** `{'version': '1.26.2', 'first_fixed_in': '1.26.2'}`
+### FG-VER - Gitea patch-currency gap
+- **State:** FAIL / HIGH
+- **Rationale:** Installed Gitea 1.26.1 is below the first release containing the fix for CVE-2026-27771.
+- **Action:** Upgrade Gitea to >=1.26.2 or a newer currently supported security release.
+- **Refs:** CVE-2026-27771
+- **Evidence:** `{'version': '1.26.1', 'first_fixed_in': '1.26.2'}`
+
+### FG-CVE-27771 - CVE-2026-27771 version posture
+- **State:** FAIL / HIGH
+- **Rationale:** Installed Gitea version is within the affected range for CVE-2026-27771. This version check does not prove exploitability or data exposure.
+- **Action:** Upgrade Gitea to >=1.26.2 or a newer currently supported security release.
+- **Refs:** CVE-2026-27771, https://blog.gitea.com/release-of-1.26.2/
+- **Evidence:** `{'product': 'gitea', 'version': '1.26.1', 'affected_through': '1.26.1', 'first_fixed_in': '1.26.2'}`
 
 ### FG-SIGNIN - Checked repository/API surfaces appear access-controlled
 - **State:** PASS
@@ -38,12 +47,6 @@ Read-only security posture and supply-chain visibility for self-hosted Gitea.
 - **State:** PASS
 - **Rationale:** The anonymous /v2/ request returned HTTP 403; no package, manifest, or blob access was attempted.
 - **Evidence:** `{'anon_v2_http': 403}`
-
-### FG-CVE-27771 - CVE-2026-27771 version posture
-- **State:** PASS - at or above first fixed release
-- **Rationale:** Installed Gitea 1.26.2 is at or above the first release containing the fix for CVE-2026-27771.
-- **Refs:** CVE-2026-27771, https://blog.gitea.com/release-of-1.26.2/
-- **Evidence:** `{'product': 'gitea', 'version': '1.26.2', 'affected_through': '1.26.1', 'first_fixed_in': '1.26.2'}`
 
 ### FG-ANON - No anonymous HTTP 200 observed on checked endpoints
 - **State:** PASS

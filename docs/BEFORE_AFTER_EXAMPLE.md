@@ -1,19 +1,21 @@
-# Before And After Example
+# Affected-Version And Patched-Version Example
 
-This is a synthetic narrative for `https://git.example.com`.
+This is a synthetic narrative for `https://git.example.com`. It contains no live scan data.
 
-## Before
+## Before: affected version
 
-The instance reports Gitea `1.25.3`. ForgeGuard identifies a patch-currency gap because the version is below `1.26.2`. The `/v2/` registry root returns an authorization-denied response, so the CVE-2026-27771 posture is classified as mitigated rather than exposed.
+The synthetic instance reports Gitea `1.26.1`. ForgeGuard reports that this version is within the affected range for CVE-2026-27771 and below the first fixed release.
 
-Result: `66/100 (C)`
+Result: `60/100 (C)`
 
-Primary action: update Gitea to `1.26.2` or newer and keep sign-in enforcement in place until the update is complete.
+Primary action: upgrade Gitea to `1.26.2` or a newer currently supported security release.
 
-## After
+This is a version/advisory result. It does not prove exploitation or data exposure.
 
-The instance reports Gitea `1.26.2`. ForgeGuard identifies the fixed release, the registry root is not anonymously reachable, and the anonymous browsing/API surfaces require sign-in.
+## After: first fixed release
+
+The synthetic instance reports Gitea `1.26.2`. ForgeGuard reports that this version is at the first release containing the fix. The independent registry-root and checked anonymous paths also return non-200 access-control responses.
 
 Result: `100/100 (A)`
 
-The update closes the code-level patch-currency gap shown in the before report.
+The update closes the version-based patch-currency gap for this CVE. A 100 score covers only ForgeGuard's limited checks and is not a complete security guarantee.

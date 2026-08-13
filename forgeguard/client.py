@@ -3,12 +3,14 @@ from __future__ import annotations
 import httpx
 
 from .safety import SAFE_GET_PATHS
+from .urls import normalize_target_url
+from .version import __version__
 
-_UA = "ForgeGuard-by-Gexiro/0.2 (read-only; own-authorized-only)"
+_UA = f"ForgeGuard-by-Gexiro/{__version__} (read-only; own-authorized-only)"
 
 
 class ForgeClient:
-    """GET-only async HTTP client for one Gitea/Forgejo instance.
+    """GET-only async HTTP client for one authorized Gitea instance.
 
     Anonymous probes do not follow redirects. A redirect to sign-in is itself a
     posture signal. The authenticated client is only used when a token is supplied.
@@ -16,17 +18,27 @@ class ForgeClient:
     is refused before any network call so the tool cannot be repurposed as a probe.
     """
 
-    def __init__(self, base_url: str, token: str | None = None, timeout: float = 10.0,
-                 verify: bool = True) -> None:
-        self.base = base_url.rstrip("/")
+    def __init__(
+        self,
+        base_url: str,
+        token: str | None = None,
+        timeout: float = 10.0,
+        verify: bool = True,
+    ) -> None:
+        self.base = normalize_target_url(base_url)
         self.has_token = bool(token)
-        self._anon = httpx.AsyncClient(timeout=timeout, follow_redirects=False,
-                                       headers={"User-Agent": _UA}, verify=verify)
+        self._anon = httpx.AsyncClient(
+            timeout=timeout,
+            follow_redirects=False,
+            headers={"User-Agent": _UA},
+            verify=verify,
+        )
         auth_headers = {"User-Agent": _UA}
         if token:
             auth_headers["Authorization"] = f"token {token}"
-        self._auth = httpx.AsyncClient(timeout=timeout, follow_redirects=False,
-                                       headers=auth_headers, verify=verify)
+        self._auth = httpx.AsyncClient(
+            timeout=timeout, follow_redirects=False, headers=auth_headers, verify=verify
+        )
 
     async def get(self, path: str, *, auth: bool = False) -> httpx.Response | None:
         if path not in SAFE_GET_PATHS:

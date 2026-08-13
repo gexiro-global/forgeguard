@@ -6,21 +6,21 @@
     "schema": "forgeguard.scan-result.v0.2",
     "positioning": "Read-only security posture and supply-chain visibility for self-hosted Gitea."
   },
-  "scan_id": "fg_example_patched_post_update",
+  "scan_id": "fg_example_affected_pre_update",
   "target": {
     "url": "https://git.example.com",
     "forge": "gitea",
-    "version": "1.26.2",
+    "version": "1.26.1",
     "authorized": true,
     "scope": "own-instance"
   },
   "score": {
-    "value": 100,
-    "grade": "A",
+    "value": 60,
+    "grade": "C",
     "max": 100,
     "sub": {
-      "patch": 100,
-      "registry": 100,
+      "patch": 80,
+      "registry": 80,
       "auth": 100,
       "runner": 100
     }
@@ -28,31 +28,33 @@
   "findings": [
     {
       "id": "FG-VER",
-      "title": "Gitea version is at or above the first fixed release",
-      "severity": "info",
-      "status": "pass",
+      "title": "Gitea patch-currency gap",
+      "severity": "high",
+      "status": "fail",
       "evidence": {
-        "version": "1.26.2",
+        "version": "1.26.1",
         "first_fixed_in": "1.26.2"
       },
-      "rationale": "Installed Gitea 1.26.2 is at or above 1.26.2.",
-      "remediation": "",
-      "references": [],
+      "rationale": "Installed Gitea 1.26.1 is below the first release containing the fix for CVE-2026-27771.",
+      "remediation": "Upgrade Gitea to >=1.26.2 or a newer currently supported security release.",
+      "references": [
+        "CVE-2026-27771"
+      ],
       "cwe": null
     },
     {
       "id": "FG-CVE-27771",
       "title": "CVE-2026-27771 version posture",
-      "severity": "info",
-      "status": "pass",
+      "severity": "high",
+      "status": "fail",
       "evidence": {
         "product": "gitea",
-        "version": "1.26.2",
+        "version": "1.26.1",
         "affected_through": "1.26.1",
         "first_fixed_in": "1.26.2"
       },
-      "rationale": "Installed Gitea 1.26.2 is at or above the first release containing the fix for CVE-2026-27771.",
-      "remediation": "",
+      "rationale": "Installed Gitea version is within the affected range for CVE-2026-27771. This version check does not prove exploitability or data exposure.",
+      "remediation": "Upgrade Gitea to >=1.26.2 or a newer currently supported security release.",
       "references": [
         "CVE-2026-27771",
         "https://blog.gitea.com/release-of-1.26.2/"
@@ -106,10 +108,10 @@
   ],
   "summary": {
     "critical": 0,
-    "high": 0,
+    "high": 2,
     "medium": 0,
     "low": 0,
     "info": 0,
-    "pass": 5
+    "pass": 3
   }
 }

@@ -4,6 +4,8 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
+from .version import __version__
+
 
 class Severity(str, Enum):
     critical = "critical"
@@ -51,9 +53,9 @@ def _default_tool_metadata() -> dict[str, str]:
     return {
         "name": "ForgeGuard",
         "brand": "by Gexiro",
-        "version": "0.2.0",
+        "version": __version__,
         "schema": "forgeguard.scan-result.v0.2",
-        "positioning": "Read-only security posture and supply-chain visibility for self-hosted Gitea/Forgejo.",
+        "positioning": "Read-only security posture and supply-chain visibility for self-hosted Gitea.",
     }
 
 

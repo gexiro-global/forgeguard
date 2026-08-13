@@ -3,7 +3,7 @@
     "name": "ForgeGuard",
     "brand": "by Gexiro",
     "version": "0.2.2",
-    "schema": "forgeguard.scan-result.v0.2",
+    "schema": "forgeguard.scan-result.v0.3",
     "positioning": "Read-only security posture and supply-chain visibility for self-hosted Gitea."
   },
   "scan_id": "fg_example_affected_pre_update",
@@ -12,35 +12,39 @@
     "forge": "gitea",
     "version": "1.26.1",
     "authorized": true,
-    "scope": "own-instance"
+    "scope": "own-instance",
+    "product_confirmed": true,
+    "product_source": "operator-declared"
   },
   "score": {
-    "value": 60,
-    "grade": "C",
+    "value": 80,
+    "grade": "B",
+    "assessed": true,
     "max": 100,
     "sub": {
       "patch": 80,
-      "registry": 80,
-      "auth": 100,
-      "runner": 100
-    }
+      "registry": 100,
+      "auth": 100
+    },
+    "incomplete_checks": []
   },
   "findings": [
     {
       "id": "FG-VER",
-      "title": "Gitea patch-currency gap",
-      "severity": "high",
-      "status": "fail",
+      "title": "Confirmed Gitea version observed",
+      "severity": "info",
+      "status": "pass",
       "evidence": {
-        "version": "1.26.1",
-        "first_fixed_in": "1.26.2"
+        "product": "gitea",
+        "product_confirmed": true,
+        "product_source": "operator-declared",
+        "version": "1.26.1"
       },
-      "rationale": "Installed Gitea 1.26.1 is below the first release containing the fix for CVE-2026-27771.",
-      "remediation": "Upgrade Gitea to >=1.26.2 or a newer currently supported security release.",
-      "references": [
-        "CVE-2026-27771"
-      ],
-      "cwe": null
+      "rationale": "Gitea 1.26.1 was observed for an operator-confirmed Gitea target. CVE risk is scored separately by FG-CVE-27771.",
+      "remediation": "",
+      "references": [],
+      "cwe": null,
+      "evidence_state": "informational"
     },
     {
       "id": "FG-CVE-27771",
@@ -49,6 +53,8 @@
       "status": "fail",
       "evidence": {
         "product": "gitea",
+        "product_confirmed": true,
+        "product_source": "operator-declared",
         "version": "1.26.1",
         "affected_through": "1.26.1",
         "first_fixed_in": "1.26.2"
@@ -59,59 +65,63 @@
         "CVE-2026-27771",
         "https://blog.gitea.com/release-of-1.26.2/"
       ],
-      "cwe": "CWE-285"
+      "cwe": "CWE-862",
+      "evidence_state": "assessed"
     },
     {
       "id": "FG-SIGNIN",
-      "title": "Checked repository/API surfaces appear access-controlled",
+      "title": "Explicit access-control responses observed on checked paths",
       "severity": "info",
       "status": "pass",
       "evidence": {
         "anon_api": 403,
-        "anon_explore": 302
+        "anon_explore": 403
       },
-      "rationale": "Anonymous requests returned access-control or sign-in redirect responses on the checked paths; no specific configuration key was read.",
+      "rationale": "Both checked paths returned HTTP 401 or 403 to anonymous requests; no specific REQUIRE_SIGNIN_VIEW configuration value was inferred.",
       "remediation": "",
       "references": [],
-      "cwe": null
+      "cwe": null,
+      "evidence_state": "assessed"
     },
     {
       "id": "FG-REG",
-      "title": "OCI registry root did not return HTTP 200 anonymously",
+      "title": "Explicit registry-root access-control response observed",
       "severity": "info",
       "status": "pass",
       "evidence": {
         "anon_v2_http": 403
       },
-      "rationale": "The anonymous /v2/ request returned HTTP 403; no package, manifest, or blob access was attempted.",
+      "rationale": "The anonymous /v2/ request returned HTTP 403, an explicit authentication or access-denial response. No artifact access was attempted.",
       "remediation": "",
       "references": [],
-      "cwe": null
+      "cwe": null,
+      "evidence_state": "assessed"
     },
     {
       "id": "FG-ANON",
-      "title": "No anonymous HTTP 200 observed on checked endpoints",
+      "title": "Explicit access-control responses observed on anonymous checks",
       "severity": "info",
       "status": "pass",
       "evidence": {
         "checked": {
           "/api/v1/repos/search?limit=1": 403,
-          "/explore/repos": 302,
+          "/explore/repos": 403,
           "/api/v1/users/search?limit=1": 403
         }
       },
-      "rationale": "None of the three checked endpoints returned HTTP 200 to an anonymous request.",
+      "rationale": "Every checked endpoint returned HTTP 401 or 403 to the anonymous request. No global sign-in configuration was inferred.",
       "remediation": "",
       "references": [],
-      "cwe": null
+      "cwe": null,
+      "evidence_state": "assessed"
     }
   ],
   "summary": {
     "critical": 0,
-    "high": 2,
+    "high": 1,
     "medium": 0,
     "low": 0,
     "info": 0,
-    "pass": 3
+    "pass": 4
   }
 }

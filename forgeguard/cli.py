@@ -34,11 +34,19 @@ def _summarize(findings) -> dict[str, int]:
 
 
 async def _run(
-    url: str, token: str | None, known_version: str | None, scan_id: str
+    url: str,
+    token: str | None,
+    known_version: str | None,
+    product: str | None,
+    scan_id: str,
 ) -> ScanResult:
     client = ForgeClient(url, token=token)
     try:
-        findings, target = await run_all_checks(client, known_version=known_version)
+        findings, target = await run_all_checks(
+            client,
+            known_version=known_version,
+            product=product,
+        )
     finally:
         await client.aclose()
     target.url = client.base
@@ -56,7 +64,7 @@ async def _run(
 def scan(
     ctx: typer.Context,
     url: Annotated[
-        str, typer.Option("--url", help="Base URL of your authorized Gitea instance")
+        str, typer.Option("--url", help="Base URL of your authorized target instance")
     ],
     authorized: Annotated[
         bool,
@@ -65,6 +73,16 @@ def scan(
             help="Affirm you own or are authorized to assess this target",
         ),
     ] = False,
+    product: Annotated[
+        str | None,
+        typer.Option(
+            "--product",
+            help=(
+                "Trusted operator product declaration. ForgeGuard 0.2.2 accepts "
+                "'gitea'; omit it for an unconfirmed, ungraded target."
+            ),
+        ),
+    ] = None,
     token: Annotated[
         str | None,
         typer.Option(
@@ -72,8 +90,8 @@ def scan(
             envvar="FORGEGUARD_TOKEN",
             show_envvar=True,
             help=(
-                "Optional version-read token. Prefer FORGEGUARD_TOKEN; command-line values "
-                "may be visible in shell history/process listings."
+                "Optional version-read token. Prefer FORGEGUARD_TOKEN; command-line "
+                "values may be visible in shell history/process listings."
             ),
         ),
     ] = None,
@@ -81,7 +99,10 @@ def scan(
         str | None,
         typer.Option(
             "--known-version",
-            help="Gitea version from trusted local inventory if the API is auth-walled",
+            help=(
+                "Version from trusted local inventory. This does not confirm product "
+                "identity; use --product gitea for a confirmed Gitea target."
+            ),
         ),
     ] = None,
     scan_id: Annotated[
@@ -93,11 +114,20 @@ def scan(
     ] = None,
     fmt: Annotated[str, typer.Option("--format", help="Comma list: md,json")] = "md",
 ) -> None:
-    """Run a read-only posture scan against one authorized Gitea instance."""
+    """Run a read-only posture scan against one authorized target."""
     if not authorized:
         typer.secho(
-            "REFUSED: pass --authorized to affirm you own or are authorized to assess this target. "
-            "ForgeGuard is scoped to your own authorized instances.",
+            "REFUSED: pass --authorized to affirm you own or are authorized to assess "
+            "this target. ForgeGuard is scoped to your own authorized instances.",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(2)
+    normalized_product = product.strip().lower() if product is not None else None
+    if normalized_product not in {None, "gitea"}:
+        typer.secho(
+            "REFUSED: ForgeGuard 0.2.2 accepts only '--product gitea'; omit --product "
+            "when the product is not confirmed.",
             fg=typer.colors.RED,
             err=True,
         )
@@ -111,7 +141,9 @@ def scan(
             err=True,
         )
     try:
-        result = asyncio.run(_run(url, token, known_version, scan_id))
+        result = asyncio.run(
+            _run(url, token, known_version, normalized_product, scan_id)
+        )
     except InvalidTargetURL as exc:
         typer.secho(f"REFUSED: {exc}", fg=typer.colors.RED, err=True)
         raise typer.Exit(2) from exc
@@ -136,11 +168,11 @@ def list_checks() -> None:
     """List the v0.2 read-only check catalog."""
     typer.echo("ForgeGuard by Gexiro - v0.2 checks")
     for check_id, description in [
-        ("FG-VER", "Gitea patch currency against the first fixed release"),
-        ("FG-CVE-27771", "Gitea CVE-2026-27771 affected/fixed version posture"),
+        ("FG-VER", "Informational observed product/version evidence"),
+        ("FG-CVE-27771", "Confirmed-Gitea CVE-2026-27771 version posture"),
         ("FG-SIGNIN", "Observed access-control responses on checked paths"),
-        ("FG-REG", "Anonymous OCI registry-root reachability"),
-        ("FG-ANON", "Observed anonymous HTTP 200 responses on checked paths"),
+        ("FG-REG", "Anonymous OCI registry-root response posture"),
+        ("FG-ANON", "Observed anonymous responses on checked paths"),
     ]:
         typer.echo(f"{check_id:14} {description}")
 

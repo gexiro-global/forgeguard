@@ -3,17 +3,19 @@
 Read-only security posture and supply-chain visibility for self-hosted Gitea.
 
 **Product:** gitea 1.26.2  |  **Score:** 100/100 (A)
+**Product confirmation:** True (operator-declared)
 **Scope:** own-instance | authorized | read-only | single target | **Scan:** fg_example_patched_post_update
 
-**Summary:** critical 0 | high 0 | medium 0 | low 0 | pass 5
+**Summary:** critical 0 | high 0 | medium 0 | low 0 | info 0 | pass 5
 
 ## Top actions
-- None - no FAIL or WARN findings.
+- None - no FAIL or WARN findings and all core checks were assessed.
 
 ## Interpretation
-- FG-VER and FG-CVE-27771 report Gitea version posture against the first fixed release.
+- FG-VER is informational version evidence. FG-CVE-27771 is the only finding that scores the CVE affected-version condition.
+- PASS means evidence supports only the named checked condition; it is not a claim that the whole instance is secure.
+- INFO / UNDETERMINED means evidence was insufficient. If any core check is undetermined, the assessment is N/A rather than an A-F grade.
 - Registry-root and anonymous-access checks are independent HTTP observations; they do not prove CVE exploitability or private artifact access.
-- PASS means the checked condition passed; it is not a claim that the whole instance is secure.
 
 ## Sub-scores
 | Domain | Score |
@@ -21,34 +23,39 @@ Read-only security posture and supply-chain visibility for self-hosted Gitea.
 | patch | 100 |
 | registry | 100 |
 | auth | 100 |
-| runner | 100 |
 
 ## Findings
-### FG-VER - Gitea version is at or above the first fixed release
-- **State:** PASS - at or above first fixed release
-- **Rationale:** Installed Gitea 1.26.2 is at or above 1.26.2.
-- **Evidence:** `{'version': '1.26.2', 'first_fixed_in': '1.26.2'}`
+### FG-VER - Confirmed Gitea version observed
+- **State:** PASS - version observed
+- **Evidence state:** informational
+- **Rationale:** Gitea 1.26.2 was observed for an operator-confirmed Gitea target. CVE risk is scored separately by FG-CVE-27771.
+- **Evidence:** `{'product': 'gitea', 'product_confirmed': True, 'product_source': 'operator-declared', 'version': '1.26.2'}`
 
-### FG-SIGNIN - Checked repository/API surfaces appear access-controlled
+### FG-SIGNIN - Explicit access-control responses observed on checked paths
 - **State:** PASS
-- **Rationale:** Anonymous requests returned access-control or sign-in redirect responses on the checked paths; no specific configuration key was read.
-- **Evidence:** `{'anon_api': 403, 'anon_explore': 302}`
+- **Evidence state:** assessed
+- **Rationale:** Both checked paths returned HTTP 401 or 403 to anonymous requests; no specific REQUIRE_SIGNIN_VIEW configuration value was inferred.
+- **Evidence:** `{'anon_api': 403, 'anon_explore': 403}`
 
-### FG-REG - OCI registry root did not return HTTP 200 anonymously
+### FG-REG - Explicit registry-root access-control response observed
 - **State:** PASS
-- **Rationale:** The anonymous /v2/ request returned HTTP 403; no package, manifest, or blob access was attempted.
+- **Evidence state:** assessed
+- **Rationale:** The anonymous /v2/ request returned HTTP 403, an explicit authentication or access-denial response. No artifact access was attempted.
 - **Evidence:** `{'anon_v2_http': 403}`
 
 ### FG-CVE-27771 - CVE-2026-27771 version posture
 - **State:** PASS - at or above first fixed release
+- **Evidence state:** assessed
 - **Rationale:** Installed Gitea 1.26.2 is at or above the first release containing the fix for CVE-2026-27771.
 - **Refs:** CVE-2026-27771, https://blog.gitea.com/release-of-1.26.2/
-- **Evidence:** `{'product': 'gitea', 'version': '1.26.2', 'affected_through': '1.26.1', 'first_fixed_in': '1.26.2'}`
+- **CWE:** CWE-862
+- **Evidence:** `{'product': 'gitea', 'product_confirmed': True, 'product_source': 'operator-declared', 'version': '1.26.2', 'affected_through': '1.26.1', 'first_fixed_in': '1.26.2'}`
 
-### FG-ANON - No anonymous HTTP 200 observed on checked endpoints
+### FG-ANON - Explicit access-control responses observed on anonymous checks
 - **State:** PASS
-- **Rationale:** None of the three checked endpoints returned HTTP 200 to an anonymous request.
-- **Evidence:** `{'checked': {'/api/v1/repos/search?limit=1': 403, '/explore/repos': 302, '/api/v1/users/search?limit=1': 403}}`
+- **Evidence state:** assessed
+- **Rationale:** Every checked endpoint returned HTTP 401 or 403 to the anonymous request. No global sign-in configuration was inferred.
+- **Evidence:** `{'checked': {'/api/v1/repos/search?limit=1': 403, '/explore/repos': 403, '/api/v1/users/search?limit=1': 403}}`
 
 ---
 ForgeGuard by Gexiro | own/authorized Gitea instances only | read-only

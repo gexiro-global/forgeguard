@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .models import Finding, Score, Severity, Status
+from .models import EvidenceState, Finding, Score, Severity, Status
 
 # Deterministic scoring for ForgeGuard by Gexiro.
 # The tool does not infer risk with AI; operators can adjust these constants if
@@ -14,11 +14,12 @@ SEVERITY_WEIGHT: dict[Severity, int] = {
 }
 WARN_FACTOR = 0.35
 
-_SUBSCORE_BUCKETS: dict[str, list[str]] = {
-    "patch": ["FG-VER"],
-    "registry": ["FG-REG", "FG-CVE-27771"],
-    "auth": ["FG-SIGNIN", "FG-ANON", "FG-VER-DISCLOSE"],
-    "runner": ["FG-ACT"],
+CORE_CHECK_IDS = ("FG-CVE-27771", "FG-REG", "FG-SIGNIN", "FG-ANON")
+
+_SUBSCORE_BUCKETS: dict[str, tuple[str, ...]] = {
+    "patch": ("FG-CVE-27771",),
+    "registry": ("FG-REG",),
+    "auth": ("FG-SIGNIN", "FG-ANON", "FG-VER-DISCLOSE"),
 }
 
 
@@ -53,17 +54,43 @@ def grade_for(value: int) -> str:
     return "F"
 
 
-def _subscores(findings: list[Finding]) -> dict[str, int]:
-    out: dict[str, int] = {}
+def _subscores(findings: list[Finding]) -> dict[str, int | None]:
+    out: dict[str, int | None] = {}
+    by_id = {finding.id: finding for finding in findings}
     for name, ids in _SUBSCORE_BUCKETS.items():
-        value = 100
-        for finding in findings:
-            if any(finding.id.startswith(check_id) for check_id in ids):
-                value -= finding_penalty(finding)
-        out[name] = max(0, value)
+        selected = [by_id[check_id] for check_id in ids if check_id in by_id]
+        required = [check_id for check_id in ids if check_id in CORE_CHECK_IDS]
+        if any(
+            check_id not in by_id
+            or by_id[check_id].evidence_state != EvidenceState.ASSESSED
+            for check_id in required
+        ):
+            out[name] = None
+            continue
+        out[name] = max(0, 100 - sum(finding_penalty(item) for item in selected))
     return out
 
 
 def score_findings(findings: list[Finding]) -> Score:
+    by_id = {finding.id: finding for finding in findings}
+    incomplete = [
+        check_id
+        for check_id in CORE_CHECK_IDS
+        if check_id not in by_id
+        or by_id[check_id].evidence_state != EvidenceState.ASSESSED
+    ]
+    if incomplete:
+        return Score(
+            value=None,
+            grade="N/A",
+            assessed=False,
+            sub=_subscores(findings),
+            incomplete_checks=incomplete,
+        )
     value = max(0, 100 - sum(finding_penalty(finding) for finding in findings))
-    return Score(value=value, grade=grade_for(value), sub=_subscores(findings))
+    return Score(
+        value=value,
+        grade=grade_for(value),
+        assessed=True,
+        sub=_subscores(findings),
+    )

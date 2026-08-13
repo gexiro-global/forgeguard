@@ -1,6 +1,39 @@
 # Scoring
 
-ForgeGuard scoring is deterministic and does not use AI.
+ForgeGuard scoring is deterministic and does not use AI. Risk and evidence completeness are separate concepts.
+
+## Assessment core
+
+The core scored checks are:
+
+- `FG-CVE-27771`, including product confirmation and Gitea advisory eligibility;
+- `FG-REG`;
+- `FG-SIGNIN`;
+- `FG-ANON`.
+
+`FG-VER` is informational product/version evidence. It never adds a second penalty for the same CVE version threshold.
+
+Every core finding has an evidence state:
+
+- `assessed`: enough evidence exists for PASS, WARN, or FAIL;
+- `indeterminate`: evidence is absent, ambiguous, unsupported, or failed;
+- `informational`: context that does not independently determine the core posture.
+
+## Incomplete assessment
+
+If any core check is missing or indeterminate:
+
+```json
+{
+  "value": null,
+  "grade": "N/A",
+  "assessed": false
+}
+```
+
+Missing evidence is not converted to score zero, risk, PASS, or A. `incomplete_checks` lists the unresolved core finding IDs. Subscores for unresolved domains are also `null`/N/A.
+
+A normal A–F grade is emitted only when all core checks are assessed.
 
 ## Severity weights
 
@@ -26,17 +59,26 @@ A WARN finding subtracts `int(weight * WARN_FACTOR)`.
 | 40–59 | D |
 | 0–39 | F |
 
+These thresholds apply only to a complete assessment.
+
 ## Current domains
 
-- `patch`: Gitea patch currency.
-- `registry`: independent OCI registry-root posture plus CVE version posture.
-- `auth`: observed sign-in and anonymous responses on checked paths.
-- `runner`: reserved for future checks and currently receives no findings.
+- `patch`: CVE-2026-27771 version/advisory posture for confirmed Gitea.
+- `registry`: independent OCI registry-root response posture.
+- `auth`: sign-in and anonymous responses on checked paths.
 
-The CVE result is based only on Gitea version/advisory posture. Registry and sign-in responses do not change it.
+No empty future domain is displayed as 100.
 
-The synthetic affected-version example contains two related HIGH FAIL findings, `FG-VER` and `FG-CVE-27771`, and therefore scores 60. Future versions may deduplicate related controls after an explicit scoring design review.
+## No correlated double counting
+
+For confirmed Gitea 1.26.1:
+
+- `FG-VER` records the observed version as informational evidence;
+- `FG-CVE-27771` produces one FAIL/HIGH penalty;
+- with every other core check assessed and passing, the result is 80/B.
+
+The same product/version root fact is not penalized twice.
 
 ## Limit
 
-A score covers only the checks implemented in the installed ForgeGuard version. It is not a complete hardening, exploitability, compromise, registration, or private-package-access assessment.
+A complete score still covers only the checks implemented in the installed ForgeGuard version. It is not a security certification, vulnerability oracle, complete hardening assessment, exploitability result, compromise determination, registration assessment, or private-package-access assessment.

@@ -36,7 +36,12 @@ Repository = "https://github.com/gexiro-global/forgeguard"
 forgeguard = "forgeguard.cli:main"
 
 [project.optional-dependencies]
-dev = ["pytest>=8,<10", "build>=1,<2"]
+dev = [
+  "build>=1,<2",
+  "pytest>=8,<10",
+  "ruff>=0.16,<0.17",
+  "twine>=6.1,<7",
+]
 
 [tool.setuptools.packages.find]
 include = ["forgeguard*"]

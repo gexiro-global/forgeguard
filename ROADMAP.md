@@ -4,7 +4,9 @@ Items below are planned and are not implemented in ForgeGuard 0.2.2 unless state
 
 ## Truth-correct current scope
 
-ForgeGuard 0.2.2 supports one authorized self-hosted Gitea target with version/advisory posture and limited read-only HTTP observations.
+ForgeGuard 0.2.2 supports one authorized, operator-confirmed self-hosted Gitea target with version/advisory posture, explicit completeness, and limited read-only HTTP observations.
+
+A compatible version endpoint is not product detection. The operator supplies `--product gitea` from trusted inventory. Without that confirmation, Gitea-specific advisory posture remains indeterminate and the assessment is ungraded.
 
 ## Future product targets
 
@@ -12,7 +14,7 @@ ForgeGuard 0.2.2 supports one authorized self-hosted Gitea target with version/a
 
 Forgejo requires a separate implementation milestone with:
 
-- product-specific detection;
+- product-specific detection or trusted Forgejo declaration;
 - Forgejo version semantics;
 - an authoritative Forgejo advisory source;
 - Forgejo-specific regression tests.

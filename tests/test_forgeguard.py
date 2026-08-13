@@ -6,8 +6,10 @@ import re
 from importlib.metadata import version as distribution_version
 from pathlib import Path
 
-import forgeguard.cli as cli_module
 import pytest
+from typer.testing import CliRunner
+
+import forgeguard.cli as cli_module
 from forgeguard import __version__
 from forgeguard.checks import (
     FIXED_VERSION,
@@ -23,22 +25,35 @@ from forgeguard.checks import (
 )
 from forgeguard.cli import app
 from forgeguard.client import _UA, ForgeClient
-from forgeguard.models import Finding, ScanResult, Score, Severity, Status, Target
+from forgeguard.models import (
+    EvidenceState,
+    Finding,
+    ScanResult,
+    Score,
+    Severity,
+    Status,
+    Target,
+)
 from forgeguard.report import render_markdown
 from forgeguard.safety import SAFE_GET_PATHS
-from forgeguard.scoring import WARN_FACTOR, grade_for, priority_key, score_findings
+from forgeguard.scoring import (
+    CORE_CHECK_IDS,
+    WARN_FACTOR,
+    grade_for,
+    priority_key,
+    score_findings,
+)
 from forgeguard.urls import InvalidTargetURL, normalize_target_url
-from typer.testing import CliRunner
 
 _ANSI = re.compile(r"\x1b\[[0-9;]*m")
 
 
 class FakeResponse:
-    def __init__(self, status_code: int, payload: dict | None = None) -> None:
+    def __init__(self, status_code: int, payload: object | None = None) -> None:
         self.status_code = status_code
-        self._payload = payload or {}
+        self._payload = {} if payload is None else payload
 
-    def json(self) -> dict:
+    def json(self) -> object:
         return self._payload
 
 
@@ -71,7 +86,7 @@ def complete_responses(
     v2: int = 403,
     home: int = 403,
     api: int = 403,
-    explore: int = 302,
+    explore: int = 403,
     users: int = 403,
 ) -> dict[str, FakeResponse]:
     version_payload = {"version": version} if version is not None else {}
@@ -85,6 +100,23 @@ def complete_responses(
     }
 
 
+def run_scored(
+    responses: dict[str, FakeResponse],
+    *,
+    product: str | None = None,
+    known_version: str | None = None,
+    has_token: bool = False,
+) -> tuple[list[Finding], Target, Score]:
+    findings, target = run(
+        run_all_checks(
+            RecordingClient(responses, has_token=has_token),
+            known_version=known_version,
+            product=product,
+        )
+    )
+    return findings, target, score_findings(findings)
+
+
 def test_version_parsing_and_gitea_fixed_release_comparison() -> None:
     assert _semver("1.26.2") == (1, 26, 2)
     assert _semver("1.26.2+gitea") == (1, 26, 2)
@@ -96,110 +128,199 @@ def test_version_parsing_and_gitea_fixed_release_comparison() -> None:
     assert _is_vulnerable(None) is None
 
 
-def test_version_check_flags_gitea_1261() -> None:
-    target = Target(url="https://forge.example", forge="gitea", version="1.26.1")
-    finding = run(check_version(RecordingClient({}), target, False))[0]
-    assert finding.id == "FG-VER"
-    assert finding.status == Status.FAIL
-    assert finding.severity == Severity.high
-    assert finding.evidence["first_fixed_in"] == FIXED_VERSION
-
-
-@pytest.mark.parametrize("version", ["1.26.2", "1.27.0", "2.0.0"])
-def test_version_check_passes_gitea_at_or_above_first_fixed_release(
+@pytest.mark.parametrize("version", ["1.26.1", "1.26.2", "1.27.0", "2.0.0"])
+def test_fg_ver_is_informational_observation_without_security_penalty(
     version: str,
 ) -> None:
-    target = Target(url="https://forge.example", forge="gitea", version=version)
+    target = Target(
+        url="https://forge.example",
+        forge="gitea",
+        version=version,
+        product_confirmed=True,
+        product_source="operator-declared",
+    )
     finding = run(check_version(RecordingClient({}), target, False))[0]
+    assert finding.id == "FG-VER"
     assert finding.status == Status.PASS
-    assert "first fixed release" in finding.title
+    assert finding.severity == Severity.info
+    assert finding.evidence_state == EvidenceState.INFORMATIONAL
+    assert "CVE risk is scored separately" in finding.rationale
 
 
 @pytest.mark.parametrize("version", [None, "not-a-version", "1.26.2-rc1"])
-def test_version_check_unknown_is_info(version: str | None) -> None:
-    target = Target(url="https://forge.example", forge="gitea", version=version)
+def test_fg_ver_unknown_is_informational_not_a_penalty(version: str | None) -> None:
+    target = Target(
+        url="https://forge.example",
+        forge="gitea",
+        version=version,
+        product_confirmed=True,
+        product_source="operator-declared",
+    )
     finding = run(check_version(RecordingClient({}), target, False))[0]
     assert finding.status == Status.INFO
-    assert finding.severity == Severity.medium
+    assert finding.severity == Severity.info
+    assert finding.evidence_state == EvidenceState.INFORMATIONAL
 
 
-def test_cve_gitea_1261_is_affected_fail_high() -> None:
+def test_cve_gitea_1261_is_affected_fail_high_and_authoritative_cwe() -> None:
     finding = run(
         check_cve_27771(
-            Target(url="https://forge.example", forge="gitea", version="1.26.1")
+            Target(
+                url="https://forge.example",
+                forge="gitea",
+                version="1.26.1",
+                product_confirmed=True,
+                product_source="operator-declared",
+            )
         )
     )[0]
     assert finding.status == Status.FAIL
     assert finding.severity == Severity.high
-    assert finding.title == "CVE-2026-27771 version posture"
+    assert finding.evidence_state == EvidenceState.ASSESSED
+    assert finding.cwe == "CWE-862"
     assert "affected range" in finding.rationale
     assert "does not prove exploitability or data exposure" in finding.rationale
-    assert finding.remediation == (
-        "Upgrade Gitea to >=1.26.2 or a newer currently supported security release."
-    )
 
 
 @pytest.mark.parametrize("version", ["1.26.2", "1.27.0", "2.0.0"])
-def test_cve_gitea_at_or_above_first_fixed_release_is_pass(version: str) -> None:
+def test_cve_confirmed_gitea_at_or_above_fixed_release_is_pass(version: str) -> None:
     finding = run(
         check_cve_27771(
-            Target(url="https://forge.example", forge="gitea", version=version)
+            Target(
+                url="https://forge.example",
+                forge="gitea",
+                version=version,
+                product_confirmed=True,
+                product_source="operator-declared",
+            )
         )
     )[0]
     assert finding.status == Status.PASS
     assert finding.severity == Severity.info
+    assert finding.evidence_state == EvidenceState.ASSESSED
     assert finding.remediation == ""
-    assert "whole instance" not in finding.rationale.lower()
 
 
-@pytest.mark.parametrize("version", [None, "1.26.2-rc1"])
-def test_cve_unknown_version_is_info_medium(version: str | None) -> None:
+@pytest.mark.parametrize("version", [None, "1.26.2-rc1", "malformed"])
+def test_cve_unknown_version_is_explicitly_indeterminate(version: str | None) -> None:
     finding = run(
         check_cve_27771(
-            Target(url="https://forge.example", forge="gitea", version=version)
+            Target(
+                url="https://forge.example",
+                forge="gitea",
+                version=version,
+                product_confirmed=True,
+                product_source="operator-declared",
+            )
         )
     )[0]
     assert finding.status == Status.INFO
     assert finding.severity == Severity.medium
-    assert "cannot be determined" in finding.rationale
+    assert finding.evidence_state == EvidenceState.INDETERMINATE
 
 
-def test_forgejo_like_version_fails_safe_without_gitea_baseline() -> None:
-    client = RecordingClient(
-        complete_responses(version_status=200, version="11.0.0+forgejo")
+def test_forgejo_marker_conflicts_with_gitea_declaration_and_fails_safe() -> None:
+    findings, target, score = run_scored(
+        complete_responses(version_status=200, version="11.0.0+forgejo"),
+        product="gitea",
     )
-    findings, target = run(run_all_checks(client))
     assert target.forge == "forgejo"
-    version_finding = by_id(findings, "FG-VER")
-    cve_finding = by_id(findings, "FG-CVE-27771")
-    assert version_finding.status == Status.INFO
-    assert cve_finding.status == Status.INFO
-    assert "Gitea 11.0.0" not in cve_finding.rationale
-    assert "first release containing the fix" not in cve_finding.rationale
+    assert target.product_confirmed is False
+    assert target.product_source == "version-marker-conflict"
+    assert by_id(findings, "FG-CVE-27771").status == Status.INFO
+    assert by_id(findings, "FG-CVE-27771").evidence_state == EvidenceState.INDETERMINATE
+    assert score.assessed is False
+    assert score.value is None
+    assert score.grade == "N/A"
+
+
+@pytest.mark.parametrize("version", ["9.9.9", "1.26.2"])
+def test_generic_version_endpoint_does_not_confirm_gitea(version: str) -> None:
+    findings, target, score = run_scored(
+        complete_responses(version_status=200, version=version)
+    )
+    assert target.forge == "unknown"
+    assert target.product_confirmed is False
+    assert by_id(findings, "FG-VER").status == Status.INFO
+    assert by_id(findings, "FG-CVE-27771").status == Status.INFO
+    assert score.assessed is False
+    assert score.value is None
+    assert score.grade == "N/A"
+
+
+def test_known_version_without_product_confirmation_is_ungraded() -> None:
+    findings, target, score = run_scored(
+        complete_responses(),
+        known_version="1.26.2",
+    )
+    assert target.forge == "unknown"
+    assert target.version == "1.26.2"
+    assert by_id(findings, "FG-CVE-27771").evidence_state == EvidenceState.INDETERMINATE
+    assert score.grade == "N/A"
+
+
+@pytest.mark.parametrize("payload", [[], {"unexpected": "value"}, {"version": 1262}])
+def test_malformed_version_response_keeps_product_unknown(payload: object) -> None:
+    responses = complete_responses(version_status=200)
+    responses["/api/v1/version"] = FakeResponse(200, payload)
+    findings, target, score = run_scored(responses)
+    assert target.forge == "unknown"
+    assert target.product_confirmed is False
+    assert by_id(findings, "FG-CVE-27771").evidence_state == EvidenceState.INDETERMINATE
+    assert score.grade == "N/A"
+
+
+def test_explicit_product_confirmation_enables_gitea_cve_pass() -> None:
+    findings, target, score = run_scored(
+        complete_responses(version_status=200, version="1.26.2"),
+        product="gitea",
+        has_token=True,
+    )
+    assert target.forge == "gitea"
+    assert target.product_confirmed is True
+    assert target.product_source == "operator-declared"
+    assert by_id(findings, "FG-CVE-27771").status == Status.PASS
+    assert score.assessed is True
+    assert score.value == 100
+    assert score.grade == "A"
 
 
 def test_registry_and_signin_responses_do_not_change_cve_verdict() -> None:
     cases = [
-        complete_responses(v2=200, home=200, api=200, explore=200, users=200),
-        complete_responses(v2=401, home=401, api=401, explore=302, users=401),
-        complete_responses(v2=403, home=403, api=403, explore=403, users=403),
+        complete_responses(v2=200, api=200, explore=200, users=200),
+        complete_responses(v2=401, api=401, explore=401, users=401),
+        complete_responses(v2=403, api=403, explore=403, users=403),
+        complete_responses(v2=500, api=500, explore=500, users=500),
     ]
     cve_results = []
     for responses in cases:
-        findings, _target = run(
-            run_all_checks(RecordingClient(responses), known_version="1.26.1")
+        findings, _target, _score = run_scored(
+            responses,
+            known_version="1.26.1",
+            product="gitea",
         )
         cve_results.append(by_id(findings, "FG-CVE-27771").model_dump())
-    assert cve_results[0] == cve_results[1] == cve_results[2]
+    assert cve_results[0] == cve_results[1] == cve_results[2] == cve_results[3]
     assert cve_results[0]["status"] == Status.FAIL
 
 
 def test_cve_check_performs_no_network_requests() -> None:
-    target = Target(url="https://forge.example", forge="gitea", version="1.26.1")
-    finding = run(check_cve_27771(target))[0]
+    finding = run(
+        check_cve_27771(
+            Target(
+                url="https://forge.example",
+                forge="gitea",
+                version="1.26.1",
+                product_confirmed=True,
+                product_source="operator-declared",
+            )
+        )
+    )[0]
     assert finding.status == Status.FAIL
     assert set(finding.evidence) == {
         "product",
+        "product_confirmed",
+        "product_source",
         "version",
         "affected_through",
         "first_fixed_in",
@@ -210,71 +331,118 @@ def test_registry_200_is_limited_independent_observation() -> None:
     finding = run(
         check_registry(
             RecordingClient({"/v2/": FakeResponse(200)}),
-            Target(url="https://forge.example", forge="gitea"),
+            Target(url="https://forge.example"),
         )
     )[0]
     assert finding.status == Status.WARN
     assert finding.severity == Severity.medium
-    assert finding.references == []
+    assert finding.evidence_state == EvidenceState.ASSESSED
     assert "does not prove access" in finding.rationale
     assert "CVE-2026-27771" not in finding.model_dump_json()
 
 
-@pytest.mark.parametrize("status_code", [401, 403, 404])
-def test_registry_non_200_reports_exact_observation(status_code: int) -> None:
+@pytest.mark.parametrize("status_code", [401, 403])
+def test_registry_explicit_access_control_is_narrow_pass(status_code: int) -> None:
     finding = run(
         check_registry(
             RecordingClient({"/v2/": FakeResponse(status_code)}),
-            Target(url="https://forge.example", forge="gitea"),
+            Target(url="https://forge.example"),
         )
     )[0]
     assert finding.status == Status.PASS
+    assert finding.severity == Severity.info
+    assert finding.evidence_state == EvidenceState.ASSESSED
     assert finding.evidence["anon_v2_http"] == status_code
-    assert f"HTTP {status_code}" in finding.rationale
 
 
-def test_registry_no_response_is_info_not_pass() -> None:
+@pytest.mark.parametrize(
+    "status_code",
+    [404, 301, 302, 303, 307, 308, 429, 500, 502, 503, 418],
+)
+def test_registry_ambiguous_or_error_status_is_indeterminate(status_code: int) -> None:
     finding = run(
         check_registry(
-            RecordingClient({}), Target(url="https://forge.example", forge="gitea")
+            RecordingClient({"/v2/": FakeResponse(status_code)}),
+            Target(url="https://forge.example"),
         )
     )[0]
     assert finding.status == Status.INFO
     assert finding.severity == Severity.medium
+    assert finding.evidence_state == EvidenceState.INDETERMINATE
+    assert finding.evidence["anon_v2_http"] == status_code
 
 
-def test_signin_posture_uses_observed_language() -> None:
-    controlled = run(
+def test_registry_no_response_is_indeterminate() -> None:
+    finding = run(
+        check_registry(RecordingClient({}), Target(url="https://forge.example"))
+    )[0]
+    assert finding.status == Status.INFO
+    assert finding.evidence_state == EvidenceState.INDETERMINATE
+
+
+@pytest.mark.parametrize("api_status", [401, 403])
+@pytest.mark.parametrize("browse_status", [401, 403])
+def test_signin_pass_requires_explicit_access_control_on_both_paths(
+    api_status: int, browse_status: int
+) -> None:
+    finding = run(
         check_signin(
             RecordingClient(
                 {
-                    "/api/v1/repos/search?limit=1": FakeResponse(403),
-                    "/explore/repos": FakeResponse(302),
+                    "/api/v1/repos/search?limit=1": FakeResponse(api_status),
+                    "/explore/repos": FakeResponse(browse_status),
                 }
             ),
-            Target(url="https://forge.example", forge="gitea"),
+            Target(url="https://forge.example"),
         )
     )[0]
-    assert controlled.status == Status.PASS
-    assert "appear access-controlled" in controlled.title
-    assert "no specific configuration key was read" in controlled.rationale
+    assert finding.status == Status.PASS
+    assert finding.evidence_state == EvidenceState.ASSESSED
+    assert "no specific REQUIRE_SIGNIN_VIEW" in finding.rationale
 
-    open_finding = run(
+
+def test_signin_200_is_observed_warning() -> None:
+    finding = run(
         check_signin(
             RecordingClient(
                 {
                     "/api/v1/repos/search?limit=1": FakeResponse(200),
-                    "/explore/repos": FakeResponse(403),
+                    "/explore/repos": FakeResponse(500),
                 }
             ),
-            Target(url="https://forge.example", forge="gitea"),
+            Target(url="https://forge.example"),
         )
     )[0]
-    assert open_finding.status == Status.WARN
-    assert "Observed" in open_finding.title
+    assert finding.status == Status.WARN
+    assert finding.evidence_state == EvidenceState.ASSESSED
 
 
-def test_anonymous_access_posture_open_closed_and_unknown() -> None:
+@pytest.mark.parametrize("status_code", [404, 302, 307, 429, 500, 502, 503])
+def test_signin_ambiguous_or_error_status_is_indeterminate(status_code: int) -> None:
+    finding = run(
+        check_signin(
+            RecordingClient(
+                {
+                    "/api/v1/repos/search?limit=1": FakeResponse(status_code),
+                    "/explore/repos": FakeResponse(status_code),
+                }
+            ),
+            Target(url="https://forge.example"),
+        )
+    )[0]
+    assert finding.status == Status.INFO
+    assert finding.evidence_state == EvidenceState.INDETERMINATE
+
+
+def test_signin_no_response_is_indeterminate() -> None:
+    finding = run(
+        check_signin(RecordingClient({}), Target(url="https://forge.example"))
+    )[0]
+    assert finding.status == Status.INFO
+    assert finding.evidence_state == EvidenceState.INDETERMINATE
+
+
+def test_anonymous_200_warns_and_all_401_403_passes() -> None:
     paths = [
         "/api/v1/repos/search?limit=1",
         "/explore/repos",
@@ -282,33 +450,85 @@ def test_anonymous_access_posture_open_closed_and_unknown() -> None:
     ]
     open_client = RecordingClient({path: FakeResponse(403) for path in paths})
     open_client.responses[paths[0]] = FakeResponse(200)
-    open_finding = run(
-        check_anon(open_client, Target(url=open_client.base, forge="gitea"))
-    )[0]
+    open_finding = run(check_anon(open_client, Target(url=open_client.base)))[0]
     assert open_finding.status == Status.WARN
-    assert open_finding.evidence["open"] == [paths[0]]
+    assert open_finding.evidence_state == EvidenceState.ASSESSED
 
-    closed_client = RecordingClient({path: FakeResponse(403) for path in paths})
-    closed_finding = run(
-        check_anon(closed_client, Target(url=closed_client.base, forge="gitea"))
-    )[0]
-    assert closed_finding.status == Status.PASS
-    assert "checked endpoints" in closed_finding.title
+    controlled_client = RecordingClient(
+        {
+            paths[0]: FakeResponse(401),
+            paths[1]: FakeResponse(403),
+            paths[2]: FakeResponse(401),
+        }
+    )
+    controlled = run(check_anon(controlled_client, Target(url=controlled_client.base)))[
+        0
+    ]
+    assert controlled.status == Status.PASS
+    assert controlled.evidence_state == EvidenceState.ASSESSED
 
-    unknown_client = RecordingClient({paths[0]: FakeResponse(403)})
-    unknown_finding = run(
-        check_anon(unknown_client, Target(url=unknown_client.base, forge="gitea"))
-    )[0]
-    assert unknown_finding.status == Status.INFO
+
+@pytest.mark.parametrize("status_code", [404, 302, 307, 429, 500, 502, 503])
+def test_anonymous_ambiguous_or_error_status_is_indeterminate(status_code: int) -> None:
+    paths = [
+        "/api/v1/repos/search?limit=1",
+        "/explore/repos",
+        "/api/v1/users/search?limit=1",
+    ]
+    client = RecordingClient({path: FakeResponse(status_code) for path in paths})
+    finding = run(check_anon(client, Target(url=client.base)))[0]
+    assert finding.status == Status.INFO
+    assert finding.evidence_state == EvidenceState.INDETERMINATE
+
+
+def test_anonymous_missing_response_is_indeterminate() -> None:
+    finding = run(check_anon(RecordingClient({}), Target(url="https://forge.example")))[
+        0
+    ]
+    assert finding.status == Status.INFO
+    assert finding.evidence_state == EvidenceState.INDETERMINATE
+
+
+def test_scoring_single_cve_penalty_closes_double_count() -> None:
+    findings, _target, score = run_scored(
+        complete_responses(),
+        product="gitea",
+        known_version="1.26.1",
+    )
+    assert by_id(findings, "FG-VER").status == Status.PASS
+    assert by_id(findings, "FG-VER").severity == Severity.info
+    assert by_id(findings, "FG-CVE-27771").status == Status.FAIL
+    assert score.assessed is True
+    assert score.value == 80
+    assert score.grade == "B"
+    assert score.sub == {"patch": 80, "registry": 100, "auth": 100}
 
 
 def test_scoring_weights_warn_factor_and_grade_thresholds() -> None:
     findings = [
         Finding(
-            id="FG-VER", title="version", severity=Severity.high, status=Status.FAIL
+            id="FG-CVE-27771",
+            title="cve",
+            severity=Severity.high,
+            status=Status.FAIL,
         ),
         Finding(
-            id="FG-REG", title="registry", severity=Severity.medium, status=Status.WARN
+            id="FG-REG",
+            title="registry",
+            severity=Severity.medium,
+            status=Status.WARN,
+        ),
+        Finding(
+            id="FG-SIGNIN",
+            title="signin",
+            severity=Severity.info,
+            status=Status.PASS,
+        ),
+        Finding(
+            id="FG-ANON",
+            title="anon",
+            severity=Severity.info,
+            status=Status.PASS,
         ),
     ]
     score = score_findings(findings)
@@ -320,6 +540,69 @@ def test_scoring_weights_warn_factor_and_grade_thresholds() -> None:
     assert grade_for(60) == "C"
     assert grade_for(40) == "D"
     assert grade_for(39) == "F"
+
+
+def test_all_core_evidence_missing_is_ungraded_not_a() -> None:
+    score = score_findings([])
+    assert score.assessed is False
+    assert score.value is None
+    assert score.grade == "N/A"
+    assert score.incomplete_checks == list(CORE_CHECK_IDS)
+    assert set(score.sub) == {"patch", "registry", "auth"}
+    assert all(value is None for value in score.sub.values())
+
+
+def test_unknown_version_is_ungraded_not_a() -> None:
+    _findings, _target, score = run_scored(
+        complete_responses(),
+        product="gitea",
+    )
+    assert score.assessed is False
+    assert score.value is None
+    assert score.grade == "N/A"
+    assert "FG-CVE-27771" in score.incomplete_checks
+
+
+def test_registry_timeout_prevents_full_grade() -> None:
+    responses = complete_responses()
+    del responses["/v2/"]
+    _findings, _target, score = run_scored(
+        responses,
+        product="gitea",
+        known_version="1.26.2",
+    )
+    assert score.assessed is False
+    assert score.grade == "N/A"
+    assert "FG-REG" in score.incomplete_checks
+
+
+def test_all_server_errors_are_ungraded_not_a() -> None:
+    responses = complete_responses(
+        version_status=500,
+        v2=500,
+        api=500,
+        explore=500,
+        users=500,
+    )
+    findings, _target, score = run_scored(responses, product="gitea")
+    assert by_id(findings, "FG-REG").status == Status.INFO
+    assert by_id(findings, "FG-ANON").status == Status.INFO
+    assert score.assessed is False
+    assert score.value is None
+    assert score.grade == "N/A"
+
+
+def test_fully_assessed_clean_confirmed_gitea_can_score_100_a() -> None:
+    _findings, target, score = run_scored(
+        complete_responses(),
+        product="gitea",
+        known_version="1.26.2",
+    )
+    assert target.product_confirmed is True
+    assert score.assessed is True
+    assert score.value == 100
+    assert score.grade == "A"
+    assert score.incomplete_checks == []
 
 
 def test_status_adjusted_top_action_sorting() -> None:
@@ -337,60 +620,74 @@ def test_status_adjusted_top_action_sorting() -> None:
     assert [finding.id for finding in ordered] == ["HIGH", "LOW", "MEDWARN"]
 
 
-def test_markdown_report_uses_affected_version_not_exposure_language() -> None:
-    findings = [
-        run(
-            check_version(
-                RecordingClient({}),
-                Target(url="https://forge.example", forge="gitea", version="1.26.1"),
-                False,
-            )
-        )[0],
-        run(
-            check_cve_27771(
-                Target(url="https://forge.example", forge="gitea", version="1.26.1")
-            )
-        )[0],
-    ]
+def test_markdown_report_uses_single_cve_action_and_score() -> None:
+    findings, target, score = run_scored(
+        complete_responses(),
+        product="gitea",
+        known_version="1.26.1",
+    )
+    target.authorized = True
     result = ScanResult(
         scan_id="test",
-        target=Target(url="https://forge.example", forge="gitea", version="1.26.1"),
-        score=score_findings(findings),
+        target=target,
+        score=score,
         findings=findings,
-        summary={"high": 2, "pass": 0},
+        summary={"high": 1, "pass": 4},
     )
     markdown = render_markdown(result)
-    assert "P1 - Upgrade Gitea to >=1.26.2" in markdown
+    assert "**Score:** 80/100 (B)" in markdown
     assert markdown.count("P1 - Upgrade Gitea") == 1
     assert "does not prove exploitability" in markdown
     assert "active exposure" not in markdown.lower()
     assert "mitigated posture" not in markdown.lower()
 
 
-def test_json_pydantic_serialization_round_trip_and_runtime_version() -> None:
+def test_markdown_incomplete_assessment_is_explicitly_ungraded() -> None:
+    findings, target, score = run_scored(complete_responses())
+    target.authorized = True
+    result = ScanResult(
+        scan_id="incomplete",
+        target=target,
+        score=score,
+        findings=findings,
+    )
+    markdown = render_markdown(result)
+    assert "**Score:** N/A (assessment incomplete)" in markdown
+    assert "Complete assessment evidence" in markdown
+    assert "INFO / UNDETERMINED" in markdown
+    assert "100/100" not in markdown
+
+
+def test_json_round_trip_schema_and_completeness_truth() -> None:
     result = ScanResult(
         scan_id="roundtrip",
-        target=Target(url="https://forge.example", forge="gitea"),
-        score=Score(value=100, grade="A"),
+        target=Target(url="https://forge.example"),
+        score=Score(
+            value=None,
+            grade="N/A",
+            assessed=False,
+            incomplete_checks=["FG-CVE-27771"],
+        ),
     )
     restored = ScanResult.model_validate_json(result.model_dump_json())
-    assert restored.tool["name"] == "ForgeGuard"
+    assert restored.tool["schema"] == "forgeguard.scan-result.v0.3"
     assert restored.tool["version"] == __version__
-    assert restored.scan_id == "roundtrip"
+    assert restored.score.value is None
+    assert restored.score.assessed is False
 
 
 def test_distribution_import_runtime_json_and_user_agent_versions_match() -> None:
     installed = distribution_version("forgeguard")
     result = ScanResult(
         scan_id="version-truth",
-        target=Target(url="https://forge.example", forge="gitea"),
+        target=Target(url="https://forge.example"),
         score=Score(value=100, grade="A"),
     )
     assert installed == __version__ == result.tool["version"] == "0.2.2"
     assert f"/{installed} " in _UA
 
 
-def test_cli_requires_authorized() -> None:
+def test_cli_requires_authorized_and_documents_product_confirmation() -> None:
     runner = CliRunner()
     denied = runner.invoke(app, ["scan", "--url", "https://forge.example"])
     assert denied.exit_code == 2
@@ -399,13 +696,30 @@ def test_cli_requires_authorized() -> None:
     help_result = runner.invoke(
         app,
         ["scan", "--help"],
-        env={"COLUMNS": "200", "NO_COLOR": "1", "TERM": "dumb"},
+        env={"COLUMNS": "220", "NO_COLOR": "1", "TERM": "dumb"},
     )
     assert help_result.exit_code == 0
     help_text = _ANSI.sub("", help_result.output)
     assert "--authorized" in help_text
+    assert "--product" in help_text
+    assert "unconfirmed, ungraded" in help_text
     assert "FORGEGUARD_TOKEN" in help_text
-    assert "--emit-issue" not in help_text
+
+
+def test_cli_refuses_unsupported_product_declaration() -> None:
+    result = CliRunner().invoke(
+        app,
+        [
+            "scan",
+            "--url",
+            "https://forge.example",
+            "--authorized",
+            "--product",
+            "forgejo",
+        ],
+    )
+    assert result.exit_code == 2
+    assert "accepts only '--product gitea'" in _ANSI.sub("", result.output)
 
 
 @pytest.mark.parametrize(
@@ -423,9 +737,22 @@ def test_unsafe_target_urls_are_rejected(url: str) -> None:
         normalize_target_url(url)
 
 
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://git.example.com/a/../b",
+        "https://git.example.com/./gitea",
+        "https://git.example.com/a/%2e%2e/b",
+    ],
+)
+def test_target_url_rejects_dot_segments(url: str) -> None:
+    with pytest.raises(InvalidTargetURL, match="dot segments"):
+        normalize_target_url(url)
+
+
 def test_target_url_preserves_legal_gitea_subpath() -> None:
-    assert normalize_target_url("HTTPS://git.example.com/gitea/") == (
-        "https://git.example.com/gitea"
+    assert normalize_target_url("HTTPS://git.example.com/team/gitea/") == (
+        "https://git.example.com/team/gitea"
     )
 
 
@@ -438,7 +765,10 @@ def test_target_url_preserves_legal_gitea_subpath() -> None:
     ],
 )
 def test_cli_rejects_sensitive_url_without_echoing_it(url: str, secret: str) -> None:
-    result = CliRunner().invoke(app, ["scan", "--url", url, "--authorized"])
+    result = CliRunner().invoke(
+        app,
+        ["scan", "--url", url, "--authorized", "--product", "gitea"],
+    )
     assert result.exit_code == 2
     assert "REFUSED" in _ANSI.sub("", result.output)
     assert secret not in result.output
@@ -448,7 +778,14 @@ def test_cli_rejects_sensitive_url_without_echoing_it(url: str, secret: str) -> 
 def _synthetic_result() -> ScanResult:
     return ScanResult(
         scan_id="token-opsec",
-        target=Target(url="https://forge.example", forge="gitea", version="1.26.2"),
+        target=Target(
+            url="https://forge.example",
+            forge="gitea",
+            version="1.26.2",
+            authorized=True,
+            product_confirmed=True,
+            product_source="operator-declared",
+        ),
         score=Score(value=100, grade="A"),
         findings=[],
         summary={"pass": 0},
@@ -462,9 +799,14 @@ def test_command_line_token_is_absent_from_terminal_and_reports(
     observed: dict[str, str | None] = {}
 
     async def fake_run(
-        url: str, token: str | None, known_version: str | None, scan_id: str
+        url: str,
+        token: str | None,
+        known_version: str | None,
+        product: str | None,
+        scan_id: str,
     ) -> ScanResult:
         observed["token"] = token
+        observed["product"] = product
         return _synthetic_result()
 
     monkeypatch.setattr(cli_module, "_run", fake_run)
@@ -476,6 +818,8 @@ def test_command_line_token_is_absent_from_terminal_and_reports(
             "--url",
             "https://forge.example",
             "--authorized",
+            "--product",
+            "gitea",
             "--token",
             sentinel,
             "--format",
@@ -485,7 +829,7 @@ def test_command_line_token_is_absent_from_terminal_and_reports(
         ],
     )
     assert result.exit_code == 0
-    assert observed["token"] == sentinel
+    assert observed == {"token": sentinel, "product": "gitea"}
     assert "SECURITY WARNING" in _ANSI.sub("", result.output)
     assert sentinel not in result.output
     assert sentinel not in output_path.read_text()
@@ -499,21 +843,40 @@ def test_environment_token_is_preferred_and_not_echoed(
     observed: dict[str, str | None] = {}
 
     async def fake_run(
-        url: str, token: str | None, known_version: str | None, scan_id: str
+        url: str,
+        token: str | None,
+        known_version: str | None,
+        product: str | None,
+        scan_id: str,
     ) -> ScanResult:
         observed["token"] = token
+        observed["product"] = product
         return _synthetic_result()
 
     monkeypatch.setattr(cli_module, "_run", fake_run)
     result = CliRunner().invoke(
         app,
-        ["scan", "--url", "https://forge.example", "--authorized", "--format", "json"],
+        [
+            "scan",
+            "--url",
+            "https://forge.example",
+            "--authorized",
+            "--product",
+            "gitea",
+            "--format",
+            "json",
+        ],
         env={"FORGEGUARD_TOKEN": sentinel},
     )
     assert result.exit_code == 0
-    assert observed["token"] == sentinel
+    assert observed == {"token": sentinel, "product": "gitea"}
     assert "SECURITY WARNING" not in _ANSI.sub("", result.output)
     assert sentinel not in result.output
+
+
+def test_target_authorization_metadata_defaults_false() -> None:
+    assert Target(url="https://forge.example").authorized is False
+    assert _synthetic_result().target.authorized is True
 
 
 def test_client_refuses_non_allowlisted_path() -> None:
@@ -532,8 +895,11 @@ def test_safe_get_paths_alias_matches_and_contains_no_artifact_path() -> None:
 
 def test_run_all_checks_is_single_target_and_safe_allowlist_only() -> None:
     client = RecordingClient(complete_responses())
-    findings, target = run(run_all_checks(client, known_version="1.26.1"))
+    findings, target = run(
+        run_all_checks(client, known_version="1.26.1", product="gitea")
+    )
     assert target.url == "https://forge.example"
+    assert target.product_confirmed is True
     assert {finding.id for finding in findings} >= {
         "FG-VER",
         "FG-CVE-27771",
@@ -594,6 +960,36 @@ def test_forgejo_is_not_claimed_in_implemented_product_copy() -> None:
         assert "gitea and forgejo" not in path.read_text().lower()
 
 
+def test_authoritative_cwe_has_no_stale_value_in_public_text() -> None:
+    root = Path(__file__).parents[1]
+    text_paths = [
+        root / "README.md",
+        root / "CHANGELOG.md",
+        *sorted((root / "docs").glob("*.md")),
+        *sorted((root / "examples").glob("*")),
+        *sorted((root / "forgeguard").glob("*.py")),
+    ]
+    for path in text_paths:
+        text = path.read_text()
+        assert "CWE-285" not in text
+
+
+def test_ci_contains_required_semantic_integrity_gates() -> None:
+    workflow = (
+        Path(__file__).parents[1] / ".github" / "workflows" / "ci.yml"
+    ).read_text()
+    for command in [
+        "ruff check .",
+        "ruff format --check .",
+        "pytest",
+        "pip check",
+        "python -m build",
+        "twine check dist/*",
+    ]:
+        assert command in workflow
+    assert 'python-version: ["3.11", "3.12"]' in workflow
+
+
 @pytest.mark.parametrize(
     "label",
     ["affected_pre_update", "patched_post_update"],
@@ -608,8 +1004,17 @@ def test_synthetic_examples_match_current_schema_scoring_and_renderer(
     expected_markdown = (root / f"scan_report_{label}.md").read_text()
     rescored = score_findings(result.findings)
     assert result.tool["version"] == "0.2.2"
+    assert result.tool["schema"] == "forgeguard.scan-result.v0.3"
     assert result.target.url == "https://git.example.com"
+    assert result.target.product_confirmed is True
     assert result.score == rescored
     assert render_markdown(result).rstrip("\n") == expected_markdown.rstrip("\n")
     assert "active exposure" not in expected_markdown.lower()
     assert "mitigated posture" not in expected_markdown.lower()
+
+    if label == "affected_pre_update":
+        assert result.score.value == 80
+        assert result.score.grade == "B"
+    else:
+        assert result.score.value == 100
+        assert result.score.grade == "A"

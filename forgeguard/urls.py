@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import unquote, urlsplit, urlunsplit
 
 
 class InvalidTargetURL(ValueError):
@@ -8,7 +8,7 @@ class InvalidTargetURL(ValueError):
 
 
 def normalize_target_url(value: str) -> str:
-    """Validate and normalize one HTTP(S) target while preserving a Gitea sub-path."""
+    """Validate and normalize one HTTP(S) target while preserving a legal sub-path."""
     if not value or any(character.isspace() for character in value):
         raise InvalidTargetURL(
             "target URL must be a non-empty HTTP(S) URL without whitespace"
@@ -33,5 +33,8 @@ def normalize_target_url(value: str) -> str:
         raise InvalidTargetURL("target URL must not contain a query")
     if parsed.fragment or "#" in value:
         raise InvalidTargetURL("target URL must not contain a fragment")
+    decoded_segments = unquote(parsed.path).split("/")
+    if any(segment in {".", ".."} for segment in decoded_segments):
+        raise InvalidTargetURL("target URL path must not contain dot segments")
     path = parsed.path.rstrip("/")
     return urlunsplit((parsed.scheme.lower(), parsed.netloc, path, "", ""))

@@ -6,9 +6,13 @@ The format is based on Keep a Changelog, and this project adheres to semantic ve
 
 ## [Unreleased]
 
-- No unreleased changes.
+- Link the official ForgeGuard product page and authorized commercial-intake path.
+- Link private vulnerability reporting directly from the security policy.
+- Add complete project metadata links for documentation, issues, and the changelog.
+- Refresh the pinned GitHub Actions and build-backend maintenance dependencies.
+- Enable GitHub private vulnerability reporting and CodeQL default setup, and strengthen `main` branch protection without imposing a single-maintainer review deadlock.
 
-## [0.2.2] - 2026-08-13
+## [0.2.2] - 2026-08-20
 
 - Narrow the implemented product scope to self-hosted Gitea and require explicit trusted `--product gitea` confirmation before Gitea-specific advisory conclusions.
 - Fail safe when a Forgejo marker conflicts with a Gitea declaration.

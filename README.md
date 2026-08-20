@@ -9,6 +9,8 @@ Read-only security posture self-check for one explicitly authorized self-hosted 
 
 ForgeGuard gives Gitea operators repeatable evidence about version posture, the fixed-version baseline for CVE-2026-27771, anonymous OCI registry-root behavior, and anonymous responses on a small allowlist of repository/API paths. It uses no exploit probes, performs no internet-wide discovery, and does not request private package contents, manifests, or blobs.
 
+Official product page: [gexiro.com/forgeguard](https://gexiro.com/forgeguard)
+
 ## Supported scope in 0.2.2
 
 ForgeGuard 0.2.2 supports self-hosted Gitea. Gitea-specific conclusions require the trusted operator declaration `--product gitea`; a compatible version endpoint or `--known-version` alone does not confirm product identity.
@@ -165,6 +167,16 @@ The score summarizes only ForgeGuard's limited checks. It is not a complete hard
 Run ForgeGuard only on a Gitea instance you own or are explicitly authorized to assess. ForgeGuard uses read-only HTTP GET requests to an exact allowlist and stops at version, root-response, and status-code evidence.
 
 See [Authorized Use](AUTHORIZED_USE.md), [Security Policy](SECURITY.md), and [Security Model](docs/SECURITY_MODEL.md).
+
+## Commercial hardening
+
+Gexiro offers a paid Hardening Report for authorized Gitea operators who want human review of bounded evidence, explicit limitations, prioritized findings, and a practical remediation plan.
+
+A Remediation Sprint is a separate engagement: scope and acceptance criteria are frozen first, changes begin only after explicit approval, and the result includes before/after verification. Scope expansion, third-party targets, and remote changes require separate written authorization.
+
+ForgeGuard remains usable as a free OSS CLI without a hosted account or control plane. Heavy SaaS and recurring monitoring are not offered at this stage.
+
+[Request a scoped ForgeGuard Hardening Report](mailto:contact@gexiro.com?subject=ForgeGuard%20Hardening%20Report)
 
 ## Roadmap
 

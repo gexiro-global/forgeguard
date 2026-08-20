@@ -29,8 +29,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/gexiro-global/forgeguard"
+Homepage = "https://gexiro.com/forgeguard"
 Repository = "https://github.com/gexiro-global/forgeguard"
+Documentation = "https://github.com/gexiro-global/forgeguard/tree/main/docs"
+Issues = "https://github.com/gexiro-global/forgeguard/issues"
+Changelog = "https://github.com/gexiro-global/forgeguard/blob/main/CHANGELOG.md"
 
 [project.scripts]
 forgeguard = "forgeguard.cli:main"

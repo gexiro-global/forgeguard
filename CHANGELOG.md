@@ -21,6 +21,10 @@ The format is based on Keep a Changelog, and this project adheres to semantic ve
 - Prefer `FORGEGUARD_TOKEN`, warn on legacy `--token`, and retain token non-disclosure regression tests.
 - Expand CI with Ruff, format, dependency, build, Twine, exact-wheel install, and built-wheel CLI gates.
 - Restore the Apache-2.0 SPDX license expression and mechanically regenerate synthetic examples under schema `forgeguard.scan-result.v0.3`.
+- Give `FG-SIGNIN` and `FG-ANON` disjoint browser/API evidence ownership so no request or score penalty is duplicated.
+- Treat only an explicit non-empty remote version string as anonymous disclosure evidence.
+- Harden Markdown rendering, dual-output collision refusal, and bounded iterative URL decoding against report and path ambiguity.
+- Make the release workflow fail closed on the Python 3.11/3.12 quality matrix and the exact wheel that would be published.
 
 ## [0.2.1] - 2026-08-10
 

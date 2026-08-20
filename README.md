@@ -22,8 +22,9 @@ One invocation accepts one target URL and refuses to run without the operator's 
 - Informational product/version evidence.
 - CVE-2026-27771 affected/fixed/unknown version posture for operator-confirmed Gitea.
 - Anonymous OCI `/v2/` registry-root response posture as an independent observation.
-- Explicit HTTP 401/403 access-control responses on checked repository/API paths.
-- Anonymous HTTP 200 responses on three allowlisted repository/API paths.
+- Repository browsing posture on the allowlisted `/explore/repos` path.
+- Anonymous HTTP responses on the two allowlisted repository and user-search API paths.
+- Non-overlapping score ownership between the browsing and API observations.
 - Markdown and JSON evidence with deterministic scoring and explicit completeness.
 
 ## Evidence and completeness semantics
@@ -93,9 +94,12 @@ forgeguard scan \
   --out ./reports/scan_report.md
 ```
 
+`--out` names the Markdown artifact. JSON replaces that suffix with `.json`;
+ForgeGuard refuses a dual-format invocation if both names resolve to the same file.
+
 Omitting `--product` keeps the product unknown and prevents a Gitea-specific A–F grade, even if a generic version value is returned.
 
-Target URLs must use HTTP or HTTPS, include a hostname, and contain no embedded credentials, query, fragment, or `.`/`..` path segment. Legal subpaths such as `/team/gitea` are preserved.
+Target URLs must use HTTP or HTTPS, include a hostname, and contain no embedded credentials, query, fragment, decoded `.`/`..` segment, or backslash separator at any of eight decoded layers. Excessive nested encoding is refused. Legal subpaths such as `/team/gitea` are preserved.
 
 ## Token handling
 
@@ -149,6 +153,8 @@ Full mechanically generated artifacts:
 ## Scoring
 
 Scoring is deterministic and does not use AI. `FG-VER` is informational. `FG-CVE-27771` is the only finding that penalizes the CVE affected-version condition, so the same version fact is not counted twice.
+
+Likewise, `FG-SIGNIN` owns only the browser path and `FG-ANON` owns only the API paths, so one HTTP observation cannot be charged twice.
 
 FAIL findings subtract the full severity weight: critical 40, high 20, medium 10, low 4. WARN findings subtract `int(weight * 0.35)`. A–F grades are emitted only when every core check is assessed. Otherwise the assessment is N/A, not zero and not A.
 

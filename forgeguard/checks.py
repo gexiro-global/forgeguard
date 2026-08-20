@@ -52,11 +52,12 @@ async def _detect(
     response = await client.get("/api/v1/version", auth=client.has_token)
     if response is not None and response.status_code == 200:
         try:
-            observed = response.json().get("version", target.version)
-        except (AttributeError, TypeError, ValueError):
-            observed = None
-        if isinstance(observed, str):
-            target.version = observed
+            payload = response.json()
+        except (TypeError, ValueError):
+            payload = None
+        observed = payload.get("version") if isinstance(payload, dict) else None
+        if isinstance(observed, str) and observed.strip():
+            target.version = observed.strip()
             if not client.has_token:
                 anon_disclosed = True
     if _looks_like_forgejo(target.version):
@@ -274,50 +275,49 @@ async def check_cve_27771(target: Target) -> list[Finding]:
 
 
 async def check_signin(client: ForgeClient, target: Target) -> list[Finding]:
-    api_response = await client.get("/api/v1/repos/search?limit=1")
-    anon_api = api_response.status_code if api_response is not None else None
     browse_response = await client.get("/explore/repos")
     anon_browse = browse_response.status_code if browse_response is not None else None
-    evidence = {"anon_api": anon_api, "anon_explore": anon_browse}
-    if anon_api == 200 or anon_browse == 200:
+    evidence = {"anon_explore": anon_browse}
+    if anon_browse == 200:
         return [
             Finding(
                 id="FG-SIGNIN",
-                title="Observed anonymous repository/API surface",
+                title="Observed anonymous repository browsing surface",
                 severity=Severity.medium,
                 status=Status.WARN,
                 evidence=evidence,
                 rationale=(
-                    "At least one checked repository/API path returned HTTP 200 "
+                    "The checked repository browsing path returned HTTP 200 "
                     "to an anonymous request."
                 ),
-                remediation="Review whether anonymous access on the observed path is intended.",
+                remediation="Review whether anonymous repository browsing is intended.",
             )
         ]
-    if anon_api in _ACCESS_CONTROL_STATUSES and anon_browse in _ACCESS_CONTROL_STATUSES:
+    if anon_browse in _ACCESS_CONTROL_STATUSES:
         return [
             Finding(
                 id="FG-SIGNIN",
-                title="Explicit access-control responses observed on checked paths",
+                title="Explicit access-control response observed on browsing path",
                 severity=Severity.info,
                 status=Status.PASS,
                 evidence=evidence,
                 rationale=(
-                    "Both checked paths returned HTTP 401 or 403 to anonymous requests; "
-                    "no specific REQUIRE_SIGNIN_VIEW configuration value was inferred."
+                    "The checked repository browsing path returned HTTP 401 or 403 to an "
+                    "anonymous request; no specific REQUIRE_SIGNIN_VIEW configuration "
+                    "value was inferred."
                 ),
             )
         ]
     return [
         Finding(
             id="FG-SIGNIN",
-            title="Sign-in posture undetermined on checked paths",
+            title="Sign-in posture undetermined on browsing path",
             severity=Severity.medium,
             status=Status.INFO,
             evidence=evidence,
             rationale=(
-                "The observed responses did not prove either anonymous readability or "
-                "explicit access control on all checked paths."
+                "The observed response did not prove either anonymous readability or "
+                "explicit access control on the checked repository browsing path."
             ),
             evidence_state=EvidenceState.INDETERMINATE,
         )
@@ -403,7 +403,6 @@ async def check_registry(client: ForgeClient, target: Target) -> list[Finding]:
 async def check_anon(client: ForgeClient, target: Target) -> list[Finding]:
     paths = [
         "/api/v1/repos/search?limit=1",
-        "/explore/repos",
         "/api/v1/users/search?limit=1",
     ]
     statuses: dict[str, int | None] = {}
@@ -417,24 +416,24 @@ async def check_anon(client: ForgeClient, target: Target) -> list[Finding]:
         return [
             Finding(
                 id="FG-ANON",
-                title="Observed anonymously readable checked endpoints",
+                title="Observed anonymously readable checked API endpoints",
                 severity=Severity.medium,
                 status=Status.WARN,
                 evidence={"open": open_surfaces, "checked": statuses},
-                rationale="The listed checked endpoints returned HTTP 200 to anonymous requests.",
-                remediation="Review whether anonymous access on each observed path is intended.",
+                rationale="The listed checked API endpoints returned HTTP 200 anonymously.",
+                remediation="Review whether anonymous API access on each path is intended.",
             )
         ]
     if all(status in _ACCESS_CONTROL_STATUSES for status in statuses.values()):
         return [
             Finding(
                 id="FG-ANON",
-                title="Explicit access-control responses observed on anonymous checks",
+                title="Explicit access-control responses observed on API checks",
                 severity=Severity.info,
                 status=Status.PASS,
                 evidence={"checked": statuses},
                 rationale=(
-                    "Every checked endpoint returned HTTP 401 or 403 to the anonymous "
+                    "Every checked API endpoint returned HTTP 401 or 403 to the anonymous "
                     "request. No global sign-in configuration was inferred."
                 ),
             )
@@ -442,12 +441,12 @@ async def check_anon(client: ForgeClient, target: Target) -> list[Finding]:
     return [
         Finding(
             id="FG-ANON",
-            title="Anonymous surface posture undetermined",
+            title="Anonymous API surface posture undetermined",
             severity=Severity.medium,
             status=Status.INFO,
             evidence={"checked": statuses},
             rationale=(
-                "No checked endpoint returned HTTP 200, but one or more responses were "
+                "No checked API endpoint returned HTTP 200, but one or more responses were "
                 "not explicit HTTP 401/403 access-control evidence."
             ),
             evidence_state=EvidenceState.INDETERMINATE,

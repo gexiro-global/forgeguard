@@ -70,14 +70,13 @@
     },
     {
       "id": "FG-SIGNIN",
-      "title": "Explicit access-control responses observed on checked paths",
+      "title": "Explicit access-control response observed on browsing path",
       "severity": "info",
       "status": "pass",
       "evidence": {
-        "anon_api": 403,
         "anon_explore": 403
       },
-      "rationale": "Both checked paths returned HTTP 401 or 403 to anonymous requests; no specific REQUIRE_SIGNIN_VIEW configuration value was inferred.",
+      "rationale": "The checked repository browsing path returned HTTP 401 or 403 to an anonymous request; no specific REQUIRE_SIGNIN_VIEW configuration value was inferred.",
       "remediation": "",
       "references": [],
       "cwe": null,
@@ -99,17 +98,16 @@
     },
     {
       "id": "FG-ANON",
-      "title": "Explicit access-control responses observed on anonymous checks",
+      "title": "Explicit access-control responses observed on API checks",
       "severity": "info",
       "status": "pass",
       "evidence": {
         "checked": {
           "/api/v1/repos/search?limit=1": 403,
-          "/explore/repos": 403,
           "/api/v1/users/search?limit=1": 403
         }
       },
-      "rationale": "Every checked endpoint returned HTTP 401 or 403 to the anonymous request. No global sign-in configuration was inferred.",
+      "rationale": "Every checked API endpoint returned HTTP 401 or 403 to the anonymous request. No global sign-in configuration was inferred.",
       "remediation": "",
       "references": [],
       "cwe": null,

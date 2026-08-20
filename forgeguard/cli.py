@@ -110,7 +110,12 @@ def scan(
     ] = "fg_local",
     out: Annotated[
         Path | None,
-        typer.Option("--out", help="Write the Markdown report to this path"),
+        typer.Option(
+            "--out",
+            help=(
+                "Write report output to this path; JSON output replaces its suffix with .json"
+            ),
+        ),
     ] = None,
     fmt: Annotated[str, typer.Option("--format", help="Comma list: md,json")] = "md",
 ) -> None:
@@ -132,6 +137,26 @@ def scan(
             err=True,
         )
         raise typer.Exit(2)
+    formats = [item.strip() for item in fmt.split(",")]
+    output_path = Path(out) if out is not None else None
+    markdown_path = output_path if output_path is not None and "md" in formats else None
+    json_path = (
+        output_path.with_suffix(".json")
+        if output_path is not None and "json" in formats
+        else None
+    )
+    if (
+        markdown_path is not None
+        and json_path is not None
+        and str(markdown_path.resolve()).casefold()
+        == str(json_path.resolve()).casefold()
+    ):
+        typer.secho(
+            "REFUSED: Markdown and JSON output paths resolve to the same file.",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(2)
     token_source = ctx.get_parameter_source("token")
     if token and token_source is not None and token_source.name == "COMMANDLINE":
         typer.secho(
@@ -147,18 +172,17 @@ def scan(
     except InvalidTargetURL as exc:
         typer.secho(f"REFUSED: {exc}", fg=typer.colors.RED, err=True)
         raise typer.Exit(2) from exc
-    formats = [item.strip() for item in fmt.split(",")]
     if "json" in formats:
         json_output = result.model_dump_json(indent=2)
-        if out:
-            Path(str(out)).with_suffix(".json").write_text(json_output)
+        if json_path is not None:
+            json_path.write_text(json_output)
         else:
             typer.echo(json_output)
     if "md" in formats:
         markdown_output = render_markdown(result)
-        if out:
-            Path(out).write_text(markdown_output)
-            typer.secho(f"report -> {out}", fg=typer.colors.GREEN)
+        if markdown_path is not None:
+            markdown_path.write_text(markdown_output)
+            typer.secho(f"report -> {markdown_path}", fg=typer.colors.GREEN)
         else:
             typer.echo(markdown_output)
 
@@ -170,9 +194,9 @@ def list_checks() -> None:
     for check_id, description in [
         ("FG-VER", "Informational observed product/version evidence"),
         ("FG-CVE-27771", "Confirmed-Gitea CVE-2026-27771 version posture"),
-        ("FG-SIGNIN", "Observed access-control responses on checked paths"),
+        ("FG-SIGNIN", "Observed access-control response on repository browsing"),
         ("FG-REG", "Anonymous OCI registry-root response posture"),
-        ("FG-ANON", "Observed anonymous responses on checked paths"),
+        ("FG-ANON", "Observed anonymous responses on checked API paths"),
     ]:
         typer.echo(f"{check_id:14} {description}")
 

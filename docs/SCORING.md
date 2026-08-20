@@ -65,7 +65,7 @@ These thresholds apply only to a complete assessment.
 
 - `patch`: CVE-2026-27771 version/advisory posture for confirmed Gitea.
 - `registry`: independent OCI registry-root response posture.
-- `auth`: sign-in and anonymous responses on checked paths.
+- `auth`: repository-browser posture from `FG-SIGNIN` and API posture from `FG-ANON`, using disjoint endpoint ownership.
 
 No empty future domain is displayed as 100.
 
@@ -78,6 +78,10 @@ For confirmed Gitea 1.26.1:
 - with every other core check assessed and passing, the result is 80/B.
 
 The same product/version root fact is not penalized twice.
+
+Authentication findings follow the same rule. `FG-SIGNIN` owns only
+`/explore/repos`; `FG-ANON` owns only the repository-search and user-search API
+paths. One endpoint/status observation therefore contributes at most one penalty.
 
 ## Limit
 

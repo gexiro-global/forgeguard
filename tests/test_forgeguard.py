@@ -57,6 +57,11 @@ class FakeResponse:
         return self._payload
 
 
+class BrokenJSONResponse(FakeResponse):
+    def json(self) -> object:
+        raise ValueError("synthetic malformed JSON")
+
+
 class RecordingClient:
     def __init__(
         self, responses: dict[str, FakeResponse], has_token: bool = False
@@ -270,6 +275,53 @@ def test_malformed_version_response_keeps_product_unknown(payload: object) -> No
     assert score.grade == "N/A"
 
 
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {},
+        {"unexpected": "value"},
+        {"version": None},
+        {"version": 1262},
+        {"version": ""},
+        {"version": "   "},
+        [],
+    ],
+)
+def test_empty_or_invalid_remote_version_does_not_claim_disclosure(
+    payload: object,
+) -> None:
+    responses = complete_responses(version_status=200)
+    responses["/api/v1/version"] = FakeResponse(200, payload)
+    findings, target, score = run_scored(
+        responses, product="gitea", known_version="1.26.2"
+    )
+    assert target.version == "1.26.2"
+    assert all(finding.id != "FG-VER-DISCLOSE" for finding in findings)
+    assert score.value == 100
+
+
+def test_malformed_version_json_does_not_claim_disclosure() -> None:
+    responses = complete_responses(version_status=200)
+    responses["/api/v1/version"] = BrokenJSONResponse(200)
+    findings, target, score = run_scored(
+        responses, product="gitea", known_version="1.26.2"
+    )
+    assert target.version == "1.26.2"
+    assert all(finding.id != "FG-VER-DISCLOSE" for finding in findings)
+    assert score.value == 100
+
+
+def test_nonempty_anonymous_remote_version_is_disclosure() -> None:
+    findings, target, score = run_scored(
+        complete_responses(version_status=200, version=" 1.26.2 "),
+        product="gitea",
+        known_version="1.26.1",
+    )
+    assert target.version == "1.26.2"
+    assert by_id(findings, "FG-VER-DISCLOSE").status == Status.WARN
+    assert score.value == 99
+
+
 def test_explicit_product_confirmation_enables_gitea_cve_pass() -> None:
     findings, target, score = run_scored(
         complete_responses(version_status=200, version="1.26.2"),
@@ -380,19 +432,13 @@ def test_registry_no_response_is_indeterminate() -> None:
     assert finding.evidence_state == EvidenceState.INDETERMINATE
 
 
-@pytest.mark.parametrize("api_status", [401, 403])
 @pytest.mark.parametrize("browse_status", [401, 403])
-def test_signin_pass_requires_explicit_access_control_on_both_paths(
-    api_status: int, browse_status: int
+def test_signin_pass_requires_explicit_browsing_access_control(
+    browse_status: int,
 ) -> None:
     finding = run(
         check_signin(
-            RecordingClient(
-                {
-                    "/api/v1/repos/search?limit=1": FakeResponse(api_status),
-                    "/explore/repos": FakeResponse(browse_status),
-                }
-            ),
+            RecordingClient({"/explore/repos": FakeResponse(browse_status)}),
             Target(url="https://forge.example"),
         )
     )[0]
@@ -404,12 +450,7 @@ def test_signin_pass_requires_explicit_access_control_on_both_paths(
 def test_signin_200_is_observed_warning() -> None:
     finding = run(
         check_signin(
-            RecordingClient(
-                {
-                    "/api/v1/repos/search?limit=1": FakeResponse(200),
-                    "/explore/repos": FakeResponse(500),
-                }
-            ),
+            RecordingClient({"/explore/repos": FakeResponse(200)}),
             Target(url="https://forge.example"),
         )
     )[0]
@@ -421,12 +462,7 @@ def test_signin_200_is_observed_warning() -> None:
 def test_signin_ambiguous_or_error_status_is_indeterminate(status_code: int) -> None:
     finding = run(
         check_signin(
-            RecordingClient(
-                {
-                    "/api/v1/repos/search?limit=1": FakeResponse(status_code),
-                    "/explore/repos": FakeResponse(status_code),
-                }
-            ),
+            RecordingClient({"/explore/repos": FakeResponse(status_code)}),
             Target(url="https://forge.example"),
         )
     )[0]
@@ -445,7 +481,6 @@ def test_signin_no_response_is_indeterminate() -> None:
 def test_anonymous_200_warns_and_all_401_403_passes() -> None:
     paths = [
         "/api/v1/repos/search?limit=1",
-        "/explore/repos",
         "/api/v1/users/search?limit=1",
     ]
     open_client = RecordingClient({path: FakeResponse(403) for path in paths})
@@ -458,7 +493,6 @@ def test_anonymous_200_warns_and_all_401_403_passes() -> None:
         {
             paths[0]: FakeResponse(401),
             paths[1]: FakeResponse(403),
-            paths[2]: FakeResponse(401),
         }
     )
     controlled = run(check_anon(controlled_client, Target(url=controlled_client.base)))[
@@ -472,7 +506,6 @@ def test_anonymous_200_warns_and_all_401_403_passes() -> None:
 def test_anonymous_ambiguous_or_error_status_is_indeterminate(status_code: int) -> None:
     paths = [
         "/api/v1/repos/search?limit=1",
-        "/explore/repos",
         "/api/v1/users/search?limit=1",
     ]
     client = RecordingClient({path: FakeResponse(status_code) for path in paths})
@@ -487,6 +520,49 @@ def test_anonymous_missing_response_is_indeterminate() -> None:
     ]
     assert finding.status == Status.INFO
     assert finding.evidence_state == EvidenceState.INDETERMINATE
+
+
+@pytest.mark.parametrize(
+    (
+        "api_status",
+        "browse_status",
+        "signin_status",
+        "anon_status",
+        "expected_value",
+    ),
+    [
+        (200, 403, Status.PASS, Status.WARN, 97),
+        (403, 200, Status.WARN, Status.PASS, 97),
+        (200, 200, Status.WARN, Status.WARN, 94),
+    ],
+)
+def test_signin_and_anonymous_api_have_disjoint_penalty_ownership(
+    api_status: int,
+    browse_status: int,
+    signin_status: Status,
+    anon_status: Status,
+    expected_value: int,
+) -> None:
+    findings, _target, score = run_scored(
+        complete_responses(api=api_status, explore=browse_status, users=403),
+        product="gitea",
+        known_version="1.26.2",
+    )
+    assert by_id(findings, "FG-SIGNIN").status == signin_status
+    assert by_id(findings, "FG-ANON").status == anon_status
+    assert score.value == expected_value
+
+
+def test_single_api_warning_preserves_affected_boundary_grade() -> None:
+    findings, _target, score = run_scored(
+        complete_responses(api=200, explore=403, users=403),
+        product="gitea",
+        known_version="1.26.1",
+    )
+    assert by_id(findings, "FG-SIGNIN").status == Status.PASS
+    assert by_id(findings, "FG-ANON").status == Status.WARN
+    assert score.value == 77
+    assert score.grade == "B"
 
 
 def test_scoring_single_cve_penalty_closes_double_count() -> None:
@@ -658,6 +734,43 @@ def test_markdown_incomplete_assessment_is_explicitly_ungraded() -> None:
     assert "100/100" not in markdown
 
 
+def test_markdown_neutralizes_untrusted_structure_html_and_backticks() -> None:
+    malicious = "1.26.2\n\n# M3C_REMOTE_HEADING\n\n<script>m3c()</script>\n`break`"
+    finding = Finding(
+        id="FG-REMOTE\n# FAKE-ID",
+        title="Remote <title>",
+        severity=Severity.info,
+        status=Status.INFO,
+        evidence={"version": malicious},
+        rationale=f"Observed {malicious}",
+        remediation="Review `quoted` <input>.",
+        references=["https://example.invalid/<ref>"],
+    )
+    result = ScanResult(
+        scan_id="scan\n# FAKE-SCAN",
+        target=Target(
+            url="https://forge.example/\n# FAKE-URL",
+            forge="gitea",
+            version=malicious,
+            authorized=True,
+            product_confirmed=True,
+            product_source="operator\n# FAKE-SOURCE",
+        ),
+        score=Score(value=100, grade="A"),
+        findings=[finding],
+        summary={"info": 1},
+    )
+    markdown = render_markdown(result)
+    assert "\n# M3C_REMOTE_HEADING" not in markdown
+    assert "<script>m3c()</script>" not in markdown
+    assert r"\n\n# M3C\_REMOTE\_HEADING" in markdown
+    assert "&lt;script&gt;m3c()&lt;/script&gt;" in markdown
+    assert r"\`break\`" in markdown
+    json_output = result.model_dump_json()
+    assert r"\n\n# M3C_REMOTE_HEADING" in json_output
+    assert "<script>m3c()</script>" in json_output
+
+
 def test_json_round_trip_schema_and_completeness_truth() -> None:
     result = ScanResult(
         scan_id="roundtrip",
@@ -743,6 +856,11 @@ def test_unsafe_target_urls_are_rejected(url: str) -> None:
         "https://git.example.com/a/../b",
         "https://git.example.com/./gitea",
         "https://git.example.com/a/%2e%2e/b",
+        "https://git.example.com/a/%252e%252e/b",
+        "https://git.example.com/a/%25252e%25252e/b",
+        "https://git.example.com/a/%252f%252e%252e%252fadmin",
+        "https://git.example.com/a/%255c%252e%252e%255cadmin",
+        r"https://git.example.com/a\..\b",
     ],
 )
 def test_target_url_rejects_dot_segments(url: str) -> None:
@@ -836,6 +954,69 @@ def test_command_line_token_is_absent_from_terminal_and_reports(
     assert sentinel not in output_path.with_suffix(".json").read_text()
 
 
+def test_dual_output_paths_are_distinct_or_refused_before_scan(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls = 0
+
+    async def fake_run(
+        url: str,
+        token: str | None,
+        known_version: str | None,
+        product: str | None,
+        scan_id: str,
+    ) -> ScanResult:
+        del url, token, known_version, product, scan_id
+        nonlocal calls
+        calls += 1
+        return _synthetic_result()
+
+    monkeypatch.setattr(cli_module, "_run", fake_run)
+    for filename in ("report.md", "report", "archive.scan.md"):
+        output_path = tmp_path / filename
+        result = CliRunner().invoke(
+            app,
+            [
+                "scan",
+                "--url",
+                "https://forge.example",
+                "--authorized",
+                "--product",
+                "gitea",
+                "--format",
+                "md,json",
+                "--out",
+                str(output_path),
+            ],
+        )
+        json_path = output_path.with_suffix(".json")
+        assert result.exit_code == 0
+        assert output_path.is_file()
+        assert json_path.is_file()
+        assert output_path != json_path
+
+    collision = tmp_path / "collision.json"
+    refused = CliRunner().invoke(
+        app,
+        [
+            "scan",
+            "--url",
+            "https://forge.example",
+            "--authorized",
+            "--product",
+            "gitea",
+            "--format",
+            "md,json",
+            "--out",
+            str(collision),
+        ],
+    )
+    assert refused.exit_code == 2
+    assert "resolve to the same file" in _ANSI.sub("", refused.output)
+    assert calls == 3
+    assert not collision.exists()
+
+
 def test_environment_token_is_preferred_and_not_echoed(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -910,6 +1091,7 @@ def test_run_all_checks_is_single_target_and_safe_allowlist_only() -> None:
     requested_paths = [path for path, _auth in client.requests]
     assert set(requested_paths).issubset(set(SAFE_GET_PATHS))
     assert all(path.startswith("/") for path in requested_paths)
+    assert len(requested_paths) == len(set(requested_paths))
     assert len({client.base}) == 1
 
 
@@ -988,6 +1170,29 @@ def test_ci_contains_required_semantic_integrity_gates() -> None:
     ]:
         assert command in workflow
     assert 'python-version: ["3.11", "3.12"]' in workflow
+
+
+def test_release_publish_is_fail_closed_on_full_quality_gate() -> None:
+    workflow = (
+        Path(__file__).parents[1] / ".github" / "workflows" / "release.yml"
+    ).read_text()
+    for command in [
+        "ruff check .",
+        "ruff format --check .",
+        "python -m compileall forgeguard",
+        "python -m pytest -q",
+        "python -m pip check",
+        "python -m build",
+        "python -m twine check dist/*",
+        "python -m venv .wheel-smoke",
+        ".wheel-smoke/bin/python -m pip install dist/*.whl",
+        ".wheel-smoke/bin/forgeguard scan --help",
+    ]:
+        assert command in workflow
+    assert 'python-version: ["3.11", "3.12"]' in workflow
+    assert "needs: quality-gate" in workflow
+    assert workflow.index("quality-gate:") < workflow.index("pypi-publish:")
+    assert workflow.count("id-token: write") == 1
 
 
 @pytest.mark.parametrize(

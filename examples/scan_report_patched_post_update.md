@@ -4,7 +4,7 @@ Read-only security posture and supply-chain visibility for self-hosted Gitea.
 
 **Product:** gitea 1.26.2  |  **Score:** 100/100 (A)
 **Product confirmation:** True (operator-declared)
-**Scope:** own-instance | authorized | read-only | single target | **Scan:** fg_example_patched_post_update
+**Scope:** own-instance | authorized | read-only | single target | **Scan:** fg\_example\_patched\_post\_update
 
 **Summary:** critical 0 | high 0 | medium 0 | low 0 | info 0 | pass 5
 
@@ -29,19 +29,19 @@ Read-only security posture and supply-chain visibility for self-hosted Gitea.
 - **State:** PASS - version observed
 - **Evidence state:** informational
 - **Rationale:** Gitea 1.26.2 was observed for an operator-confirmed Gitea target. CVE risk is scored separately by FG-CVE-27771.
-- **Evidence:** `{'product': 'gitea', 'product_confirmed': True, 'product_source': 'operator-declared', 'version': '1.26.2'}`
+- **Evidence:** {'product': 'gitea', 'product\_confirmed': True, 'product\_source': 'operator-declared', 'version': '1.26.2'}
 
-### FG-SIGNIN - Explicit access-control responses observed on checked paths
+### FG-SIGNIN - Explicit access-control response observed on browsing path
 - **State:** PASS
 - **Evidence state:** assessed
-- **Rationale:** Both checked paths returned HTTP 401 or 403 to anonymous requests; no specific REQUIRE_SIGNIN_VIEW configuration value was inferred.
-- **Evidence:** `{'anon_api': 403, 'anon_explore': 403}`
+- **Rationale:** The checked repository browsing path returned HTTP 401 or 403 to an anonymous request; no specific REQUIRE\_SIGNIN\_VIEW configuration value was inferred.
+- **Evidence:** {'anon\_explore': 403}
 
 ### FG-REG - Explicit registry-root access-control response observed
 - **State:** PASS
 - **Evidence state:** assessed
 - **Rationale:** The anonymous /v2/ request returned HTTP 403, an explicit authentication or access-denial response. No artifact access was attempted.
-- **Evidence:** `{'anon_v2_http': 403}`
+- **Evidence:** {'anon\_v2\_http': 403}
 
 ### FG-CVE-27771 - CVE-2026-27771 version posture
 - **State:** PASS - at or above first fixed release
@@ -49,13 +49,13 @@ Read-only security posture and supply-chain visibility for self-hosted Gitea.
 - **Rationale:** Installed Gitea 1.26.2 is at or above the first release containing the fix for CVE-2026-27771.
 - **Refs:** CVE-2026-27771, https://blog.gitea.com/release-of-1.26.2/
 - **CWE:** CWE-862
-- **Evidence:** `{'product': 'gitea', 'product_confirmed': True, 'product_source': 'operator-declared', 'version': '1.26.2', 'affected_through': '1.26.1', 'first_fixed_in': '1.26.2'}`
+- **Evidence:** {'product': 'gitea', 'product\_confirmed': True, 'product\_source': 'operator-declared', 'version': '1.26.2', 'affected\_through': '1.26.1', 'first\_fixed\_in': '1.26.2'}
 
-### FG-ANON - Explicit access-control responses observed on anonymous checks
+### FG-ANON - Explicit access-control responses observed on API checks
 - **State:** PASS
 - **Evidence state:** assessed
-- **Rationale:** Every checked endpoint returned HTTP 401 or 403 to the anonymous request. No global sign-in configuration was inferred.
-- **Evidence:** `{'checked': {'/api/v1/repos/search?limit=1': 403, '/explore/repos': 403, '/api/v1/users/search?limit=1': 403}}`
+- **Rationale:** Every checked API endpoint returned HTTP 401 or 403 to the anonymous request. No global sign-in configuration was inferred.
+- **Evidence:** {'checked': {'/api/v1/repos/search?limit=1': 403, '/api/v1/users/search?limit=1': 403}}
 
 ---
 ForgeGuard by Gexiro | own/authorized Gitea instances only | read-only

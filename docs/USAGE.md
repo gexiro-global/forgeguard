@@ -39,6 +39,9 @@ forgeguard scan \
   --out ./reports/scan_report.md
 ```
 
+This writes `scan_report.md` and `scan_report.json`. If both requested formats
+resolve to one path, ForgeGuard refuses before scanning or writing.
+
 A trusted inventory version can be supplied when the endpoint is hidden:
 
 ```bash
@@ -73,14 +76,16 @@ The backward-compatible `--token` option emits a security warning because comman
 - `--token`: legacy optional token input for the authenticated version read; prefer `FORGEGUARD_TOKEN`.
 - `--known-version`: version from trusted local inventory; does not establish product identity.
 - `--scan-id`: identifier embedded in output artifacts.
-- `--out`: output Markdown path; JSON uses the same path with `.json`.
+- `--out`: output Markdown path; JSON replaces its suffix with `.json`. A collision is refused.
 - `--format`: `md`, `json`, or `md,json`.
 
-Target URLs using non-HTTP(S) schemes, missing a hostname, containing credentials/query/fragment, or containing decoded `.`/`..` path segments are refused without echoing sensitive input.
+Target URLs using non-HTTP(S) schemes, missing a hostname, containing credentials/query/fragment, decoded `.`/`..` segments, or backslash separators are refused without echoing sensitive input. Validation iteratively decodes up to eight layers and refuses excessive nested encoding.
 
 ## Output and schema
 
 Markdown is intended for operator review. JSON uses `forgeguard.scan-result.v0.3`.
+
+Dynamic Markdown values are rendered on one line with control characters, Markdown metacharacters, and raw HTML neutralized. JSON retains the original structured evidence.
 
 A complete assessment has an integer `value`, A–F `grade`, and `assessed: true`. If a core check is indeterminate, `value` is `null`, `grade` is `"N/A"`, `assessed` is `false`, and `incomplete_checks` identifies the gap.
 

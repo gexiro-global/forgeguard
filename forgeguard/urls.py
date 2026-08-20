@@ -33,8 +33,22 @@ def normalize_target_url(value: str) -> str:
         raise InvalidTargetURL("target URL must not contain a query")
     if parsed.fragment or "#" in value:
         raise InvalidTargetURL("target URL must not contain a fragment")
-    decoded_segments = unquote(parsed.path).split("/")
-    if any(segment in {".", ".."} for segment in decoded_segments):
-        raise InvalidTargetURL("target URL path must not contain dot segments")
+    decoded_path = parsed.path
+    for _decode_layer in range(8):
+        decoded_segments = decoded_path.split("/")
+        if "\\" in decoded_path or any(
+            segment in {".", ".."} for segment in decoded_segments
+        ):
+            raise InvalidTargetURL(
+                "target URL path must not contain dot segments or backslash separators"
+            )
+        next_path = unquote(decoded_path)
+        if next_path == decoded_path:
+            break
+        decoded_path = next_path
+    else:
+        raise InvalidTargetURL(
+            "target URL path contains excessive nested percent-encoding"
+        )
     path = parsed.path.rstrip("/")
     return urlunsplit((parsed.scheme.lower(), parsed.netloc, path, "", ""))

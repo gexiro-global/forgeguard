@@ -29,7 +29,8 @@ A target must:
 - include a hostname;
 - contain no embedded username/password;
 - contain no query or fragment;
-- contain no decoded `.` or `..` path segment.
+- contain no decoded `.` or `..` segment or backslash separator across up to eight decoding layers;
+- avoid excessive nested percent-encoding.
 
 A legal subpath is preserved. Unsafe URLs are rejected before the HTTP client is created or a report is written.
 
@@ -44,11 +45,22 @@ A legal subpath is preserved. Unsafe URLs are rejected before the HTTP client is
 
 Every request path is checked at runtime. Non-allowlisted paths are refused before a network call.
 
+`FG-SIGNIN` owns the browser observation at `/explore/repos`. `FG-ANON`
+owns the two API-search observations. No endpoint/status observation is requested
+or scored twice.
+
 ## Authentication
 
 Prefer `FORGEGUARD_TOKEN` for an optional token. The token is used only for the authenticated version read. Anonymous posture checks remain anonymous. Redirect following is disabled.
 
 The legacy `--token` option remains available with a warning because command-line values may be visible in shell history or process listings. Token values are not fields in reports.
+
+## Report integrity
+
+Markdown rendering treats target, scan, finding, rationale, remediation, reference,
+and evidence values as untrusted. Control characters become visible escapes,
+Markdown metacharacters are escaped, and raw HTML is neutralized. JSON preserves
+the original structured values under JSON escaping.
 
 ## HTTP evidence taxonomy
 

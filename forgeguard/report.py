@@ -1,7 +1,41 @@
 from __future__ import annotations
 
+import unicodedata
+
 from .models import EvidenceState, Finding, ScanResult, Status
 from .scoring import priority_key
+
+_MARKDOWN_ESCAPED = frozenset(r"\`*_[]|")
+
+
+def _markdown_text(value: object) -> str:
+    """Render untrusted values as single-line Markdown text without raw HTML."""
+    text = str(value)
+    out: list[str] = []
+    for character in text:
+        if character == "\n":
+            out.append(r"\n")
+        elif character == "\r":
+            out.append(r"\r")
+        elif character == "\t":
+            out.append(r"\t")
+        elif unicodedata.category(character) in {"Cc", "Zl", "Zp"}:
+            codepoint = ord(character)
+            escape = (
+                f"\\x{codepoint:02x}" if codepoint <= 0xFF else f"\\u{codepoint:04x}"
+            )
+            out.append(escape)
+        elif character == "&":
+            out.append("&amp;")
+        elif character == "<":
+            out.append("&lt;")
+        elif character == ">":
+            out.append("&gt;")
+        elif character in _MARKDOWN_ESCAPED:
+            out.append(f"\\{character}")
+        else:
+            out.append(character)
+    return "".join(out)
 
 
 def _finding_label(finding: Finding) -> str:
@@ -40,7 +74,7 @@ def _evidence_summary(finding: Finding) -> str:
             "affected_through",
             "first_fixed_in",
         ),
-        "FG-SIGNIN": ("anon_api", "anon_explore"),
+        "FG-SIGNIN": ("anon_explore",),
         "FG-REG": ("anon_v2_http",),
         "FG-ANON": ("open", "checked"),
     }.get(finding.id)
@@ -54,7 +88,7 @@ def _evidence_summary(finding: Finding) -> str:
 def _top_actions(findings: list[Finding], incomplete_checks: list[str]) -> list[str]:
     actions: list[str] = []
     if incomplete_checks:
-        checks = ", ".join(incomplete_checks)
+        checks = _markdown_text(", ".join(incomplete_checks))
         actions.append(
             "- **P1 - Complete assessment evidence** - the assessment is ungraded "
             f"because these core checks are indeterminate: {checks}."
@@ -71,11 +105,12 @@ def _top_actions(findings: list[Finding], incomplete_checks: list[str]) -> list[
                 "does not prove exploitability."
             )
         else:
-            remediation = (
+            title = _markdown_text(finding.title)
+            remediation = _markdown_text(
                 finding.remediation
                 or "Review finding evidence and decide operator action."
             )
-            actions.append(f"- **P{index} - {finding.title}** - {remediation}")
+            actions.append(f"- **P{index} - {title}** - {remediation}")
         if len(actions) >= 5:
             break
     return actions
@@ -88,25 +123,29 @@ def render_markdown(result: ScanResult) -> str:
         score_display = f"{result.score.value}/100 ({result.score.grade})"
     else:
         score_display = "N/A (assessment incomplete)"
+    target_url = _markdown_text(result.target.url)
+    target_forge = _markdown_text(result.target.forge)
+    target_version = _markdown_text(result.target.version or "(unknown)")
+    product_confirmed = _markdown_text(result.target.product_confirmed)
+    product_source = _markdown_text(result.target.product_source)
+    scope = _markdown_text(result.target.scope)
+    scan_id = _markdown_text(result.scan_id)
+    score_display = _markdown_text(score_display)
     out: list[str] = []
-    out.append(f"# ForgeGuard by Gexiro - {result.target.url}")
+    out.append(f"# ForgeGuard by Gexiro - {target_url}")
     out.append("")
     out.append(
         "Read-only security posture and supply-chain visibility for self-hosted Gitea."
     )
     out.append("")
     out.append(
-        f"**Product:** {result.target.forge} {result.target.version or '(unknown)'}  |  "
-        f"**Score:** {score_display}"
+        f"**Product:** {target_forge} {target_version}  |  **Score:** {score_display}"
     )
-    out.append(
-        f"**Product confirmation:** {result.target.product_confirmed} "
-        f"({result.target.product_source})"
-    )
+    out.append(f"**Product confirmation:** {product_confirmed} ({product_source})")
     authorization = "authorized" if result.target.authorized else "not affirmed"
     out.append(
-        f"**Scope:** {result.target.scope} | {authorization} | read-only | single target | "
-        f"**Scan:** {result.scan_id}"
+        f"**Scope:** {scope} | {authorization} | read-only | single target | "
+        f"**Scan:** {scan_id}"
     )
     out.append("")
     out.append(
@@ -152,17 +191,23 @@ def render_markdown(result: ScanResult) -> str:
     out.append("")
     out.append("## Findings")
     for finding in findings:
-        out.append(f"### {finding.id} - {finding.title}")
-        out.append(f"- **State:** {_finding_label(finding)}")
-        out.append(f"- **Evidence state:** {finding.evidence_state.value}")
-        out.append(f"- **Rationale:** {finding.rationale}")
+        finding_id = _markdown_text(finding.id)
+        finding_title = _markdown_text(finding.title)
+        out.append(f"### {finding_id} - {finding_title}")
+        out.append(f"- **State:** {_markdown_text(_finding_label(finding))}")
+        out.append(
+            f"- **Evidence state:** {_markdown_text(finding.evidence_state.value)}"
+        )
+        out.append(f"- **Rationale:** {_markdown_text(finding.rationale)}")
         if finding.remediation:
-            out.append(f"- **Action:** {finding.remediation}")
+            out.append(f"- **Action:** {_markdown_text(finding.remediation)}")
         if finding.references:
-            out.append(f"- **Refs:** {', '.join(finding.references)}")
+            references = _markdown_text(", ".join(finding.references))
+            out.append(f"- **Refs:** {references}")
         if finding.cwe:
-            out.append(f"- **CWE:** {finding.cwe}")
-        out.append(f"- **Evidence:** `{_evidence_summary(finding)}`")
+            out.append(f"- **CWE:** {_markdown_text(finding.cwe)}")
+        evidence = _markdown_text(_evidence_summary(finding))
+        out.append(f"- **Evidence:** {evidence}")
         out.append("")
     out.append("---")
     out.append("ForgeGuard by Gexiro | own/authorized Gitea instances only | read-only")

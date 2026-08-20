@@ -812,7 +812,7 @@ def test_cli_requires_authorized_and_documents_product_confirmation() -> None:
         env={"COLUMNS": "220", "NO_COLOR": "1", "TERM": "dumb"},
     )
     assert help_result.exit_code == 0
-    help_text = _ANSI.sub("", help_result.output)
+    help_text = " ".join(_ANSI.sub("", help_result.output).replace("│", " ").split())
     assert "--authorized" in help_text
     assert "--product" in help_text
     assert "unconfirmed, ungraded" in help_text

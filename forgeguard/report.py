@@ -1,30 +1,82 @@
 from __future__ import annotations
 
-from .models import Finding, ScanResult, Status
+import unicodedata
+
+from .models import EvidenceState, Finding, ScanResult, Status
 from .scoring import priority_key
 
+_MARKDOWN_ESCAPED = frozenset(r"\`*_[]|")
 
-def _finding_by_id(findings: list[Finding], finding_id: str) -> Finding | None:
-    return next((finding for finding in findings if finding.id == finding_id), None)
+
+def _markdown_text(value: object) -> str:
+    """Render untrusted values as single-line Markdown text without raw HTML."""
+    text = str(value)
+    out: list[str] = []
+    for character in text:
+        if character == "\n":
+            out.append(r"\n")
+        elif character == "\r":
+            out.append(r"\r")
+        elif character == "\t":
+            out.append(r"\t")
+        elif unicodedata.category(character) in {"Cc", "Zl", "Zp"}:
+            codepoint = ord(character)
+            escape = (
+                f"\\x{codepoint:02x}" if codepoint <= 0xFF else f"\\u{codepoint:04x}"
+            )
+            out.append(escape)
+        elif character == "&":
+            out.append("&amp;")
+        elif character == "<":
+            out.append("&lt;")
+        elif character == ">":
+            out.append("&gt;")
+        elif character in _MARKDOWN_ESCAPED:
+            out.append(f"\\{character}")
+        else:
+            out.append(character)
+    return "".join(out)
 
 
 def _finding_label(finding: Finding) -> str:
-    if finding.id == "FG-CVE-27771" and finding.status == Status.WARN and finding.severity.value == "critical":
-        return "WARN / CRITICAL CVE - mitigated but unpatched"
-    if finding.id == "FG-CVE-27771" and finding.status == Status.FAIL:
-        return "FAIL / CRITICAL CVE - active exposure"
     if finding.status == Status.PASS:
-        return "PASS - patched" if finding.id in {"FG-VER", "FG-CVE-27771"} else "PASS"
+        if finding.id == "FG-CVE-27771":
+            return "PASS - at or above first fixed release"
+        if finding.id == "FG-VER":
+            return "PASS - version observed"
+        return "PASS"
+    if (
+        finding.status == Status.INFO
+        and finding.evidence_state == EvidenceState.INDETERMINATE
+    ):
+        return "INFO / UNDETERMINED"
+    if (
+        finding.status == Status.INFO
+        and finding.evidence_state == EvidenceState.INFORMATIONAL
+    ):
+        return "INFO / INFORMATIONAL"
     return f"{finding.status.value.upper()} / {finding.severity.value.upper()}"
 
 
 def _evidence_summary(finding: Finding) -> str:
     keys = {
-        "FG-VER": ("version", "fixed_in"),
-        "FG-CVE-27771": ("version", "anon_v2_http", "signin_required_inferred", "registry_anon_open"),
-        "FG-SIGNIN": ("anon_api", "anon_explore"),
+        "FG-VER": (
+            "product",
+            "product_confirmed",
+            "product_source",
+            "version",
+        ),
+        "FG-CVE-27771": (
+            "product",
+            "product_confirmed",
+            "product_source",
+            "version",
+            "affected_through",
+            "first_fixed_in",
+        ),
+        "FG-SIGNIN": ("anon_explore",),
         "FG-REG": ("anon_v2_http",),
-        "FG-ANON": ("open", "probed"),
+        "FG-ANON": ("open", "checked"),
     }.get(finding.id)
     if keys is None:
         data = finding.evidence
@@ -33,24 +85,32 @@ def _evidence_summary(finding: Finding) -> str:
     return str(data)
 
 
-def _top_actions(findings: list[Finding]) -> list[str]:
-    actionable = [finding for finding in findings if finding.status in (Status.FAIL, Status.WARN)]
-    version = _finding_by_id(actionable, "FG-VER")
-    cve = _finding_by_id(actionable, "FG-CVE-27771")
+def _top_actions(findings: list[Finding], incomplete_checks: list[str]) -> list[str]:
     actions: list[str] = []
-    consumed: set[str] = set()
-    if version is not None and cve is not None:
+    if incomplete_checks:
+        checks = _markdown_text(", ".join(incomplete_checks))
         actions.append(
-            "- **P1 - Update Gitea to >=1.26.2** - CVE-2026-27771 window present, "
-            "mitigation active, code-level fix missing."
+            "- **P1 - Complete assessment evidence** - the assessment is ungraded "
+            f"because these core checks are indeterminate: {checks}."
         )
-        consumed.update({"FG-VER", "FG-CVE-27771"})
-    for index, finding in enumerate(
-        sorted((f for f in actionable if f.id not in consumed), key=priority_key, reverse=True),
-        start=2 if actions else 1,
-    ):
-        remediation = finding.remediation or "Review finding evidence and decide operator action."
-        actions.append(f"- **P{index} - {finding.title}** - {remediation}")
+    actionable = [
+        finding for finding in findings if finding.status in (Status.FAIL, Status.WARN)
+    ]
+    for finding in sorted(actionable, key=priority_key, reverse=True):
+        index = len(actions) + 1
+        if finding.id == "FG-CVE-27771" and finding.status == Status.FAIL:
+            actions.append(
+                f"- **P{index} - Upgrade Gitea to >=1.26.2** - the confirmed version "
+                "is within the affected range for CVE-2026-27771; this version result "
+                "does not prove exploitability."
+            )
+        else:
+            title = _markdown_text(finding.title)
+            remediation = _markdown_text(
+                finding.remediation
+                or "Review finding evidence and decide operator action."
+            )
+            actions.append(f"- **P{index} - {title}** - {remediation}")
         if len(actions) >= 5:
             break
     return actions
@@ -59,47 +119,96 @@ def _top_actions(findings: list[Finding]) -> list[str]:
 def render_markdown(result: ScanResult) -> str:
     findings = sorted(result.findings, key=priority_key, reverse=True)
     summary = result.summary
+    if result.score.assessed:
+        score_display = f"{result.score.value}/100 ({result.score.grade})"
+    else:
+        score_display = "N/A (assessment incomplete)"
+    target_url = _markdown_text(result.target.url)
+    target_forge = _markdown_text(result.target.forge)
+    target_version = _markdown_text(result.target.version or "(unknown)")
+    product_confirmed = _markdown_text(result.target.product_confirmed)
+    product_source = _markdown_text(result.target.product_source)
+    scope = _markdown_text(result.target.scope)
+    scan_id = _markdown_text(result.scan_id)
+    score_display = _markdown_text(score_display)
     out: list[str] = []
-    out.append(f"# ForgeGuard by Gexiro - {result.target.url}")
+    out.append(f"# ForgeGuard by Gexiro - {target_url}")
     out.append("")
-    out.append("Read-only security posture and supply-chain visibility for self-hosted Gitea/Forgejo.")
+    out.append(
+        "Read-only security posture and supply-chain visibility for self-hosted Gitea."
+    )
     out.append("")
-    out.append(f"**Forge:** {result.target.forge} {result.target.version or '(unknown)'}  |  "
-               f"**Score:** {result.score.value}/100 ({result.score.grade})")
-    out.append(f"**Scope:** {result.target.scope} | authorized | read-only | single target | **Scan:** {result.scan_id}")
+    out.append(
+        f"**Product:** {target_forge} {target_version}  |  **Score:** {score_display}"
+    )
+    out.append(f"**Product confirmation:** {product_confirmed} ({product_source})")
+    authorization = "authorized" if result.target.authorized else "not affirmed"
+    out.append(
+        f"**Scope:** {scope} | {authorization} | read-only | single target | "
+        f"**Scan:** {scan_id}"
+    )
     out.append("")
-    out.append(f"**Summary:** critical {summary.get('critical', 0)} | high {summary.get('high', 0)} | "
-               f"medium {summary.get('medium', 0)} | low {summary.get('low', 0)} | pass {summary.get('pass', 0)}")
+    out.append(
+        f"**Summary:** critical {summary.get('critical', 0)} | "
+        f"high {summary.get('high', 0)} | medium {summary.get('medium', 0)} | "
+        f"low {summary.get('low', 0)} | info {summary.get('info', 0)} | "
+        f"pass {summary.get('pass', 0)}"
+    )
     out.append("")
     out.append("## Top actions")
-    top_actions = _top_actions(findings)
+    top_actions = _top_actions(findings, result.score.incomplete_checks)
     if not top_actions:
-        out.append("- None - all checks pass.")
+        out.append(
+            "- None - no FAIL or WARN findings and all core checks were assessed."
+        )
     else:
         out.extend(top_actions)
     out.append("")
     out.append("## Interpretation")
-    out.append("- FG-VER reports patch currency: vulnerable version, patched, or unknown.")
-    out.append("- FG-CVE-27771 reports exposure posture: active exposure, mitigated posture, patched, or unknown.")
-    out.append("- A mitigated posture still needs the code-level update because mitigation is not the patch.")
+    out.append(
+        "- FG-VER is informational version evidence. FG-CVE-27771 is the only finding "
+        "that scores the CVE affected-version condition."
+    )
+    out.append(
+        "- PASS means evidence supports only the named checked condition; it is not a "
+        "claim that the whole instance is secure."
+    )
+    out.append(
+        "- INFO / UNDETERMINED means evidence was insufficient. If any core check is "
+        "undetermined, the assessment is N/A rather than an A-F grade."
+    )
+    out.append(
+        "- Registry-root and anonymous-access checks are independent HTTP observations; "
+        "they do not prove CVE exploitability or private artifact access."
+    )
     out.append("")
     out.append("## Sub-scores")
     out.append("| Domain | Score |")
     out.append("|--------|------:|")
-    for key in ("patch", "registry", "auth", "runner"):
-        out.append(f"| {key} | {result.score.sub.get(key, '-')} |")
+    for key in ("patch", "registry", "auth"):
+        value = result.score.sub.get(key)
+        out.append(f"| {key} | {value if value is not None else 'N/A'} |")
     out.append("")
     out.append("## Findings")
     for finding in findings:
-        out.append(f"### {finding.id} - {finding.title}")
-        out.append(f"**State:** {_finding_label(finding)}  ")
-        out.append(f"**Rationale:** {finding.rationale}  ")
+        finding_id = _markdown_text(finding.id)
+        finding_title = _markdown_text(finding.title)
+        out.append(f"### {finding_id} - {finding_title}")
+        out.append(f"- **State:** {_markdown_text(_finding_label(finding))}")
+        out.append(
+            f"- **Evidence state:** {_markdown_text(finding.evidence_state.value)}"
+        )
+        out.append(f"- **Rationale:** {_markdown_text(finding.rationale)}")
         if finding.remediation:
-            out.append(f"**Action:** {finding.remediation}  ")
+            out.append(f"- **Action:** {_markdown_text(finding.remediation)}")
         if finding.references:
-            out.append(f"**Refs:** {', '.join(finding.references)}  ")
-        out.append(f"**Evidence:** `{_evidence_summary(finding)}`")
+            references = _markdown_text(", ".join(finding.references))
+            out.append(f"- **Refs:** {references}")
+        if finding.cwe:
+            out.append(f"- **CWE:** {_markdown_text(finding.cwe)}")
+        evidence = _markdown_text(_evidence_summary(finding))
+        out.append(f"- **Evidence:** {evidence}")
         out.append("")
     out.append("---")
-    out.append("ForgeGuard by Gexiro | own/authorized instances only | read-only by default")
+    out.append("ForgeGuard by Gexiro | own/authorized Gitea instances only | read-only")
     return "\n".join(out)

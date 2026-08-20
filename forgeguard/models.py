@@ -4,6 +4,8 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
+from .version import __version__
+
 
 class Severity(str, Enum):
     critical = "critical"
@@ -20,6 +22,12 @@ class Status(str, Enum):
     INFO = "info"
 
 
+class EvidenceState(str, Enum):
+    ASSESSED = "assessed"
+    INDETERMINATE = "indeterminate"
+    INFORMATIONAL = "informational"
+
+
 class Finding(BaseModel):
     id: str
     title: str
@@ -30,30 +38,35 @@ class Finding(BaseModel):
     remediation: str = ""
     references: list[str] = Field(default_factory=list)
     cwe: str | None = None
+    evidence_state: EvidenceState = EvidenceState.ASSESSED
 
 
 class Target(BaseModel):
     url: str
     forge: str = "unknown"
     version: str | None = None
-    authorized: bool = True
+    authorized: bool = False
     scope: str = "own-instance"
+    product_confirmed: bool = False
+    product_source: str = "unconfirmed"
 
 
 class Score(BaseModel):
-    value: int
+    value: int | None
     grade: str
+    assessed: bool = True
     max: int = 100
-    sub: dict[str, int] = Field(default_factory=dict)
+    sub: dict[str, int | None] = Field(default_factory=dict)
+    incomplete_checks: list[str] = Field(default_factory=list)
 
 
 def _default_tool_metadata() -> dict[str, str]:
     return {
         "name": "ForgeGuard",
         "brand": "by Gexiro",
-        "version": "0.2.0",
-        "schema": "forgeguard.scan-result.v0.2",
-        "positioning": "Read-only security posture and supply-chain visibility for self-hosted Gitea/Forgejo.",
+        "version": __version__,
+        "schema": "forgeguard.scan-result.v0.3",
+        "positioning": "Read-only security posture and supply-chain visibility for self-hosted Gitea.",
     }
 
 

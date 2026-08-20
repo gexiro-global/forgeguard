@@ -1,20 +1,20 @@
 [build-system]
-requires = ["setuptools>=68,<77", "wheel>=0.41,<1"]
+requires = ["setuptools>=77,<82", "wheel>=0.41,<1"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "forgeguard"
-version = "0.2.1"
-description = "Read-only security posture self-check for self-hosted Gitea and Forgejo."
+version = "0.2.2"
+description = "Read-only security posture self-check for one authorized self-hosted Gitea instance."
 readme = "README.md"
 requires-python = ">=3.11"
-license = {file = "LICENSE"}
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [
   {name = "Gexiro Global Enterprises Ltd"}
 ]
-keywords = ["gitea", "forgejo", "security", "posture", "self-hosted", "cve-2026-27771"]
+keywords = ["gitea", "security", "posture", "self-hosted", "cve-2026-27771"]
 classifiers = [
-  "License :: OSI Approved :: Apache Software License",
   "Intended Audience :: Developers",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
@@ -36,7 +36,12 @@ Repository = "https://github.com/gexiro-global/forgeguard"
 forgeguard = "forgeguard.cli:main"
 
 [project.optional-dependencies]
-dev = ["pytest>=8,<10", "build>=1,<2"]
+dev = [
+  "build>=1,<2",
+  "pytest>=8,<10",
+  "ruff>=0.16,<0.17",
+  "twine>=6.1,<7",
+]
 
 [tool.setuptools.packages.find]
 include = ["forgeguard*"]

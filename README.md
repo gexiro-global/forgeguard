@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/forgeguard.svg)](https://pypi.org/project/forgeguard/)
 [![License: Apache-2.0](https://img.shields.io/pypi/l/forgeguard.svg)](https://github.com/gexiro-global/forgeguard/blob/main/LICENSE)
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/gexiro-global/forgeguard/badge)](https://scorecard.dev/viewer/?uri=github.com/gexiro-global/forgeguard)
 [Security and trust evidence](docs/SECURITY-TRUST.md) documents the project's policies and automated checks. No certification or badge level is claimed.
 
 Read-only security posture self-check for one explicitly authorized self-hosted Gitea instance.

@@ -5,6 +5,8 @@
 [![Python](https://img.shields.io/pypi/pyversions/forgeguard.svg)](https://pypi.org/project/forgeguard/)
 [![License: Apache-2.0](https://img.shields.io/pypi/l/forgeguard.svg)](https://github.com/gexiro-global/forgeguard/blob/main/LICENSE)
 
+[Security and trust evidence](docs/SECURITY-TRUST.md) documents the project's policies and automated checks. No certification or badge level is claimed.
+
 Read-only security posture self-check for one explicitly authorized self-hosted Gitea instance.
 
 ForgeGuard gives Gitea operators repeatable evidence about version posture, the fixed-version baseline for CVE-2026-27771, anonymous OCI registry-root behavior, and anonymous responses on a small allowlist of repository/API paths. It uses no exploit probes, performs no internet-wide discovery, and does not request private package contents, manifests, or blobs.

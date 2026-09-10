@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools>=84.0.0,<85", "wheel>=0.41,<1"]
+requires = ["setuptools==84.0.0", "wheel==0.48.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "forgeguard"
-version = "0.2.2"
-description = "Read-only security posture self-check for one authorized self-hosted Gitea instance."
+version = "0.5.0rc1"
+description = "Read-only security posture self-check for one authorized self-hosted Gitea or Forgejo instance."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
@@ -40,14 +40,16 @@ forgeguard = "forgeguard.cli:main"
 
 [project.optional-dependencies]
 dev = [
-  "build>=1,<2",
-  "pytest>=8,<10",
-  "ruff>=0.16,<0.17",
-  "twine>=6.1,<7",
+  "build==1.6.1",
+  "pytest==9.1.1",
+  "ruff==0.16.6",
+  "twine==6.2.0",
+  "pytest-cov==7.1.0",
+  "jsonschema==4.26.0",
 ]
 
 [tool.setuptools.packages.find]
 include = ["forgeguard*"]
 
 [tool.setuptools.package-data]
-forgeguard = ["py.typed"]
+forgeguard = ["py.typed", "schemas/*.json", "schemas/*.md", "advisories/catalog/*.json"]

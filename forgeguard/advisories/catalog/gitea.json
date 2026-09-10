@@ -1,0 +1,62 @@
+{
+  "version": "2026-09-10.1",
+  "verified_at": "2026-09-10",
+  "records": [
+    {
+      "id": "FG-CVE-27771",
+      "product": "gitea",
+      "title": "CVE-2026-27771 version posture",
+      "sources": [
+        "https://github.com/go-gitea/gitea/security/advisories/GHSA-8qw8-rq86-9pc2"
+      ],
+      "source_sha256": [
+        "d29ed4507db13ad48fa9e54c7ecc0800256b9ca6c95e5a1a453cd59e8778e95b"
+      ],
+      "verified_at": "2026-09-10",
+      "affected": [
+        {
+          "lower": "0.0.0",
+          "upper": "1.26.1"
+        }
+      ],
+      "fixed": [
+        {
+          "lower": "1.26.2",
+          "upper": "1.27.3"
+        }
+      ],
+      "severity": "high",
+      "severity_source": "https://github.com/go-gitea/gitea/security/advisories/GHSA-8qw8-rq86-9pc2",
+      "limitations": "No custom vendor backports or future releases inferred.",
+      "applicability": "Unmodified upstream version; version posture only."
+    },
+    {
+      "id": "FG-CVE-78433",
+      "product": "gitea",
+      "title": "CVE-2026-78433 version posture",
+      "sources": [
+        "https://github.com/go-gitea/gitea/security/advisories/GHSA-frpv-2xgv-wxpq"
+      ],
+      "source_sha256": [
+        "c381d4438154ab147710216e4fe7639029a5ab9c8f08101d4abfed57b1b400b3"
+      ],
+      "verified_at": "2026-09-10",
+      "affected": [
+        {
+          "lower": "1.26.0",
+          "upper": "1.27.2"
+        }
+      ],
+      "fixed": [
+        {
+          "lower": "1.27.3",
+          "upper": "1.27.3"
+        }
+      ],
+      "severity": "medium",
+      "severity_source": "https://github.com/go-gitea/gitea/security/advisories/GHSA-frpv-2xgv-wxpq",
+      "limitations": "No custom vendor backports or future releases inferred.",
+      "applicability": "Unmodified upstream version; version posture only."
+    }
+  ]
+}

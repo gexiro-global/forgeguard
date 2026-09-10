@@ -796,7 +796,7 @@ def test_distribution_import_runtime_json_and_user_agent_versions_match() -> Non
         target=Target(url="https://forge.example"),
         score=Score(value=100, grade="A"),
     )
-    assert installed == __version__ == result.tool["version"] == "0.2.2"
+    assert installed == __version__ == result.tool["version"] == "0.5.0rc1"
     assert f"/{installed} " in _UA
 
 
@@ -828,7 +828,7 @@ def test_cli_refuses_unsupported_product_declaration() -> None:
             "https://forge.example",
             "--authorized",
             "--product",
-            "forgejo",
+            "gogs",
         ],
     )
     assert result.exit_code == 2
@@ -972,7 +972,7 @@ def test_dual_output_paths_are_distinct_or_refused_before_scan(
         return _synthetic_result()
 
     monkeypatch.setattr(cli_module, "_run", fake_run)
-    for filename in ("report.md", "report", "archive.scan.md"):
+    for filename in ("report.md", "second-report", "archive.scan.md"):
         output_path = tmp_path / filename
         result = CliRunner().invoke(
             app,

@@ -1,0 +1,230 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_id": {
+      "const": "forgeguard.config-snapshot.v1",
+      "title": "Schema Id",
+      "type": "string"
+    },
+    "product": {
+      "enum": [
+        "gitea",
+        "forgejo"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "version": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Version",
+      "type": "string"
+    },
+    "instance_alias": {
+      "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+      "title": "Instance Alias",
+      "type": "string"
+    },
+    "snapshot_at": {
+      "title": "Snapshot At",
+      "type": "string"
+    },
+    "provenance": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Provenance",
+      "type": "string"
+    },
+    "settings": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "title": "Settings",
+      "type": "object"
+    },
+    "declared_defaults": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Declared Defaults",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_id",
+    "product",
+    "version",
+    "instance_alias",
+    "snapshot_at",
+    "provenance",
+    "settings"
+  ],
+  "title": "Snapshot",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/gexiro-global/forgeguard/schemas/config-snapshot-v1.json",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "const": "gitea"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "settings": {
+            "type": "object",
+            "properties": {
+              "service.DISABLE_REGISTRATION": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "service.REGISTER_EMAIL_CONFIRM": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "service.REGISTER_MANUAL_CONFIRM": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "service.REQUIRE_SIGNIN_VIEW": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "repository.FORCE_PRIVATE": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "repository.DEFAULT_PRIVATE": {
+                "enum": [
+                  "last",
+                  "private",
+                  "public"
+                ]
+              },
+              "security.TWO_FACTOR_AUTH": {
+                "enum": [
+                  "",
+                  "enforced"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "declared_defaults": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "service.DISABLE_REGISTRATION",
+                "service.REGISTER_EMAIL_CONFIRM",
+                "service.REGISTER_MANUAL_CONFIRM",
+                "service.REQUIRE_SIGNIN_VIEW",
+                "repository.FORCE_PRIVATE",
+                "repository.DEFAULT_PRIVATE",
+                "security.TWO_FACTOR_AUTH"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "product": {
+            "const": "forgejo"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "settings": {
+            "type": "object",
+            "properties": {
+              "service.DISABLE_REGISTRATION": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "service.REGISTER_EMAIL_CONFIRM": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "service.REGISTER_MANUAL_CONFIRM": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "service.REQUIRE_SIGNIN_VIEW": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "repository.FORCE_PRIVATE": {
+                "enum": [
+                  false,
+                  true
+                ]
+              },
+              "repository.DEFAULT_PRIVATE": {
+                "enum": [
+                  "last",
+                  "private",
+                  "public"
+                ]
+              },
+              "security.GLOBAL_TWO_FACTOR_REQUIREMENT": {
+                "enum": [
+                  "none",
+                  "all",
+                  "admin"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "declared_defaults": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "service.DISABLE_REGISTRATION",
+                "service.REGISTER_EMAIL_CONFIRM",
+                "service.REGISTER_MANUAL_CONFIRM",
+                "service.REQUIRE_SIGNIN_VIEW",
+                "repository.FORCE_PRIVATE",
+                "repository.DEFAULT_PRIVATE",
+                "security.GLOBAL_TWO_FACTOR_REQUIREMENT"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  ]
+}

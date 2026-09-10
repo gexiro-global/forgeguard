@@ -1,0 +1,494 @@
+{
+  "catalog": {
+    "coverage": "Curated records only; absence is not evidence of safety.",
+    "sha256": "49037c6b5c32ed89508ab5280bc527062ce44e4ece27039fd18bd66de4de8a37",
+    "verified_at": "2026-09-10",
+    "version": "2026-09-10.1"
+  },
+  "findings": [
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        }
+      },
+      "evidence_state": "assessed",
+      "expected": "Private intent: review anonymous HTTP 200; public/unspecified: informational.",
+      "id": "FG-ANON",
+      "observed": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        }
+      },
+      "penalty_group": "anonymous-access",
+      "rationale": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.",
+      "reason": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.",
+      "references": [
+        "https://github.com/go-gitea/gitea/blob/v1.27.3/templates/swagger/v1_json.tmpl"
+      ],
+      "remediation": "",
+      "scope": "http",
+      "severity": "info",
+      "source": "anonymous-http",
+      "status": "pass",
+      "title": "Allowlisted API HTTP responses"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "outcome": "fixed"
+      },
+      "evidence_state": "assessed",
+      "expected": "Version within the explicit fixed range for this advisory.",
+      "id": "FG-CVE-27771",
+      "observed": {
+        "outcome": "fixed",
+        "record_version": 1,
+        "version": "1.27.3"
+      },
+      "penalty_group": "version-advisories",
+      "rationale": "Version is within the catalog's explicit fixed interval. Version assessment does not prove exploitability. No custom vendor backports or future releases inferred.",
+      "reason": "Version is within the catalog's explicit fixed interval.",
+      "references": [
+        "https://github.com/go-gitea/gitea/security/advisories/GHSA-8qw8-rq86-9pc2"
+      ],
+      "remediation": "",
+      "scope": "version",
+      "severity": "info",
+      "source": "catalog:gitea",
+      "status": "pass",
+      "title": "CVE-2026-27771 version posture"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "outcome": "fixed"
+      },
+      "evidence_state": "assessed",
+      "expected": "Version within the explicit fixed range for this advisory.",
+      "id": "FG-CVE-78433",
+      "observed": {
+        "outcome": "fixed",
+        "record_version": 1,
+        "version": "1.27.3"
+      },
+      "penalty_group": "version-advisories",
+      "rationale": "Version is within the catalog's explicit fixed interval. Version assessment does not prove exploitability. No custom vendor backports or future releases inferred.",
+      "reason": "Version is within the catalog's explicit fixed interval.",
+      "references": [
+        "https://github.com/go-gitea/gitea/security/advisories/GHSA-frpv-2xgv-wxpq"
+      ],
+      "remediation": "",
+      "scope": "version",
+      "severity": "info",
+      "source": "catalog:gitea",
+      "status": "pass",
+      "title": "CVE-2026-78433 version posture"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": true,
+          "json": true,
+          "nosniff": false,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        }
+      },
+      "evidence_state": "assessed",
+      "expected": "Verified HTTPS; header summaries apply only to returned response types.",
+      "id": "FG-HTTP",
+      "observed": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": true,
+          "json": true,
+          "nosniff": false,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        }
+      },
+      "penalty_group": "FG-HTTP",
+      "rationale": "HTTPS means certificate verification on this request, not a TLS audit. X-Frame-Options only describes embedding protection for HTML; nosniff is a limited response observation. HSTS/CSP presence is informational and is not policy validation. Reverse proxies may supply headers. No penalty from presence alone.",
+      "reason": "HTTPS means certificate verification on this request, not a TLS audit. X-Frame-Options only describes embedding protection for HTML; nosniff is a limited response observation. HSTS/CSP presence is informational and is not policy validation. Reverse proxies may supply headers. No penalty from presence alone.",
+      "references": [],
+      "remediation": "",
+      "scope": "http",
+      "severity": "info",
+      "source": "anonymous-http",
+      "status": "info",
+      "title": "Transport and HTTP protection observations"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        }
+      },
+      "evidence_state": "assessed",
+      "expected": "Private intent: review anonymous HTTP 200; public/unspecified: informational.",
+      "id": "FG-REG",
+      "observed": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        }
+      },
+      "penalty_group": "FG-REG",
+      "rationale": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.",
+      "reason": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.",
+      "references": [
+        "https://github.com/go-gitea/gitea/blob/v1.27.3/templates/swagger/v1_json.tmpl"
+      ],
+      "remediation": "",
+      "scope": "http",
+      "severity": "info",
+      "source": "anonymous-http",
+      "status": "pass",
+      "title": "OCI registry-root HTTP response"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        }
+      },
+      "evidence_state": "assessed",
+      "expected": "Private intent: review anonymous HTTP 200; public/unspecified: informational.",
+      "id": "FG-SIGNIN",
+      "observed": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": true,
+          "https": true,
+          "json": false,
+          "nosniff": false,
+          "status": 403
+        }
+      },
+      "penalty_group": "anonymous-access",
+      "rationale": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.",
+      "reason": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.",
+      "references": [
+        "https://github.com/go-gitea/gitea/blob/v1.27.3/templates/swagger/v1_json.tmpl"
+      ],
+      "remediation": "",
+      "scope": "http",
+      "severity": "info",
+      "source": "anonymous-http",
+      "status": "pass",
+      "title": "Repository browser HTTP response"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "declared_product": "gitea",
+        "declared_version": null,
+        "declared_version_marker": null,
+        "normalized_version": "1.27.3",
+        "observed_product_marker": null,
+        "observed_version": "1.27.3",
+        "product_conflict": false,
+        "product_source": "operator-declared",
+        "provider_revision": "1",
+        "support": "qualified",
+        "version_conflict": false
+      },
+      "evidence_state": "assessed",
+      "expected": "Declared product and consistent qualified upstream version.",
+      "id": "FG-VER",
+      "observed": {
+        "declared_product": "gitea",
+        "declared_version": null,
+        "declared_version_marker": null,
+        "normalized_version": "1.27.3",
+        "observed_product_marker": null,
+        "observed_version": "1.27.3",
+        "product_conflict": false,
+        "product_source": "operator-declared",
+        "provider_revision": "1",
+        "support": "qualified",
+        "version_conflict": false
+      },
+      "penalty_group": "FG-VER",
+      "rationale": "Product is an operator declaration; version conflicts stop advisory inference.",
+      "reason": "Product is an operator declaration; version conflicts stop advisory inference.",
+      "references": [],
+      "remediation": "",
+      "scope": "version",
+      "severity": "info",
+      "source": "operator-declared",
+      "status": "info",
+      "title": "Product and version provenance"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      },
+      "evidence_state": "assessed",
+      "expected": "Review intentional version disclosure.",
+      "id": "FG-VER-DISCLOSE",
+      "observed": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      },
+      "penalty_group": "version-context",
+      "rationale": "An explicit version value was returned anonymously; no independent penalty.",
+      "reason": "An explicit version value was returned anonymously; no independent penalty.",
+      "references": [],
+      "remediation": "",
+      "scope": "http",
+      "severity": "info",
+      "source": "anonymous-http",
+      "status": "info",
+      "title": "Anonymous version disclosure"
+    }
+  ],
+  "identity": {
+    "declared_product": "gitea",
+    "declared_version": null,
+    "declared_version_marker": null,
+    "normalized_version": "1.27.3",
+    "observed_product_marker": null,
+    "observed_version": "1.27.3",
+    "product_conflict": false,
+    "product_source": "operator-declared",
+    "provider_revision": "1",
+    "support": "qualified",
+    "version_conflict": false
+  },
+  "limitations": [
+    "Operator declarations are not independent product detection.",
+    "A complete result covers selected checks only; no security certification.",
+    "HTTP status does not prove data access or loaded configuration.",
+    "Catalog coverage is finite; no runtime feeds or exploit tests."
+  ],
+  "policy": "private",
+  "policy_version": "1",
+  "profile": "standard",
+  "profile_version": "1",
+  "request_count": 5,
+  "run": {
+    "fixture": "synthetic",
+    "timestamp": "2026-09-10T12:00:00Z"
+  },
+  "scan_id": "synthetic-complete",
+  "schema_id": "forgeguard.assessment.v1",
+  "score": {
+    "assessed": true,
+    "grade": "A",
+    "incomplete_checks": [],
+    "max": 100,
+    "sub": {},
+    "value": 100
+  },
+  "scoring_version": "2",
+  "skipped_checks": [
+    "FG-ROOT-HTTP"
+  ],
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "info": 3,
+    "low": 0,
+    "medium": 0,
+    "pass": 5
+  },
+  "target": {
+    "authorized": true,
+    "forge": "gitea",
+    "product_confirmed": true,
+    "product_source": "operator-declared",
+    "scope": "own-instance",
+    "url": "https://synthetic.invalid/team",
+    "version": "1.27.3"
+  },
+  "tool": {
+    "brand": "by Gexiro",
+    "name": "ForgeGuard",
+    "positioning": "Bounded forge posture assessment.",
+    "schema": "forgeguard.assessment.v1",
+    "version": "0.5.0rc1"
+  }
+}

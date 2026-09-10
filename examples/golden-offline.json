@@ -1,0 +1,206 @@
+{
+  "catalog": {
+    "coverage": "Not evaluated in config review"
+  },
+  "findings": [
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "declared_defaults": [],
+        "values": {
+          "security.TWO_FACTOR_AUTH": ""
+        }
+      },
+      "evidence_state": "assessed",
+      "expected": "Private intent: closed registration, sign-in required, forced new private repositories, MFA required for all.",
+      "id": "FG-CONFIG-MFA",
+      "observed": {
+        "declared_defaults": [],
+        "values": {
+          "security.TWO_FACTOR_AUTH": ""
+        }
+      },
+      "penalty_group": "FG-CONFIG-MFA",
+      "rationale": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
+      "reason": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
+      "references": [
+        "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+      ],
+      "remediation": "",
+      "scope": "operator-snapshot",
+      "severity": "info",
+      "source": "operator-declared",
+      "status": "info",
+      "title": "MFA declared configuration"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "declared_defaults": [],
+        "values": {
+          "repository.DEFAULT_PRIVATE": "last",
+          "repository.FORCE_PRIVATE": false
+        }
+      },
+      "evidence_state": "assessed",
+      "expected": "Private intent: closed registration, sign-in required, forced new private repositories, MFA required for all.",
+      "id": "FG-CONFIG-PRIVACY",
+      "observed": {
+        "declared_defaults": [],
+        "values": {
+          "repository.DEFAULT_PRIVATE": "last",
+          "repository.FORCE_PRIVATE": false
+        }
+      },
+      "penalty_group": "FG-CONFIG-PRIVACY",
+      "rationale": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
+      "reason": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
+      "references": [
+        "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+      ],
+      "remediation": "",
+      "scope": "operator-snapshot",
+      "severity": "info",
+      "source": "operator-declared",
+      "status": "info",
+      "title": "PRIVACY declared configuration"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "declared_defaults": [],
+        "values": {
+          "service.DISABLE_REGISTRATION": false,
+          "service.REGISTER_EMAIL_CONFIRM": false,
+          "service.REGISTER_MANUAL_CONFIRM": false
+        }
+      },
+      "evidence_state": "assessed",
+      "expected": "Private intent: closed registration, sign-in required, forced new private repositories, MFA required for all.",
+      "id": "FG-CONFIG-REGISTRATION",
+      "observed": {
+        "declared_defaults": [],
+        "values": {
+          "service.DISABLE_REGISTRATION": false,
+          "service.REGISTER_EMAIL_CONFIRM": false,
+          "service.REGISTER_MANUAL_CONFIRM": false
+        }
+      },
+      "penalty_group": "FG-CONFIG-REGISTRATION",
+      "rationale": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
+      "reason": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
+      "references": [
+        "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+      ],
+      "remediation": "",
+      "scope": "operator-snapshot",
+      "severity": "info",
+      "source": "operator-declared",
+      "status": "info",
+      "title": "REGISTRATION declared configuration"
+    },
+    {
+      "applicability": "applicable",
+      "check_version": "1",
+      "cwe": null,
+      "evidence": {
+        "declared_defaults": [],
+        "values": {
+          "service.REQUIRE_SIGNIN_VIEW": false
+        }
+      },
+      "evidence_state": "assessed",
+      "expected": "Private intent: closed registration, sign-in required, forced new private repositories, MFA required for all.",
+      "id": "FG-CONFIG-SIGNIN",
+      "observed": {
+        "declared_defaults": [],
+        "values": {
+          "service.REQUIRE_SIGNIN_VIEW": false
+        }
+      },
+      "penalty_group": "FG-CONFIG-SIGNIN",
+      "rationale": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
+      "reason": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
+      "references": [
+        "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+      ],
+      "remediation": "",
+      "scope": "operator-snapshot",
+      "severity": "info",
+      "source": "operator-declared",
+      "status": "info",
+      "title": "SIGNIN declared configuration"
+    }
+  ],
+  "identity": {
+    "declared_product": "gitea",
+    "declared_version": "1.27.3",
+    "declared_version_marker": null,
+    "normalized_version": "1.27.3",
+    "observed_product_marker": null,
+    "observed_version": null,
+    "product_conflict": false,
+    "product_source": "operator-declared",
+    "provider_revision": "1",
+    "support": "qualified",
+    "version_conflict": false
+  },
+  "limitations": [
+    "Operator declarations are not independent product detection.",
+    "A complete result covers selected checks only; no security certification.",
+    "HTTP status does not prove data access or loaded configuration.",
+    "Catalog coverage is finite; no runtime feeds or exploit tests."
+  ],
+  "policy": "public",
+  "policy_version": "1",
+  "profile": "config-review",
+  "profile_version": "1",
+  "request_count": 0,
+  "run": {
+    "provenance": "Synthetic fixture; not a runtime observation.",
+    "reviewed_at": "2026-09-10T18:00:00+00:00",
+    "snapshot_at": "2026-09-10T12:00:00Z"
+  },
+  "scan_id": "fg_local",
+  "schema_id": "forgeguard.assessment.v1",
+  "score": {
+    "assessed": true,
+    "grade": "A",
+    "incomplete_checks": [],
+    "max": 100,
+    "sub": {},
+    "value": 100
+  },
+  "scoring_version": "2",
+  "skipped_checks": [],
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "info": 4,
+    "low": 0,
+    "medium": 0,
+    "pass": 0
+  },
+  "target": {
+    "authorized": false,
+    "forge": "gitea",
+    "product_confirmed": false,
+    "product_source": "operator-declared",
+    "scope": "operator-snapshot",
+    "url": "synthetic-gitea",
+    "version": "1.27.3"
+  },
+  "tool": {
+    "brand": "by Gexiro",
+    "name": "ForgeGuard",
+    "positioning": "Bounded forge posture assessment.",
+    "schema": "forgeguard.assessment.v1",
+    "version": "0.5.0rc1"
+  }
+}

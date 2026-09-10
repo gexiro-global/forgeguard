@@ -4,7 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to semantic versioning.
 
-## [Unreleased]
+## [0.5.0rc1] - Unreleased
+
+- Add separate Gitea and Forgejo providers with explicit identity/version provenance.
+- Add closed offline configuration snapshots, including provider-specific MFA settings.
+- Add minimal/standard/extended scopes, dry-run and public/private/unspecified policy.
+- Add finite, hashed advisory catalogs and explicit unknown future/backport handling.
+- Add assessment JSON Schema and offline SARIF 2.1.0 export/validation.
+- Enforce response streaming limits, deadlines, cookie separation and no token over HTTP.
+- Use scoring algorithm 2 with grouped penalties and partial-evidence completeness; scores are not comparable with 0.2.2.
+- Add atomic no-clobber output and documented exit codes 0/2/3/4/5.
+
+## [Unreleased maintenance before 0.5]
 
 - Link the official ForgeGuard product page and authorized commercial-intake path.
 - Link private vulnerability reporting directly from the security policy.

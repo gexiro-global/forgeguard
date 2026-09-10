@@ -14,7 +14,7 @@ Read-only posture assessment for one explicitly authorized self-hosted Gitea or 
 
 This is an unreleased candidate. It adds separate providers, operator-declared product identity, finite provider-specific advisory catalogs, exposure intent, request profiles, offline configuration review and JSON/Markdown/SARIF exports. It does not scan application source code or private artifact contents.
 
-Qualification targets are Gitea 1.27.3 and Forgejo 15.0.8 / 16.0.4. Target versions are not a universal support promise; see [candidate notes](docs/RELEASE_CANDIDATE_0_5.md) and the PR's actual test evidence. No complete milestone or verified attestation is implied by this README.
+Qualification targets are Gitea 1.26.4 / 1.27.3 and Forgejo 15.0.8 / 16.0.4. Target versions are not a universal support promise; see [candidate notes](docs/RELEASE_CANDIDATE_0_5.md) and the PR's actual test evidence. No complete milestone or verified attestation is implied by this README.
 
 ## Install the candidate
 

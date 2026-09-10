@@ -15,7 +15,7 @@ Source: operator-declared
 Observed: {"declared\_defaults": \[\], "values": {"security.TWO\_FACTOR\_AUTH": ""}}
 Expected: Private intent: closed registration, sign-in required, forced new private repositories, MFA required for all.
 Reason: In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.
-Action: 
+Action:
 References: https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini
 
 ## FG-CONFIG-PRIVACY — PRIVACY declared configuration
@@ -24,7 +24,7 @@ Source: operator-declared
 Observed: {"declared\_defaults": \[\], "values": {"repository.DEFAULT\_PRIVATE": "last", "repository.FORCE\_PRIVATE": false}}
 Expected: Private intent: closed registration, sign-in required, forced new private repositories, MFA required for all.
 Reason: In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.
-Action: 
+Action:
 References: https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini
 
 ## FG-CONFIG-REGISTRATION — REGISTRATION declared configuration
@@ -33,7 +33,7 @@ Source: operator-declared
 Observed: {"declared\_defaults": \[\], "values": {"service.DISABLE\_REGISTRATION": false, "service.REGISTER\_EMAIL\_CONFIRM": false, "service.REGISTER\_MANUAL\_CONFIRM": false}}
 Expected: Private intent: closed registration, sign-in required, forced new private repositories, MFA required for all.
 Reason: In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.
-Action: 
+Action:
 References: https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini
 
 ## FG-CONFIG-SIGNIN — SIGNIN declared configuration
@@ -42,7 +42,7 @@ Source: operator-declared
 Observed: {"declared\_defaults": \[\], "values": {"service.REQUIRE\_SIGNIN\_VIEW": false}}
 Expected: Private intent: closed registration, sign-in required, forced new private repositories, MFA required for all.
 Reason: In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.
-Action: 
+Action:
 References: https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini
 
 ## Limits

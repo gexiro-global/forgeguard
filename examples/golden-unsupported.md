@@ -15,7 +15,7 @@ Source: anonymous-http
 Observed: {"/api/v1/repos/search?limit=1": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": true, "https": true, "json": false, "nosniff": false, "status": 403}, "/api/v1/users/search?limit=1": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": true, "https": true, "json": false, "nosniff": false, "status": 403}}
 Expected: Private intent: review anonymous HTTP 200; public/unspecified: informational.
 Reason: Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.
-Action: 
+Action:
 References: https://github.com/go-gitea/gitea/blob/v1.27.3/templates/swagger/v1\_json.tmpl
 
 ## FG-CVE-27771 — CVE-2026-27771 version posture
@@ -42,8 +42,8 @@ Source: anonymous-http
 Observed: {"/api/v1/repos/search?limit=1": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": true, "https": true, "json": false, "nosniff": false, "status": 403}, "/api/v1/users/search?limit=1": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": true, "https": true, "json": false, "nosniff": false, "status": 403}, "/api/v1/version": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": false, "https": true, "json": true, "nosniff": false, "status": 200}, "/explore/repos": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": true, "https": true, "json": false, "nosniff": false, "status": 403}, "/v2/": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": true, "https": true, "json": false, "nosniff": false, "status": 403}}
 Expected: Verified HTTPS; header summaries apply only to returned response types.
 Reason: HTTPS means certificate verification on this request, not a TLS audit. X-Frame-Options only describes embedding protection for HTML; nosniff is a limited response observation. HSTS/CSP presence is informational and is not policy validation. Reverse proxies may supply headers. No penalty from presence alone.
-Action: 
-References: 
+Action:
+References:
 
 ## FG-REG — OCI registry-root HTTP response
 pass | assessed | applicable
@@ -51,7 +51,7 @@ Source: anonymous-http
 Observed: {"/v2/": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": true, "https": true, "json": false, "nosniff": false, "status": 403}}
 Expected: Private intent: review anonymous HTTP 200; public/unspecified: informational.
 Reason: Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.
-Action: 
+Action:
 References: https://github.com/go-gitea/gitea/blob/v1.27.3/templates/swagger/v1\_json.tmpl
 
 ## FG-SIGNIN — Repository browser HTTP response
@@ -60,7 +60,7 @@ Source: anonymous-http
 Observed: {"/explore/repos": {"complete": true, "csp\_present": false, "frame\_policy": false, "hsts\_present": false, "html": true, "https": true, "json": false, "nosniff": false, "status": 403}}
 Expected: Private intent: review anonymous HTTP 200; public/unspecified: informational.
 Reason: Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning.
-Action: 
+Action:
 References: https://github.com/go-gitea/gitea/blob/v1.27.3/templates/swagger/v1\_json.tmpl
 
 ## FG-VER — Product and version provenance
@@ -69,8 +69,8 @@ Source: operator-declared
 Observed: {"declared\_product": "gitea", "declared\_version": null, "declared\_version\_marker": null, "normalized\_version": "99.0.0", "observed\_product\_marker": null, "observed\_version": "99.0.0", "product\_conflict": false, "product\_source": "operator-declared", "provider\_revision": "1", "support": "unsupported", "version\_conflict": false}
 Expected: Declared product and consistent qualified upstream version.
 Reason: Product is an operator declaration; version conflicts stop advisory inference.
-Action: 
-References: 
+Action:
+References:
 
 ## FG-VER-DISCLOSE — Anonymous version disclosure
 info | assessed | applicable
@@ -78,8 +78,8 @@ Source: anonymous-http
 Observed: {"disclosed": true, "endpoint": "/api/v1/version"}
 Expected: Review intentional version disclosure.
 Reason: An explicit version value was returned anonymously; no independent penalty.
-Action: 
-References: 
+Action:
+References:
 
 ## Limits
 - Operator declarations are not independent product detection.

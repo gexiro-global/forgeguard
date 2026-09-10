@@ -37,4 +37,4 @@ def render_markdown(result):
             ]
         )
     out.extend(["## Limits", *("- " + esc(x) for x in result.limitations)])
-    return "\n".join(out) + "\n"
+    return "\n".join(line.rstrip() for line in out) + "\n"

@@ -6,12 +6,12 @@ SHA-256: c3b4bb2d6093897483348925aaa73af03b3e3f4bd4ca38cef26dcb4212a2682e
 
 Notice from https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/sarif-v2.1.0-errata01-os-complete.html
 
-Copyright © OASIS Open 2023. All Rights Reserved. 
+Copyright © OASIS Open 2023. All Rights Reserved.
 
  All capitalized terms in the following text have the
 meanings assigned to them in the OASIS Intellectual Property Rights Policy (the
 "OASIS IPR Policy"). The full  Policy  may be
-found at the OASIS website: [ https://www.oasis-open.org/policies-guidelines/ipr/ ]. 
+found at the OASIS website: [ https://www.oasis-open.org/policies-guidelines/ipr/ ].
 
  This document and translations of it may be copied and furnished
 to others, and derivative works that comment on or otherwise explain it or
@@ -23,10 +23,10 @@ in any way, including by removing the copyright notice or references to OASIS,
 except as needed for the purpose of developing any document or deliverable
 produced by an OASIS Technical Committee (in which case the rules applicable to
 copyrights, as set forth in the OASIS IPR Policy, must be followed) or as
-required to translate it into languages other than English. 
+required to translate it into languages other than English.
 
  The limited permissions granted above are perpetual and will
-not be revoked by OASIS or its successors or assigns. 
+not be revoked by OASIS or its successors or assigns.
 
  This document and the information contained herein is
 provided on an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES,
@@ -35,18 +35,18 @@ THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED
 WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. OASIS AND
 ITS MEMBERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR
 CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THIS DOCUMENT OR ANY PART
-THEREOF. 
+THEREOF.
 
  As stated in the OASIS IPR Policy, the following three
 paragraphs in brackets apply to OASIS Standards Final Deliverable documents (Committee
-Specifications, OASIS Standards, or Approved Errata). 
+Specifications, OASIS Standards, or Approved Errata).
 
  [OASIS requests that any OASIS Party or any other party that
 believes it has patent claims that would necessarily be infringed by
 implementations of this OASIS Standards Final Deliverable, to notify OASIS TC
 Administrator and provide an indication of its willingness to grant patent
 licenses to such patent claims in a manner consistent with the IPR Mode of the
-OASIS Technical Committee that produced this deliverable.] 
+OASIS Technical Committee that produced this deliverable.]
 
  [OASIS invites any party to contact the OASIS TC
 Administrator if it is aware of a claim of ownership of any patent claims that
@@ -54,7 +54,7 @@ would necessarily be infringed by implementations of this OASIS Standards Final
 Deliverable by a patent holder that is not willing to provide a license to such
 patent claims in a manner consistent with the IPR Mode of the OASIS Technical
 Committee that produced this OASIS Standards Final Deliverable. OASIS may
-include such claims on its website, but disclaims any obligation to do so.] 
+include such claims on its website, but disclaims any obligation to do so.]
 
  [OASIS takes no position regarding the validity or scope of
 any intellectual property or other rights that might be claimed to pertain to
@@ -70,10 +70,10 @@ of such proprietary rights by implementers or users of this OASIS Standards
 Final Deliverable, can be obtained from the OASIS TC Administrator. OASIS makes
 no representation that any information or list of intellectual property rights
 will at any time be complete, or that any claims in such list are, in fact, Essential
-Claims.] 
+Claims.]
 
  The name "OASIS" is a trademark of  OASIS , the owner and developer of this document,
 and should be used only to refer to the organization and its official outputs.
 OASIS welcomes reference to, and implementation and use of, documents, while
-reserving the right to enforce its marks against misleading uses. Please see  https://www.oasis-open.org/policies-guidelines/trademark/ 
+reserving the right to enforce its marks against misleading uses. Please see  https://www.oasis-open.org/policies-guidelines/trademark/
 for above guidance.

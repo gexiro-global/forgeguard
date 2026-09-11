@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to semantic versioning.
 
+## [0.7.1] - 2026-09-11
+
+### Fixed
+
+- `versionsec --version` and `forgeguard --version` exited with code 2 and
+  `Error: No such option: --version` in 0.7.0. Both now exit 0 and print a deterministic
+  version line. **0.7.0 is superseded**; only the version flag was affected, scanning,
+  configuration review and runner review behaved correctly in 0.7.0.
+
+### Added
+
+- `--version` on the canonical and the compatibility entrypoint. Canonical output is
+  `VersionSec <version>`; the legacy entrypoint appends `(forgeguard compatibility CLI)` so
+  it identifies itself without presenting ForgeGuard as the current brand.
+- `tests/test_release_contract.py`: the documented release-contract commands are now executed
+  as real subprocesses against installed console scripts, in the source environment and in
+  clean virtual environments built from the wheel and from the sdist. The 0.7.0 defect existed
+  because the suite asserted `__version__` and used in-process runners, which cannot observe a
+  missing CLI option.
+
 ## [0.7.0] - 2026-09-11
 
 **ForgeGuard is now VersionSec.** Releases up to and including 0.6.0 were published as

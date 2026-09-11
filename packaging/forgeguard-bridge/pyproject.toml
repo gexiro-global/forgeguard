@@ -12,7 +12,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "forgeguard"
-version = "0.7.0"
+version = "0.7.1"
 description = "Compatibility bridge: ForgeGuard is now VersionSec. Installs versionsec."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -30,7 +30,7 @@ classifiers = [
   "Topic :: Security",
 ]
 dependencies = [
-  "versionsec==0.7.0"
+  "versionsec==0.7.1"
 ]
 
 [project.urls]

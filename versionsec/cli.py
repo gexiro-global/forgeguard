@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import json
+import sys
+from importlib.metadata import entry_points
 from pathlib import Path
 from typing import Annotated
 
@@ -17,6 +19,7 @@ from .providers.registry import PROVIDERS
 from .runner_review import RunnerSnapshot
 from .runner_review import review as runner_review_fn
 from .urls import normalize_target_url
+from .version import __version__
 
 app = typer.Typer(
     add_completion=False,
@@ -30,6 +33,61 @@ runner_app = typer.Typer(
     help="Offline review of an explicitly supplied runner posture snapshot."
 )
 app.add_typer(runner_app, name="runner")
+
+CANONICAL_ENTRYPOINT = "versionsec"
+
+
+def invocation_name() -> str:
+    """Return the console-script name the user actually invoked."""
+    raw = Path(sys.argv[0]).name if sys.argv and sys.argv[0] else ""
+    return raw.removesuffix(".exe").removesuffix(".py").lower()
+
+
+def alias_entrypoints() -> frozenset[str]:
+    """Console scripts this package installs, read from metadata rather than hardcoded."""
+    try:
+        scripts = entry_points(group="console_scripts")
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+    ):  # pragma: no cover - broken install metadata
+        return frozenset()
+    return frozenset(
+        script.name
+        for script in scripts
+        if script.value.startswith(f"{CANONICAL_ENTRYPOINT}.cli")
+        and script.name != CANONICAL_ENTRYPOINT
+    )
+
+
+def version_line() -> str:
+    """Release-contract version string; canonical brand even on a compatibility alias."""
+    invoked = invocation_name()
+    if invoked in alias_entrypoints():
+        return f"VersionSec {__version__} ({invoked} compatibility CLI)"
+    return f"VersionSec {__version__}"
+
+
+def _version_option(value: bool) -> None:
+    if value:
+        typer.echo(version_line())
+        raise typer.Exit()
+
+
+@app.callback()
+def entrypoint(
+    version: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            callback=_version_option,
+            is_eager=True,
+            help="Show the VersionSec version and exit.",
+        ),
+    ] = False,
+) -> None:
+    """VersionSec by Gexiro. Bounded posture for one authorized forge."""
 
 
 async def _run(

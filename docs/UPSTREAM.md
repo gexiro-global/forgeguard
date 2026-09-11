@@ -22,6 +22,29 @@ The unchanged OASIS schema and complete copyright notice are included under forg
 
 Forgejo v16.0.4 Makefile appends GITEA_COMPATIBILITY=gitea-1.22.0 to its API version. Source: https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/Makefile (SHA-256 acf93a41758c7b70eb899a69f34ed76788dc863c5f0020aa97f4015766a49b77). Both v15/v16 version handlers return setting.AppVer; source handlers SHA-256 478bd137f67e29a045e6b8ff55073d4d473028f1d6e6889cec1cff81af8046b0. Real integration observed the compatibility suffix in both exact target releases. It is a compatibility marker, not independent product confirmation.
 
+## Runner review upstream evidence
+
+Retrieved 2026-09-11. These citations are documentation-only (not wired into the
+`tests/test_sources.py` frozen-manifest re-verification that binds the HTTP advisory catalog);
+each was independently confirmed by downloading the exact, checksum-verified official release
+binary and running its own `--version` and `generate-config` (no registration, no network job
+execution) rather than trusting a blog post.
+
+| Fact | Source | Retrieved |
+|---|---|---|
+| Gitea Runner >=3.0.0 strips host-escape `container.options` (`PidMode`, `CapAdd`, `SecurityOpt`, `Devices`, `DeviceCgroupRules`, `DeviceRequests`, `VolumesFrom`, `Runtime`, `CgroupParent`, `Sysctls`, ...) from non-privileged job containers | [blog.gitea.com/release-of-runner-3.0.0](https://blog.gitea.com/release-of-runner-3.0.0/), [gitea/runner#1058](https://gitea.com/gitea/runner/issues/1058) | 2026-09-11 |
+| `gitea-runner` v3.4.2 self-reported version and `generate-config` output confirm the exact `privileged`/`valid_volumes`/`network`/`docker_host`/`options` field names and defaults, and the non-privileged option-stripping note verbatim in the generated config comments | `https://gitea.com/gitea/runner/releases/download/v3.4.2/gitea-runner-3.4.2-linux-amd64`, sha256 `3d823df5b6084d6d8d8cfb86713a5525285eb99d0ca66692b87e050e3eec2466` (verified against the release's own `checksums.txt`) | 2026-09-11 |
+| Forgejo Runner v13.0.0 removes implicit `DOCKER_USERNAME`/`DOCKER_PASSWORD` registry auth (replaced by explicit `jobs.<job_id>.container.credentials`) and removes the `add-path`/`set-output`/`set-env` workflow commands (workflow-command-injection class) | [forgejo.org/2026-08-runner-release-v13](https://forgejo.org/2026-08-runner-release-v13/) | 2026-09-11 |
+| Forgejo Runner v13.1.0 adds an experimental, alpha-stability gRPC plugin execution-engine protocol; no stability guarantee | [forgejo.org/2026-09-runner-release-v131](https://forgejo.org/2026-09-runner-release-v131/) | 2026-09-11 |
+| `forgejo-runner` v13.1.0 self-reported version and `generate-config` output confirm the same `container.privileged`/`valid_volumes`/`network`/`docker_host`/`options` field names as Gitea, and that `docker_host="-"` (default) means no daemon socket is mounted into the job container while a non-empty value mounts it at `/var/run/docker.sock` | `https://code.forgejo.org/forgejo/runner/releases/download/v13.1.0/forgejo-runner-13.1.0-linux-amd64`, sha256 `29dae21e93f0eab5cdf3564008d44603c74770b41a4f4f1aceed172c774bc376` (verified against the release's own `.sha256` file) | 2026-09-11 |
+| Forgejo Actions security guidance: `container.privileged` default `false`; `container.valid_volumes` default `[]`, wildcard `**` allows any volume; `docker`/`lxc`/`host` label isolation levels (`lxc` has no CPU/memory/disk/network limit enforcement; `host` runs as the runner's own user with zero isolation) | [forgejo.org/docs/latest/admin/actions/security](https://forgejo.org/docs/latest/admin/actions/security/) | 2026-09-11 |
+| Ephemeral registration (`--ephemeral`) is server-enforced: at most one job, credential revoked on assignment; stricter than `--once` (stops after one job but the credential remains valid) — confirmed identically documented for both Gitea and Forgejo runners | [forgejo.org/docs/v15.0/admin/actions/registration](https://forgejo.org/docs/v15.0/admin/actions/registration/), [docs.gitea.com/runner/registration](https://docs.gitea.com/runner/registration/) | 2026-09-11 |
+
+Gitea Runner's Docker Hub image `gitea/act_runner:latest` was checked and found to self-report
+`version=v0.6.1` — a stale/mismatched tag scheme relative to the real `gitea.com/gitea/runner`
+source releases (`v3.4.2` at the time of this qualification). ForgeGuard's citations and
+qualified-version list use the verified source-repo binary, not that Docker Hub image.
+
 ## Gitea previous-line qualification
 
 Read 2026-09-10: [release management](https://github.com/go-gitea/gitea/blob/579de92b8adceb4d0feea7d6a142809440e68b9c/docs/release-management.md)

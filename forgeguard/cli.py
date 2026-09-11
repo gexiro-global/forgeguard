@@ -14,6 +14,8 @@ from .engine import assess
 from .models import Status
 from .output import prepare_outputs, render_outputs
 from .providers.registry import PROVIDERS
+from .runner_review import RunnerSnapshot
+from .runner_review import review as runner_review_fn
 from .urls import normalize_target_url
 
 app = typer.Typer(
@@ -24,6 +26,10 @@ config_app = typer.Typer(
     help="Offline review of explicitly supplied anonymized snapshots."
 )
 app.add_typer(config_app, name="config")
+runner_app = typer.Typer(
+    help="Offline review of an explicitly supplied runner posture snapshot."
+)
+app.add_typer(runner_app, name="runner")
 
 
 async def _run(
@@ -217,6 +223,31 @@ def config_review(
     _finish(result, paths)
 
 
+@runner_app.command("review")
+def runner_review(
+    snapshot: Annotated[Path, typer.Option("--snapshot")],
+    out: Annotated[Path | None, typer.Option("--out")] = None,
+    fmt: Annotated[str, typer.Option("--format")] = "md",
+):
+    """Zero-network review of an operator-declared runner posture snapshot."""
+    try:
+        paths = prepare_outputs(fmt, out, snapshot)
+        if snapshot.is_symlink() or not snapshot.is_file():
+            raise ValueError("Snapshot must be a regular file")
+        with snapshot.open("rb") as stream:
+            raw = stream.read(262145)
+        if len(raw) > 262144:
+            raise ValueError("Snapshot exceeds size limit")
+        parsed = RunnerSnapshot.model_validate_json(raw)
+        result = runner_review_fn(parsed)
+    except (ValueError, ValidationError, OSError):
+        # Validation errors can contain rejected secret-bearing input.
+        _refuse(
+            "Invalid snapshot or output path; check the closed runner-snapshot schema"
+        )
+    _finish(result, paths)
+
+
 @app.command("providers")
 def list_providers():
     """Show provider capabilities and exact configuration qualification targets."""
@@ -230,6 +261,9 @@ def list_providers():
                     "config_keys": [s.key for s in p.settings],
                     "api_source": p.api_source,
                     "config_source": p.config_source,
+                    "runner_product": p.runner.product,
+                    "runner_qualification_targets": list(p.runner.qualified_versions),
+                    "runner_security_source": p.runner.security_source,
                     "integration_status": "See release candidate evidence; target list is not a test result.",
                 }
                 for p in PROVIDERS.values()
@@ -258,6 +292,17 @@ def list_checks():
             checks[r.id] = p + ": " + r.title
     for suffix in ("REGISTRATION", "SIGNIN", "PRIVACY", "MFA"):
         checks["FG-CONFIG-" + suffix] = "Offline declared " + suffix.lower()
+    for suffix, text in (
+        ("VERSION", "Runner version provenance"),
+        ("EXECUTION", "Execution engine isolation level"),
+        ("PRIVILEGED", "Privileged container mode"),
+        ("VOLUMES", "Host volume mount allowlist"),
+        ("DOCKER", "Docker socket exposure to job containers"),
+        ("NETWORK", "Job container network mode"),
+        ("EPHEMERAL", "Runner credential/registration lifetime"),
+        ("PLUGIN", "Experimental plugin execution engine usage"),
+    ):
+        checks["FG-RUNNER-" + suffix] = "Offline declared runner: " + text
     for id_, text in sorted(checks.items()):
         typer.echo(f"{id_:28} {text}")
 

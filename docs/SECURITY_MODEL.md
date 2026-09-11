@@ -1,8 +1,10 @@
-# Security model — 0.5 preview
+# Security model
 
-ForgeGuard assesses one explicitly authorized base URL or one operator-supplied
-offline snapshot. It performs no discovery, exploitation, auth bypass, writes,
-account creation, private content retrieval or automatic remediation.
+ForgeGuard assesses one explicitly authorized base URL, one operator-supplied
+offline configuration snapshot, or one operator-supplied offline runner posture
+snapshot (see [runner review](RUNNER_REVIEW.md)). It performs no discovery,
+exploitation, auth bypass, writes, account creation, private content retrieval,
+runner registration or automatic remediation.
 
 Product identity is an operator declaration, separate from version evidence.
 A compatible API does not identify Gitea or Forgejo. Opposing markers in inventory

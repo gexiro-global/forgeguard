@@ -1,4 +1,4 @@
-from .base import ProviderBase, Setting, common_settings, release_version
+from .base import ProviderBase, RunnerInfo, Setting, common_settings, release_version
 
 
 class ForgejoProvider(ProviderBase):
@@ -13,6 +13,12 @@ class ForgejoProvider(ProviderBase):
             "none",
             config_source,
         ),
+    )
+    runner = RunnerInfo(
+        product="forgejo-runner",
+        qualified_versions=("13.0.0", "13.1.0"),
+        config_source="https://forgejo.org/docs/latest/admin/actions/security/",
+        security_source="https://forgejo.org/2026-08-runner-release-v13/",
     )
 
     def normalize_version(self, raw: str | None) -> tuple[int, int, int] | None:

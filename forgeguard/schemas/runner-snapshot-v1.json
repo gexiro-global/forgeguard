@@ -1,0 +1,155 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_id": {
+      "const": "forgeguard.runner-snapshot.v1",
+      "title": "Schema Id",
+      "type": "string"
+    },
+    "product": {
+      "enum": [
+        "gitea",
+        "forgejo"
+      ],
+      "title": "Product",
+      "type": "string"
+    },
+    "server_version": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Server Version",
+      "type": "string"
+    },
+    "runner_product": {
+      "enum": [
+        "gitea-runner",
+        "forgejo-runner"
+      ],
+      "title": "Runner Product",
+      "type": "string"
+    },
+    "runner_version": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Runner Version",
+      "type": "string"
+    },
+    "instance_alias": {
+      "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+      "title": "Instance Alias",
+      "type": "string"
+    },
+    "runner_alias": {
+      "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+      "title": "Runner Alias",
+      "type": "string"
+    },
+    "snapshot_at": {
+      "title": "Snapshot At",
+      "type": "string"
+    },
+    "provenance": {
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Provenance",
+      "type": "string"
+    },
+    "runner_scope": {
+      "enum": [
+        "dedicated",
+        "shared"
+      ],
+      "title": "Runner Scope",
+      "type": "string"
+    },
+    "workload_trust": {
+      "enum": [
+        "trusted-only",
+        "mixed-untrusted"
+      ],
+      "title": "Workload Trust",
+      "type": "string"
+    },
+    "ephemeral": {
+      "enum": [
+        "ephemeral",
+        "once",
+        "persistent"
+      ],
+      "title": "Ephemeral",
+      "type": "string"
+    },
+    "execution_engine": {
+      "enum": [
+        "docker",
+        "lxc",
+        "host",
+        "plugin"
+      ],
+      "title": "Execution Engine",
+      "type": "string"
+    },
+    "privileged": {
+      "title": "Privileged",
+      "type": "boolean"
+    },
+    "docker_socket": {
+      "enum": [
+        "not-exposed",
+        "host-daemon-exposed-to-job",
+        "dedicated-dind",
+        "rootless-dind",
+        "unknown"
+      ],
+      "title": "Docker Socket",
+      "type": "string"
+    },
+    "valid_volumes": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 32,
+      "title": "Valid Volumes",
+      "type": "array"
+    },
+    "network": {
+      "enum": [
+        "isolated",
+        "host",
+        "custom"
+      ],
+      "title": "Network",
+      "type": "string"
+    },
+    "plugin_usage": {
+      "default": "unused",
+      "enum": [
+        "unused",
+        "declared-experimental",
+        "unknown"
+      ],
+      "title": "Plugin Usage",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_id",
+    "product",
+    "server_version",
+    "runner_product",
+    "runner_version",
+    "instance_alias",
+    "runner_alias",
+    "snapshot_at",
+    "provenance",
+    "runner_scope",
+    "workload_trust",
+    "ephemeral",
+    "execution_engine",
+    "privileged",
+    "docker_socket",
+    "network"
+  ],
+  "title": "RunnerSnapshot",
+  "type": "object"
+}

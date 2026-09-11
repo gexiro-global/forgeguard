@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to semantic versioning.
 
+## [0.6.0] - 2026-09-11
+
+Control Plane Hardening.
+
+- Add `forgeguard runner review`: an offline, zero-network assessment of one
+  operator-declared Gitea or Forgejo Actions runner's security posture, validated
+  against a new closed schema `forgeguard.runner-snapshot.v1`
+  (`forgeguard/schemas/runner-snapshot-v1.json`). It never reads runner credentials,
+  `.runner` files, Docker/registry secrets, or repository secrets, and refuses any
+  field outside the closed schema without echoing the rejected input.
+- Add eight provider-aware checks: `FG-RUNNER-VERSION`, `FG-RUNNER-EXECUTION`,
+  `FG-RUNNER-PRIVILEGED`, `FG-RUNNER-VOLUMES`, `FG-RUNNER-DOCKER`, `FG-RUNNER-NETWORK`,
+  `FG-RUNNER-EPHEMERAL`, `FG-RUNNER-PLUGIN`. Severity depends on the declared
+  `workload_trust` (trusted-only vs mixed-untrusted), never on runner version alone.
+  When `execution_engine=host`, the four container-specific checks correctly report
+  `not_applicable` instead of re-penalizing one root cause five times.
+- Runner qualification targets: Gitea Runner 3.4.2 and Forgejo Runner 13.0.0 / 13.1.0,
+  each independently verified via the exact, checksum-verified official release binary's
+  own `--version` and `generate-config` output — see [docs/UPSTREAM.md](docs/UPSTREAM.md).
+- `forgeguard.config-snapshot.v1` is unchanged; 0.5.0 config-review snapshots remain valid.
+- Add `docs/RUNNER_REVIEW.md`; update README, CHECKS.md, PROVIDERS.md, UPSTREAM.md.
+
 ## [0.5.0] - 2026-09-11
 
 - Complete the R01 qualification contract: the manifest must carry all of G01-G15 (each PASS) and a closed set of hash-bound evidence categories; the preflight compares the exact source ref and run attempt, requires the manifest hash, enforces an exact two-file set, and shares a no-network publisher-stub handoff (`promote_handoff`) used by both the workflow and tests.

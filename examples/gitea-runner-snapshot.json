@@ -1,0 +1,20 @@
+{
+  "schema_id": "forgeguard.runner-snapshot.v1",
+  "product": "gitea",
+  "server_version": "1.27.3",
+  "runner_product": "gitea-runner",
+  "runner_version": "3.4.2",
+  "instance_alias": "synthetic-gitea",
+  "runner_alias": "synthetic-runner-02",
+  "snapshot_at": "2026-09-10T12:00:00Z",
+  "provenance": "Synthetic fixture; not a runtime observation.",
+  "runner_scope": "shared",
+  "workload_trust": "mixed-untrusted",
+  "ephemeral": "once",
+  "execution_engine": "docker",
+  "privileged": false,
+  "docker_socket": "rootless-dind",
+  "valid_volumes": ["data", "/src/*.json"],
+  "network": "isolated",
+  "plugin_usage": "unused"
+}

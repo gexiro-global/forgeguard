@@ -10,6 +10,10 @@
 
 Read-only posture assessment for one explicitly authorized self-hosted Gitea or Forgejo instance, or an explicitly supplied anonymized configuration snapshot.
 
+## Control Plane Hardening — 0.6.0
+
+Adds an offline runner posture review (`forgeguard runner review`) for the trust boundaries that matter most to a Gitea or Forgejo administrator: execution engine isolation, privileged mode, host volume mounts, Docker socket exposure, job network mode, ephemeral registration, and the experimental Forgejo plugin engine. Runner review is zero-network, evaluates only an explicitly supplied `forgeguard.runner-snapshot.v1` snapshot, and never reads runner credentials, `.runner` files, or Docker/registry secrets. Runner qualification targets are Gitea Runner 3.4.2 and Forgejo Runner 13.0.0 / 13.1.0 — see [upstream evidence](docs/UPSTREAM.md) and [runner review](docs/RUNNER_REVIEW.md).
+
 ## Multi-Forge Support — 0.5.0
 
 Adds Gitea or Forgejo as separate providers, with operator-declared product identity, finite provider-specific advisory catalogs, exposure intent, request profiles, offline configuration review of an explicitly supplied snapshot, and JSON/Markdown/SARIF exports. It does not scan application source code or private artifact contents.
@@ -25,7 +29,7 @@ python -m pip install forgeguard
 Or pin the exact release:
 
 ```bash
-python -m pip install forgeguard==0.5.0
+python -m pip install forgeguard==0.6.0
 ```
 
 ## Usage
@@ -36,6 +40,7 @@ forgeguard checks
 forgeguard scan --url https://git.example.com/team --authorized --product forgejo --profile standard --policy public --dry-run
 forgeguard scan --url https://git.example.com/team --authorized --product forgejo --profile standard --policy public --format json
 forgeguard config review --snapshot anonymized-snapshot.json --policy private --format json
+forgeguard runner review --snapshot runner-snapshot.json --format json
 ```
 
 Use minimal for one version request, standard for five bounded existing requests, or extended for those requests plus root. The profiles change scope, not aggressiveness. Exposure intent (public/private/unspecified) is independent; unspecified is the default.
@@ -65,7 +70,7 @@ JSON uses forgeguard.assessment.v1 with a packaged schema. SARIF 2.1.0 is schema
 - [Migration and exit codes](docs/MIGRATION_0_5.md)
 - [Security model](docs/SECURITY_MODEL.md) and [authorized use](AUTHORIZED_USE.md)
 - [Scoring](docs/SCORING.md), [checks](docs/CHECKS.md), [upstream evidence](docs/UPSTREAM.md)
-- [Provider guide](docs/PROVIDERS.md) and [integration lab](docs/INTEGRATION_TESTING.md)
+- [Provider guide](docs/PROVIDERS.md), [runner review](docs/RUNNER_REVIEW.md) and [integration lab](docs/INTEGRATION_TESTING.md)
 - [Candidate notes](docs/RELEASE_CANDIDATE_0_5.md) and [release checklist](docs/RELEASE_CHECKLIST.md)
 
 Historical 0.2.2 before/after examples remain in examples/ for migration context. Current examples use the golden- prefix and are synthetic offline fixtures, not production scans.

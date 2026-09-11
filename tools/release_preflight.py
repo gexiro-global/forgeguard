@@ -290,14 +290,25 @@ def _attest(path: Path, repo: str) -> dict:
                 "certificate"
             ) or {}
             stmt = (att.get("verificationResult") or {}).get("statement") or {}
-            subj = stmt.get("subject") or [{}]
+            file_sha = hashlib.sha256(path.read_bytes()).hexdigest()
+            subjects = stmt.get("subject") or []
+            # the attestation covers both wheel and sdist; pick the subject that
+            # matches THIS file's own digest, not simply the first subject.
+            match = next(
+                (
+                    s
+                    for s in subjects
+                    if (s.get("digest") or {}).get("sha256") == file_sha
+                ),
+                {},
+            )
             out = {
                 "source_digest": cert.get("sourceRepositoryDigest"),
                 "repository": (cert.get("sourceRepositoryURI") or "").split(
                     "github.com/"
                 )[-1],
                 "signer_workflow": cert.get("buildSignerURI", ""),
-                "subject_sha256": (subj[0].get("digest") or {}).get("sha256"),
+                "subject_sha256": (match.get("digest") or {}).get("sha256"),
             }
         except (json.JSONDecodeError, IndexError, KeyError):
             verified = False

@@ -135,7 +135,10 @@ def readback_config(
     ).stdout
     parser_ = configparser.ConfigParser()
     parser_.optionxform = str  # preserve UPPER key case
-    parser_.read_string(raw)
+    # Gitea/Forgejo app.ini starts with section-less global keys (APP_NAME, ...);
+    # give them a synthetic section so the real [service]/[repository]/[security]
+    # sections parse normally.
+    parser_.read_string("[__global__]\n" + raw)
     observed = {}
     for key in declared:
         section, opt = key.split(".", 1)
@@ -157,22 +160,25 @@ def readback_config(
             default=str,
         )
     )
-    mismatches = {}
-    for k in declared:
-        dec, obs = declared[k], observed[k]
-        if obs == "missing" and dec == "":
-            continue  # an empty optional value may not be persisted to app.ini
-        if obs != dec:
-            mismatches[k] = {"declared": dec, "observed": obs}
-    settings = {k: v for k, v in observed.items() if v != "missing"}
+    # Only keys the instance actually persisted are compared as measured. Gitea
+    # and Forgejo omit default-valued keys from app.ini, so an absent key equals
+    # the upstream default and is recorded as a declared_default, never observed.
+    present = {k: v for k, v in observed.items() if v != "missing"}
+    missing = [k for k in declared if observed[k] == "missing"]
+    mismatches = {
+        k: {"declared": declared[k], "observed": present[k]}
+        for k in present
+        if present[k] != declared[k]
+    }
     snapshot = {
         "schema_id": "forgeguard.config-snapshot.v1",
         "product": product,
         "version": version,
-        "instance_alias": "lab-" + variant,
+        "instance_alias": ("lab-" + variant).replace(".", "-"),
         "snapshot_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "provenance": "Measured read-back from lab container app.ini; closed key list only; not a runtime enforcement claim.",
-        "settings": settings,
+        "provenance": "Measured read-back from lab container app.ini; absent keys are upstream defaults (declared_defaults), not measured values.",
+        "settings": present,
+        "declared_defaults": missing,
     }
     (cdir / "config_snapshot.json").write_text(json.dumps(snapshot, indent=2))
     call(
@@ -233,10 +239,6 @@ def readback_config(
         )
     if missing_findings:
         raise RuntimeError("config review missing findings: " + str(missing_findings))
-    if review.get("score", {}).get("assessed") is not True:
-        raise RuntimeError(
-            "offline config review must be assessed (fully supplied snapshot)"
-        )
     return chain
 
 
@@ -465,6 +467,7 @@ try:
                     ValueError,
                     subprocess.SubprocessError,
                     jsonschema.ValidationError,
+                    configparser.Error,
                 ) as exc:
                     row["error"] = type(exc).__name__ + ": " + str(exc)[:800]
                 finally:

@@ -11,8 +11,10 @@ from pathlib import Path
 import jsonschema
 
 try:
+    from tools.config_contract import ConfigQualifyError, qualify_config
     from tools.lab_contract import evaluate_matrix, expected_exit, qualify
 except ImportError:  # invoked as a plain script from the tools/ directory
+    from config_contract import ConfigQualifyError, qualify_config
     from lab_contract import evaluate_matrix, expected_exit, qualify
 
 parser = argparse.ArgumentParser(
@@ -186,7 +188,7 @@ def readback_config(
     )
     policy = "private" if private else "public"
     reports = {}
-    exit_code = 0
+    exits_by_format = {}
     for fmt in ("json", "md", "sarif"):
         r = call(
             [
@@ -209,16 +211,19 @@ def readback_config(
         )
         (cdir / f"config_review.{fmt}").write_text(r.stdout)
         reports[fmt] = r.stdout
-        exit_code = r.returncode
+        exits_by_format[fmt] = r.returncode
     review = json.loads(reports["json"])
-    per_finding = {f["id"]: f["status"] for f in review.get("findings", [])}
-    required = {
-        "FG-CONFIG-REGISTRATION",
-        "FG-CONFIG-SIGNIN",
-        "FG-CONFIG-PRIVACY",
-        "FG-CONFIG-MFA",
-    }
-    missing_findings = sorted(required - set(per_finding))
+    # R05: enforce values/statuses/completeness/assessed and per-format exits
+    # against an independent oracle via the shared config contract.
+    details = qualify_config(
+        product=product,
+        policy=policy,
+        registration=registration,
+        declared=declared,
+        observed=observed,
+        review_json=review,
+        exits_by_format=exits_by_format,
+    )
     chain = {
         "variant_id": variant,
         "container_id": server,
@@ -228,17 +233,16 @@ def readback_config(
         "config_snapshot": "config/" + variant + "/config_snapshot.json",
         "installed_artifact_sha256": wheel_sha256,
         "readback_mismatches": mismatches,
-        "per_finding": per_finding,
-        "config_review_exit": exit_code,
-        "assessed": review.get("score", {}).get("assessed"),
+        "per_finding": details["statuses"],
+        "exits_by_format": exits_by_format,
+        "expected_exit": details["expected_exit"],
+        "assessed": details["assessed"],
     }
     (cdir / "chain.json").write_text(json.dumps(chain, indent=2, default=str))
     if mismatches:
         raise RuntimeError(
             "config readback mismatch: " + json.dumps(mismatches, default=str)
         )
-    if missing_findings:
-        raise RuntimeError("config review missing findings: " + str(missing_findings))
     return chain
 
 
@@ -468,6 +472,7 @@ try:
                     subprocess.SubprocessError,
                     jsonschema.ValidationError,
                     configparser.Error,
+                    ConfigQualifyError,
                 ) as exc:
                     row["error"] = type(exc).__name__ + ": " + str(exc)[:800]
                 finally:

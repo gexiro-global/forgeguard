@@ -10,7 +10,7 @@
 
 Read-only posture assessment for one explicitly authorized self-hosted Gitea or Forgejo instance, or an explicitly supplied anonymized configuration snapshot.
 
-## Multi-Forge Preview — 0.5.0rc1
+## Multi-Forge Preview — 0.5.0rc4
 
 This is an unreleased candidate. It adds separate providers, operator-declared product identity, finite provider-specific advisory catalogs, exposure intent, request profiles, offline configuration review and JSON/Markdown/SARIF exports. It does not scan application source code or private artifact contents.
 
@@ -23,7 +23,7 @@ Build the candidate checkout, then install the resulting wheel:
 ```bash
 python -m pip install -e ".[dev]"
 python -m build
-python -m pip install dist/forgeguard-0.5.0rc1-py3-none-any.whl
+python -m pip install dist/forgeguard-0.5.0rc4-py3-none-any.whl
 ```
 
 No stable release or PyPI publication is performed by the milestone.

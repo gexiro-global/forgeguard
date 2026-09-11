@@ -23,6 +23,10 @@ on:
         description: "Full 40-char commit SHA of the qualified candidate."
         type: string
         default: ""
+      source_ref:
+        description: "Exact allowed source ref (e.g. refs/heads/feat/forgeguard-v0.5-multiforge)."
+        type: string
+        default: ""
       run_id:
         description: "Completed successful trusted PUSH run id whose exact artifacts are promoted."
         type: string
@@ -75,6 +79,14 @@ jobs:
           mkdir -p dist
           gh run download "$FG_RUN_ID" --repo "${{ github.repository }}" -n candidate-dist -D dist
           ls -l dist
+      - name: Fetch qualification evidence package (owner-supplied; hash-bound by manifest)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FG_RUN_ID: ${{ inputs.run_id }}
+        run: |
+          mkdir -p qualification_evidence
+          # optional: an owner-provided evidence artifact bound by the manifest hashes.
+          gh run download "$FG_RUN_ID" --repo "${{ github.repository }}" -n qualification-evidence -D qualification_evidence 2>/dev/null || true
       - name: Preflight gate (validates data + real attestation; no upload)
         id: gate
         env:
@@ -85,9 +97,12 @@ jobs:
           FG_PUBLISH: ${{ inputs.publish }}
           FG_INPUT_VERSION: ${{ inputs.version }}
           FG_SOURCE_SHA: ${{ inputs.source_sha }}
+          FG_SOURCE_REF: ${{ inputs.source_ref }}
           FG_RUN_ID: ${{ inputs.run_id }}
+          FG_RUN_ATTEMPT: ${{ inputs.run_attempt }}
           FG_MANIFEST_PATH: qualification_manifest.json
           FG_MANIFEST_SHA256: ${{ inputs.manifest_sha256 }}
+          FG_EVIDENCE_DIR: qualification_evidence
           FG_DIST_DIR: dist
           FG_BUILT_IN_PROMOTION: "false"
         run: python tools/release_preflight.py
@@ -105,6 +120,10 @@ jobs:
       contents: read
       actions: read
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
       - name: Download the same qualified artifacts (no rebuild)
         env:
           GH_TOKEN: ${{ github.token }}
@@ -112,27 +131,27 @@ jobs:
         run: |
           mkdir -p dist
           gh run download "$FG_RUN_ID" --repo "${{ github.repository }}" -n candidate-dist -D dist
-      - name: Re-verify exact digests against the manifest before upload
+      - name: Validate the exact two-file set and digests via the shared handoff
         env:
           FG_MANIFEST_JSON: ${{ inputs.manifest_json }}
         run: |
           printf '%s' "$FG_MANIFEST_JSON" > qualification_manifest.json
           python - <<'PY'
-          import hashlib, glob, json, sys
+          import json, sys
+          from tools.release_preflight import promote_handoff, HandoffError
           m = json.load(open("qualification_manifest.json"))
           want = {".whl": m["wheel_sha256"], ".tar.gz": m["sdist_sha256"]}
-          seen = {}
-          for p in sorted(glob.glob("dist/*")):
-              suffix = ".whl" if p.endswith(".whl") else ".tar.gz" if p.endswith(".tar.gz") else None
-              if suffix is None:
-                  sys.exit(f"unexpected file in dist: {p}")
-              d = hashlib.sha256(open(p, "rb").read()).hexdigest()
-              if d != want[suffix]:
-                  sys.exit(f"digest mismatch {p}: {d} != {want[suffix]}")
-              seen[suffix] = d
-          if set(seen) != {".whl", ".tar.gz"}:
-              sys.exit(f"expected exactly one wheel and one sdist, got {sorted(seen)}")
-          print("exact frozen set verified against manifest")
+          def check(payload):
+              for name, _size, sha in payload:
+                  suffix = ".whl" if name.endswith(".whl") else ".tar.gz"
+                  if sha != want[suffix]:
+                      raise SystemExit(f"digest mismatch {name}")
+              return [n for n, _s, _h in payload]
+          try:
+              names = promote_handoff("dist", check)
+          except HandoffError as e:
+              raise SystemExit(f"handoff refused: {e}")
+          print("exact frozen set verified against manifest:", names)
           PY
           rm -f qualification_manifest.json
       - name: Publish to PyPI

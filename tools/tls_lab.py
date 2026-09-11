@@ -15,7 +15,13 @@ import json
 import subprocess
 import time
 import uuid
+from datetime import UTC, datetime
 from pathlib import Path
+
+try:
+    from tools.lab_cleanup import cleanup_resources
+except ImportError:  # invoked as a plain script from the tools/ directory
+    from lab_cleanup import cleanup_resources
 
 GITEA_1_27_3 = (
     "docker.gitea.com/gitea@sha256:"
@@ -368,13 +374,20 @@ def main() -> int:
         }
         print("TLS_SUBPATH_TOKEN=PASS")
     finally:
-        for kind, name in reversed(created):
-            if kind == "container":
-                call(["docker", "rm", "-f", name], False)
-            else:
-                call(["docker", "network", "rm", name], False)
+
+        def _run(args):
+            r = subprocess.run(
+                args, capture_output=True, text=True, check=False, timeout=60
+            )
+            return r.returncode, r.stderr
+
+        cleanup = cleanup_resources(created, _run)
+        cleanup["at_utc"] = datetime.now(UTC).isoformat()
+        cleanup["run_prefix"] = prefix
+        (e / "cleanup").mkdir(parents=True, exist_ok=True)
+        (e / "cleanup" / "tls-cleanup.json").write_text(json.dumps(cleanup, indent=2))
         (e / "TLS_SUBPATH_MATRIX.json").write_text(json.dumps(result, indent=2))
-    return 0 if result["status"] == "PASS" else 1
+    return 0 if (result["status"] == "PASS" and cleanup["status"] == "PASS") else 1
 
 
 if __name__ == "__main__":

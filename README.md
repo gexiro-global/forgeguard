@@ -10,23 +10,23 @@
 
 Read-only posture assessment for one explicitly authorized self-hosted Gitea or Forgejo instance, or an explicitly supplied anonymized configuration snapshot.
 
-## Multi-Forge Preview — 0.5.0rc4
+## Multi-Forge Support — 0.5.0
 
-This is an unreleased candidate. It adds separate providers, operator-declared product identity, finite provider-specific advisory catalogs, exposure intent, request profiles, offline configuration review and JSON/Markdown/SARIF exports. It does not scan application source code or private artifact contents.
+Adds Gitea or Forgejo as separate providers, with operator-declared product identity, finite provider-specific advisory catalogs, exposure intent, request profiles, offline configuration review of an explicitly supplied snapshot, and JSON/Markdown/SARIF exports. It does not scan application source code or private artifact contents.
 
-Qualification targets are Gitea 1.26.4 / 1.27.3 and Forgejo 15.0.8 / 16.0.4. Target versions are not a universal support promise; see [candidate notes](docs/RELEASE_CANDIDATE_0_5.md) and the PR's actual test evidence. No complete milestone or verified attestation is implied by this README.
+Qualification targets are Gitea 1.26.4 / 1.27.3 and Forgejo 15.0.8 / 16.0.4 — these are the exact tested targets, not a universal support promise; see [release notes](docs/RELEASE_CANDIDATE_0_5.md) and the CI evidence linked from the release.
 
-## Install the candidate
-
-Build the candidate checkout, then install the resulting wheel:
+## Install
 
 ```bash
-python -m pip install -e ".[dev]"
-python -m build
-python -m pip install dist/forgeguard-0.5.0rc4-py3-none-any.whl
+python -m pip install forgeguard
 ```
 
-No stable release or PyPI publication is performed by the milestone.
+Or pin the exact release:
+
+```bash
+python -m pip install forgeguard==0.5.0
+```
 
 ## Usage
 

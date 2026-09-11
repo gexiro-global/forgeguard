@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to semantic versioning.
 
-## [0.5.0rc4] - Unreleased
+## [0.5.0] - 2026-09-11
 
 - Complete the R01 qualification contract: the manifest must carry all of G01-G15 (each PASS) and a closed set of hash-bound evidence categories; the preflight compares the exact source ref and run attempt, requires the manifest hash, enforces an exact two-file set, and shares a no-network publisher-stub handoff (`promote_handoff`) used by both the workflow and tests.
 - Extract an importable R05 config-qualification contract (`tools/config_contract.py`) that asserts finding statuses against an independent oracle, completeness/assessed, request_count, and the exit code of every export format; the lab and tests share it.

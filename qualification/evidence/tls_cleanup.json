@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "resources": [
+    {
+      "kind": "container",
+      "name": "fgtls-8223dba13f53-server",
+      "remove_exit": 0,
+      "inspect_exit": 1,
+      "absent": true,
+      "daemon_unreachable": false,
+      "ok": true,
+      "status": "removed_and_absent"
+    },
+    {
+      "kind": "container",
+      "name": "fgtls-8223dba13f53-proxy",
+      "remove_exit": 0,
+      "inspect_exit": 1,
+      "absent": true,
+      "daemon_unreachable": false,
+      "ok": true,
+      "status": "removed_and_absent"
+    },
+    {
+      "kind": "container",
+      "name": "fgtls-8223dba13f53-client",
+      "remove_exit": 0,
+      "inspect_exit": 1,
+      "absent": true,
+      "daemon_unreachable": false,
+      "ok": true,
+      "status": "removed_and_absent"
+    },
+    {
+      "kind": "network",
+      "name": "fgtls-8223dba13f53-net",
+      "remove_exit": 0,
+      "inspect_exit": 1,
+      "absent": true,
+      "daemon_unreachable": false,
+      "ok": true,
+      "status": "removed_and_absent"
+    }
+  ],
+  "failures": [],
+  "at_utc": "2026-09-11T13:12:55.309927+00:00",
+  "run_prefix": "fgtls-8223dba13f53"
+}

@@ -74,9 +74,10 @@ jobs:
     outputs:
       approved: ${{ steps.gate.outputs.approved }}
     steps:
+      # Check out only the trusted dispatch ref (github.sha), never an arbitrary
+      # inputs.source_sha, to avoid privileged execution of untrusted code. The
+      # preflight refuses unless the declared source_sha equals the built HEAD.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ inputs.source_sha }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"

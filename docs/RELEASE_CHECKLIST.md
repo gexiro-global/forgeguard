@@ -15,3 +15,21 @@
 - Keep PR draft when any mandatory evidence gate is incomplete.
 - Do not merge, publish tags/releases/PyPI, change environments, trust publishers,
   branch protection or production as part of this milestone.
+
+## Manual publish contract (no automatic publication)
+
+`release.yml` prepares and qualifies candidates on every trigger but never uploads
+automatically. A GitHub Release (`release: published`) can no longer reach the
+upload job. To publish in the future, a maintainer must:
+
+1. Dispatch the `publish` workflow (`workflow_dispatch`) against the exact commit
+   to release; the preflight refuses unless `source_sha` equals the built HEAD.
+2. Provide `version` (must equal the project version), the qualifying `run_id`
+   (must be a completed successful run), and `attestation_verified=true`.
+3. Set `publish=true`. The upload job runs only when the data-validated preflight
+   approves, and `id-token: write` is scoped to that single job.
+4. The upload job downloads the exact prepared distributions and re-verifies their
+   SHA-256 before publishing; it never rebuilds.
+
+Inputs are validated as data (`tools/release_preflight.py`), never interpolated
+into a shell. The contract is covered by `tests/test_release_workflow.py`.

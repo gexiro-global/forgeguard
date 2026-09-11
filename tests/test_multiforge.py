@@ -10,18 +10,18 @@ import jsonschema
 import pytest
 from typer.testing import CliRunner
 
-from forgeguard.advisories.evaluator import catalog, evaluate
-from forgeguard.advisories.models import Advisory
-from forgeguard.assessment import Assessment
-from forgeguard.cli import app
-from forgeguard.client import ForgeClient
-from forgeguard.config_review import Snapshot, review
-from forgeguard.engine import assess, identify
-from forgeguard.exporters.sarif import to_sarif
-from forgeguard.models import EvidenceState, Status
-from forgeguard.output import prepare_outputs, write_atomic
-from forgeguard.providers.base import release_version
-from forgeguard.providers.registry import PROVIDERS
+from versionsec.advisories.evaluator import catalog, evaluate
+from versionsec.advisories.models import Advisory
+from versionsec.assessment import Assessment
+from versionsec.cli import app
+from versionsec.client import ForgeClient
+from versionsec.config_review import Snapshot, review
+from versionsec.engine import assess, identify
+from versionsec.exporters.sarif import to_sarif
+from versionsec.models import EvidenceState, Status
+from versionsec.output import prepare_outputs, write_atomic
+from versionsec.providers.base import release_version
+from versionsec.providers.registry import PROVIDERS
 
 NOW = datetime(2026, 9, 10, 18, tzinfo=UTC)
 PRODUCTS = [("gitea", "1.27.3"), ("forgejo", "16.0.4"), ("forgejo", "15.0.8")]
@@ -38,7 +38,7 @@ def validate(result):
         ("sarif-2.1.0.json", to_sarif(result)),
     ]:
         schema = json.loads(
-            files("forgeguard").joinpath("schemas", filename).read_text()
+            files("versionsec").joinpath("schemas", filename).read_text()
         )
         jsonschema.validators.validator_for(schema)(schema).validate(obj)
     assert Assessment.model_validate(data) == result
@@ -192,7 +192,7 @@ def test_offline_config_schema_and_zero_network(monkeypatch, product):
     monkeypatch.setattr(httpx.AsyncClient, "send", denied)
     s = snapshot(product)
     schema = json.loads(
-        files("forgeguard").joinpath("schemas", "config-snapshot-v1.json").read_text()
+        files("versionsec").joinpath("schemas", "config-snapshot-v1.json").read_text()
     )
     jsonschema.Draft202012Validator(schema).validate(s.model_dump())
     result = review(s, now=NOW, policy="public")
@@ -418,7 +418,7 @@ def test_output_no_clobber_input_symlink_and_atomic_write(tmp_path):
     q = tmp_path / "new.json"
     write_atomic(q, "{}")
     assert q.read_text() == "{}"
-    assert not list(tmp_path.glob(".forgeguard-*"))
+    assert not list(tmp_path.glob(".versionsec-*"))
 
 
 def test_sarif_incomplete_without_fake_vulnerabilities():
@@ -548,7 +548,7 @@ def test_cli_live_transport_is_locally_mocked(monkeypatch):
         client._auth = httpx.AsyncClient(transport=transport)
         return client
 
-    from forgeguard import cli
+    from versionsec import cli
 
     monkeypatch.setattr(cli, "ForgeClient", factory)
     # Construct the mock clients outside the CLI's running loop.
@@ -586,7 +586,7 @@ def test_golden_contracts(name):
     assert to_sarif(result) == json.loads(
         Path("examples", "golden-" + name + ".sarif").read_text()
     )
-    from forgeguard.exporters.markdown import render_markdown
+    from versionsec.exporters.markdown import render_markdown
 
     assert (
         render_markdown(result)
@@ -601,14 +601,14 @@ def test_golden_contracts(name):
 def test_official_sarif_schema_hash_and_notice():
     import hashlib
 
-    schema = files("forgeguard").joinpath("schemas", "sarif-2.1.0.json")
+    schema = files("versionsec").joinpath("schemas", "sarif-2.1.0.json")
     assert (
         hashlib.sha256(schema.read_bytes()).hexdigest()
         == "c3b4bb2d6093897483348925aaa73af03b3e3f4bd4ca38cef26dcb4212a2682e"
     )
     assert (
         "All Rights Reserved"
-        in files("forgeguard").joinpath("schemas", "OASIS_NOTICE.md").read_text()
+        in files("versionsec").joinpath("schemas", "OASIS_NOTICE.md").read_text()
     )
 
 

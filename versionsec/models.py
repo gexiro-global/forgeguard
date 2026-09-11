@@ -62,7 +62,7 @@ class Score(BaseModel):
 
 def _default_tool_metadata() -> dict[str, str]:
     return {
-        "name": "ForgeGuard",
+        "name": "VersionSec",
         "brand": "by Gexiro",
         "version": __version__,
         "schema": "forgeguard.scan-result.v0.3",

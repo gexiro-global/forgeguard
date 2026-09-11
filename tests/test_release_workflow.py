@@ -115,8 +115,8 @@ def valid_inputs():
     present = {c: {"sha256": v["sha256"], "matches": True} for c, v in evidence.items()}
     return {
         "event_name": "workflow_dispatch",
-        "repository": "gexiro-global/forgeguard",
-        "expected_repository": "gexiro-global/forgeguard",
+        "repository": "gexiro-global/versionsec",
+        "expected_repository": "gexiro-global/versionsec",
         "publish": "true",
         "version": "0.5.0",
         "project_version": "0.5.0",
@@ -138,7 +138,7 @@ def valid_inputs():
             "evidence": evidence,
         },
         "observed_run": {
-            "repository": "gexiro-global/forgeguard",
+            "repository": "gexiro-global/versionsec",
             "head_sha": SHA,
             "head_branch_ref": REF,
             "status": "completed",
@@ -153,16 +153,16 @@ def valid_inputs():
             "wheel": {
                 "verified": True,
                 "source_digest": SHA,
-                "repository": "gexiro-global/forgeguard",
-                "signer_workflow": "https://github.com/gexiro-global/forgeguard/.github/workflows/ci.yml@"
+                "repository": "gexiro-global/versionsec",
+                "signer_workflow": "https://github.com/gexiro-global/versionsec/.github/workflows/ci.yml@"
                 + REF,
                 "subject_sha256": WHEEL,
             },
             "sdist": {
                 "verified": True,
                 "source_digest": SHA,
-                "repository": "gexiro-global/forgeguard",
-                "signer_workflow": "https://github.com/gexiro-global/forgeguard/.github/workflows/ci.yml@"
+                "repository": "gexiro-global/versionsec",
+                "signer_workflow": "https://github.com/gexiro-global/versionsec/.github/workflows/ci.yml@"
                 + REF,
                 "subject_sha256": SDIST,
             },

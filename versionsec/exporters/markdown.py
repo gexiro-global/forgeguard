@@ -9,7 +9,7 @@ def render_markdown(result):
         return legacy_markdown(result)
     esc = _markdown_text
     out = [
-        f"# ForgeGuard — {esc(result.target.url)}",
+        f"# VersionSec — {esc(result.target.url)}",
         "",
         f"Schema: {result.schema_id} | Profile: {esc(result.profile)} | Policy: {esc(result.policy)}",
         f"Score: {result.score.value if result.score.assessed else 'N/A'} ({result.score.grade})",

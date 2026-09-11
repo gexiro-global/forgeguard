@@ -17,23 +17,23 @@ expected_version = tomllib.loads((root / "pyproject.toml").read_text())["project
     "version"
 ]
 required = [
-    "forgeguard/providers/gitea.py",
-    "forgeguard/providers/forgejo.py",
-    "forgeguard/advisories/catalog/gitea.json",
-    "forgeguard/advisories/catalog/forgejo.json",
-    "forgeguard/schemas/assessment-v1.json",
-    "forgeguard/schemas/config-snapshot-v1.json",
-    "forgeguard/schemas/sarif-2.1.0.json",
-    "forgeguard/schemas/OASIS_NOTICE.md",
-    "forgeguard/py.typed",
+    "versionsec/providers/gitea.py",
+    "versionsec/providers/forgejo.py",
+    "versionsec/advisories/catalog/gitea.json",
+    "versionsec/advisories/catalog/forgejo.json",
+    "versionsec/schemas/assessment-v1.json",
+    "versionsec/schemas/config-snapshot-v1.json",
+    "versionsec/schemas/sarif-2.1.0.json",
+    "versionsec/schemas/OASIS_NOTICE.md",
+    "versionsec/py.typed",
 ]
 snippet = """
 import json, importlib.metadata, pathlib, socket
 from datetime import datetime, timezone
-import forgeguard
-from forgeguard.config_review import Snapshot, review
-from forgeguard.providers.registry import PROVIDERS
-from forgeguard.exporters.sarif import to_sarif
+import versionsec
+from versionsec.config_review import Snapshot, review
+from versionsec.providers.registry import PROVIDERS
+from versionsec.exporters.sarif import to_sarif
 from importlib.resources import files
 def denied(*a, **kw): raise AssertionError('offline package attempted DNS')
 socket.getaddrinfo=denied
@@ -45,9 +45,9 @@ for product,p in PROVIDERS.items():
  r=review(s,policy='public')
  assert r.score.assessed and r.request_count==0
  reports.append({'json':r.model_dump(mode='json'),'sarif':to_sarif(r)})
-print(json.dumps({'module':str(pathlib.Path(forgeguard.__file__).resolve()),
- 'version':importlib.metadata.version('forgeguard'),'reports':reports,
- 'schemas':{name:json.loads(files('forgeguard').joinpath('schemas',name).read_text())
+print(json.dumps({'module':str(pathlib.Path(versionsec.__file__).resolve()),
+ 'version':importlib.metadata.version('versionsec'),'reports':reports,
+ 'schemas':{name:json.loads(files('versionsec').joinpath('schemas',name).read_text())
  for name in ['assessment-v1.json','sarif-2.1.0.json']}}))
 """
 artifacts = sorted(dist.glob("*.whl")) + sorted(dist.glob("*.tar.gz"))
@@ -67,7 +67,7 @@ for artifact in artifacts:
             names = archive.getnames()
             assert all(any(p.endswith("/" + path) for p in names) for path in required)
             assert any(p.endswith("/LICENSE") for p in names)
-    with tempfile.TemporaryDirectory(prefix="forgeguard-dist-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="versionsec-dist-") as tmp:
         tmp = Path(tmp)
         env = tmp / "env"
         subprocess.run([sys.executable, "-m", "venv", str(env)], check=True)
@@ -89,7 +89,7 @@ for artifact in artifacts:
                 jsonschema.validators.validator_for(doc)(doc).validate(report[fmt])
         for args in [["--help"], ["scan", "--help"], ["checks"], ["providers"]]:
             subprocess.run(
-                [str(env / "bin/forgeguard"), *args],
+                [str(env / "bin/versionsec"), *args],
                 cwd=tmp,
                 check=True,
                 stdout=subprocess.DEVNULL,

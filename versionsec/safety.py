@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-# ForgeGuard by Gexiro - read-only safety allowlist.
+# VersionSec by Gexiro - read-only safety allowlist.
 # Every network read MUST target one of these exact paths. ForgeClient enforces
-# this at runtime so a future code change cannot turn ForgeGuard into a probe.
+# this at runtime so a future code change cannot turn VersionSec into a probe.
 SAFE_GET_PATHS = frozenset(
     {
         "/api/v1/version",

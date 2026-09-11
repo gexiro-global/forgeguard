@@ -32,7 +32,7 @@ def to_sarif(result):
                 "ruleIndex": index,
                 "level": "error" if f.status == Status.FAIL else "warning",
                 "message": {"text": f.rationale or f.title},
-                "partialFingerprints": {"forgeguard/v1": fingerprint},
+                "partialFingerprints": {"versionsec/v1": fingerprint},
                 "properties": {
                     "evidence_state": f.evidence_state.value,
                     "versionOnly": getattr(f, "scope", None) == "version",
@@ -46,9 +46,9 @@ def to_sarif(result):
             {
                 "tool": {
                     "driver": {
-                        "name": "ForgeGuard",
+                        "name": "VersionSec",
                         "version": result.tool["version"],
-                        "informationUri": "https://github.com/gexiro-global/forgeguard",
+                        "informationUri": "https://github.com/gexiro-global/versionsec",
                         "rules": rules,
                     }
                 },

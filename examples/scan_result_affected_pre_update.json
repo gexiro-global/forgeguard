@@ -1,6 +1,6 @@
 {
   "tool": {
-    "name": "ForgeGuard",
+    "name": "VersionSec",
     "brand": "by Gexiro",
     "version": "0.2.2",
     "schema": "forgeguard.scan-result.v0.3",

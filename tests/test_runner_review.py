@@ -10,11 +10,11 @@ import pytest
 from pydantic import ValidationError
 from typer.testing import CliRunner
 
-from forgeguard.assessment import Assessment
-from forgeguard.cli import app
-from forgeguard.exporters.sarif import to_sarif
-from forgeguard.models import EvidenceState, Status
-from forgeguard.runner_review import RunnerSnapshot, review
+from versionsec.assessment import Assessment
+from versionsec.cli import app
+from versionsec.exporters.sarif import to_sarif
+from versionsec.models import EvidenceState, Status
+from versionsec.runner_review import RunnerSnapshot, review
 
 NOW = datetime(2026, 9, 11, 13, tzinfo=UTC)
 
@@ -35,7 +35,7 @@ def validate(result):
         ("sarif-2.1.0.json", to_sarif(result)),
     ]:
         schema = json.loads(
-            files("forgeguard").joinpath("schemas", filename).read_text()
+            files("versionsec").joinpath("schemas", filename).read_text()
         )
         jsonschema.validators.validator_for(schema)(schema).validate(obj)
     assert Assessment.model_validate(data) == result
@@ -50,7 +50,7 @@ def test_offline_runner_schema_and_zero_network(monkeypatch, product):
     monkeypatch.setattr(httpx.AsyncClient, "send", denied)
     s = snapshot(product)
     schema = json.loads(
-        files("forgeguard").joinpath("schemas", "runner-snapshot-v1.json").read_text()
+        files("versionsec").joinpath("schemas", "runner-snapshot-v1.json").read_text()
     )
     jsonschema.Draft202012Validator(schema).validate(s.model_dump())
     result = review(s, now=NOW)

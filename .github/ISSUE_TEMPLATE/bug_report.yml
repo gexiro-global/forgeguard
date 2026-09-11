@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a reproducible ForgeGuard issue.
+description: Report a reproducible VersionSec issue.
 title: "[Bug]: "
 labels: ["bug"]
 body:
@@ -27,6 +27,6 @@ body:
   - type: input
     id: version
     attributes:
-      label: ForgeGuard version
+      label: VersionSec version
     validations:
       required: true

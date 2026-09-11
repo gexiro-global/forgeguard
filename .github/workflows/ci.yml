@@ -26,9 +26,9 @@ jobs:
       - name: Format
         run: ruff format --check .
       - name: Compile
-        run: python -m compileall forgeguard
+        run: python -m compileall versionsec
       - name: Test
-        run: python -m pytest -q --cov=forgeguard --cov-fail-under=91.28
+        run: python -m pytest -q --cov=versionsec --cov-fail-under=91.28
       - name: Check installed dependencies
         run: python -m pip check
 
@@ -53,9 +53,15 @@ jobs:
           .wheel-smoke/bin/python -m pip check
       - name: Built-wheel CLI smoke
         run: |
+          .wheel-smoke/bin/versionsec --help
+          .wheel-smoke/bin/versionsec scan --help
+          .wheel-smoke/bin/versionsec checks
+          .wheel-smoke/bin/versionsec runner review --help
+      - name: Built-wheel legacy ForgeGuard compatibility smoke
+        run: |
           .wheel-smoke/bin/forgeguard --help
-          .wheel-smoke/bin/forgeguard scan --help
           .wheel-smoke/bin/forgeguard checks
+          .wheel-smoke/bin/python -c 'import forgeguard, versionsec; assert forgeguard.__version__ == versionsec.__version__'
 
       - name: Validate exact distributions outside checkout
         run: python tools/validate_dist.py dist
@@ -68,7 +74,7 @@ jobs:
           retention-days: 5
 
   candidate-provenance:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge' || github.ref == 'refs/heads/feat/forgeguard-v0.6-control-plane-hardening')
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge' || github.ref == 'refs/heads/feat/forgeguard-v0.6-control-plane-hardening' || github.ref == 'refs/heads/feat/versionsec-0.7-rebrand')
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -103,7 +109,7 @@ jobs:
           retention-days: 5
 
   qualification-evidence:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge' || github.ref == 'refs/heads/feat/forgeguard-v0.6-control-plane-hardening')
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge' || github.ref == 'refs/heads/feat/forgeguard-v0.6-control-plane-hardening' || github.ref == 'refs/heads/feat/versionsec-0.7-rebrand')
     needs: build
     runs-on: ubuntu-latest
     permissions:

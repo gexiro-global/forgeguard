@@ -14,3 +14,6 @@ PUBLICATION_CHECKLIST.md
 GITHUB_PUSH_PLAN.md
 ARCHITECT_VERIFICATION.md
 *_RELEASE_EVIDENCE.md
+packaging/forgeguard-bridge/dist/
+packaging/forgeguard-bridge/build/
+packaging/forgeguard-bridge/*.egg-info/

@@ -2,11 +2,11 @@
 
 ## Supported Versions
 
-ForgeGuard v0.x is experimental. Security fixes are handled on the latest v0.x release line.
+VersionSec v0.x is experimental. Security fixes are handled on the latest v0.x release line.
 
 ## Reporting A Vulnerability
 
-Use [GitHub private vulnerability reporting](https://github.com/gexiro-global/forgeguard/security/advisories/new) so maintainers can discuss and remediate the issue without publishing it first.
+Use [GitHub private vulnerability reporting](https://github.com/gexiro-global/versionsec/security/advisories/new) so maintainers can discuss and remediate the issue without publishing it first.
 
 If that workflow is unavailable to you, email `admin@gexiro.com`.
 
@@ -14,8 +14,8 @@ Please include:
 
 - A concise description of the issue.
 - A minimal reproduction against a local or synthetic target.
-- The ForgeGuard version and Python version.
+- The VersionSec version and Python version.
 
 Do not submit reports based on scanning third-party instances without authorization. Do not include sensitive values in reports.
 
-ForgeGuard is a defensive self-check tool for operators assessing their own authorized systems.
+VersionSec is a defensive self-check tool for operators assessing their own authorized systems.

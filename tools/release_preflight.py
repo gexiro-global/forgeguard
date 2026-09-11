@@ -26,12 +26,13 @@ import sys
 import tomllib
 from pathlib import Path
 
-EXPECTED_REPOSITORY = "gexiro-global/forgeguard"
+EXPECTED_REPOSITORY = "gexiro-global/versionsec"
 EXPECTED_WORKFLOW = ".github/workflows/ci.yml"
 EXPECTED_EVENT = "push"
 ALLOWED_SOURCE_REFS = {
     "refs/heads/feat/forgeguard-v0.5-multiforge",
     "refs/heads/feat/forgeguard-v0.6-control-plane-hardening",
+    "refs/heads/feat/versionsec-0.7-rebrand",
 }
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _DIGEST_RE = re.compile(r"^[0-9a-f]{64}$")

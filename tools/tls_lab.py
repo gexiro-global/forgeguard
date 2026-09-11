@@ -131,7 +131,7 @@ def main() -> int:
                 "create",
                 "--internal",
                 "--label",
-                "forgeguard.lab=" + prefix,
+                "versionsec.lab=" + prefix,
                 net,
             ]
         )
@@ -146,7 +146,7 @@ def main() -> int:
                 "--name",
                 client,
                 "--label",
-                "forgeguard.lab=" + prefix,
+                "versionsec.lab=" + prefix,
                 "--cpus",
                 "1",
                 "--memory",
@@ -190,7 +190,7 @@ def main() -> int:
                 "--name",
                 proxy,
                 "--label",
-                "forgeguard.lab=" + prefix,
+                "versionsec.lab=" + prefix,
                 "--network",
                 net,
                 "--network-alias",
@@ -221,7 +221,7 @@ def main() -> int:
                 "--name",
                 server,
                 "--label",
-                "forgeguard.lab=" + prefix,
+                "versionsec.lab=" + prefix,
                 "--network",
                 net,
                 "--cpus",
@@ -316,7 +316,7 @@ def main() -> int:
             raise RuntimeError("unexpected synthetic token")
         for auth in (False, True):
             args = [
-                "forgeguard",
+                "versionsec",
                 "scan",
                 "--url",
                 "https://" + proxy_alias + ":3443/forge",

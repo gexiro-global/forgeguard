@@ -1,6 +1,6 @@
 """R06 provenance: catalog records bind to exact frozen source bytes via a manifest.
 
-Offline only. ``forgeguard scan`` never fetches these sources; the manifest and
+Offline only. ``versionsec scan`` never fetches these sources; the manifest and
 frozen bytes committed under tests/fixtures/sources let anyone re-verify the
 recorded hashes without network access.
 """
@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from forgeguard.advisories.evaluator import catalog
+from versionsec.advisories.evaluator import catalog
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ROOT / "tests" / "fixtures" / "sources"

@@ -7,7 +7,7 @@ Use this checklist before any public release.
 - Confirm no credential material or sensitive values are present.
 - Confirm target URLs with credentials, query strings, fragments, or dot segments are rejected without echo.
 - Confirm environment and legacy CLI token inputs never appear in terminal output or reports.
-- Confirm the distribution version, `forgeguard.__version__`, JSON `tool.version`, and User-Agent match.
+- Confirm the distribution version, `versionsec.__version__`, JSON `tool.version`, and User-Agent match.
 - Confirm all remote methods are GET and all paths are in `SAFE_GET_PATHS`.
 - Confirm no package, repository, blob, manifest, layer, or private artifact retrieval exists.
 - Confirm Gitea-specific results require `--product gitea` and explicit Forgejo markers fail safe.

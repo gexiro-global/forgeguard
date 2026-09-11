@@ -195,7 +195,7 @@ def readback_config(
                 "docker",
                 "exec",
                 client,
-                "forgeguard",
+                "versionsec",
                 "config",
                 "review",
                 "--snapshot",
@@ -262,7 +262,7 @@ try:
             "--name",
             client,
             "--label",
-            "forgeguard.lab=" + prefix,
+            "versionsec.lab=" + prefix,
             "--cpus",
             "1",
             "--memory",
@@ -302,7 +302,7 @@ try:
             "create",
             "--internal",
             "--label",
-            "forgeguard.lab=" + prefix,
+            "versionsec.lab=" + prefix,
             network,
         ]
     )
@@ -321,7 +321,7 @@ try:
                     "--name",
                     name,
                     "--label",
-                    "forgeguard.lab=" + prefix,
+                    "versionsec.lab=" + prefix,
                     "--network",
                     network,
                     "--cpus",
@@ -390,7 +390,7 @@ try:
                             "docker",
                             "exec",
                             client,
-                            "forgeguard",
+                            "versionsec",
                             "scan",
                             "--url",
                             "http://" + name + ":3000/",
@@ -429,8 +429,8 @@ try:
                     expected = details["expected_statuses"]
                     from importlib.resources import files
 
-                    from forgeguard.assessment import Assessment
-                    from forgeguard.exporters.sarif import to_sarif
+                    from versionsec.assessment import Assessment
+                    from versionsec.exporters.sarif import to_sarif
 
                     for doc, schema in [
                         (report, "assessment-v1.json"),
@@ -440,7 +440,7 @@ try:
                         ),
                     ]:
                         sch = json.loads(
-                            files("forgeguard").joinpath("schemas", schema).read_text()
+                            files("versionsec").joinpath("schemas", schema).read_text()
                         )
                         jsonschema.validators.validator_for(sch)(sch).validate(doc)
                     # R05: real config read-back from this container before cleanup

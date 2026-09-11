@@ -1,4 +1,4 @@
-# ForgeGuard by Gexiro - https://git.example.com
+# VersionSec by Gexiro - https://git.example.com
 
 Read-only security posture and supply-chain visibility for self-hosted Gitea.
 
@@ -58,4 +58,4 @@ Read-only security posture and supply-chain visibility for self-hosted Gitea.
 - **Evidence:** {'checked': {'/api/v1/repos/search?limit=1': 403, '/api/v1/users/search?limit=1': 403}}
 
 ---
-ForgeGuard by Gexiro | own/authorized Gitea instances only | read-only
+VersionSec by Gexiro | own/authorized Gitea instances only | read-only

@@ -404,7 +404,7 @@ def review(snapshot: RunnerSnapshot, *, now=None):
             applicability="applicable" if plugin_applicable else "not_applicable",
             reason=(
                 "Forgejo Runner >=13.1.0 plugin protocol is alpha with no stability "
-                "guarantee; ForgeGuard does not evaluate a custom plugin implementation "
+                "guarantee; VersionSec does not evaluate a custom plugin implementation "
                 "it cannot see." + reason_suffix
                 if plugin_applicable
                 else "Plugin engine unused or not supported by this runner_product/runner_version."

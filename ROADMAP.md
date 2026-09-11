@@ -2,7 +2,7 @@
 
 ## 0.6.0 Control Plane Hardening
 
-Adds offline runner posture review (`forgeguard runner review`): execution engine isolation,
+Adds offline runner posture review (`versionsec runner review`): execution engine isolation,
 privileged mode, host volume mounts, Docker socket exposure, job network mode, ephemeral
 registration, and the experimental Forgejo plugin engine. Closes the "explicitly scoped
 runner/token controls" item named as future work in 0.5's own entry below. See
@@ -24,11 +24,11 @@ Future work: additional qualified releases, reviewed advisory coverage, explicit
 
 # Roadmap
 
-Items below are planned and are not implemented in ForgeGuard 0.2.2 unless stated otherwise.
+Items below are planned and are not implemented in VersionSec 0.2.2 unless stated otherwise.
 
 ## Truth-correct current scope
 
-ForgeGuard 0.2.2 supports one authorized, operator-confirmed self-hosted Gitea target with version/advisory posture, explicit completeness, and limited read-only HTTP observations.
+VersionSec 0.2.2 supports one authorized, operator-confirmed self-hosted Gitea target with version/advisory posture, explicit completeness, and limited read-only HTTP observations.
 
 A compatible version endpoint is not product detection. The operator supplies `--product gitea` from trusted inventory. Without that confirmation, Gitea-specific advisory posture remains indeterminate and the assessment is ungraded.
 

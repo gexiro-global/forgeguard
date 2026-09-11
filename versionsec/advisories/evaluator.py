@@ -12,7 +12,7 @@ def catalog(product: str) -> tuple[list[Advisory], dict]:
     if product not in {"gitea", "forgejo"}:
         return [], {"version": "2026-09-10.1", "coverage": "unknown product"}
     data = (
-        files("forgeguard")
+        files("versionsec")
         .joinpath("advisories", "catalog", product + ".json")
         .read_bytes()
     )

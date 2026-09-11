@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to semantic versioning.
 
+## [0.7.0] - 2026-09-11
+
+**ForgeGuard is now VersionSec.** Releases up to and including 0.6.0 were published as
+`forgeguard` and are unchanged; the entries below them in this file are historical and
+deliberately still say ForgeGuard.
+
+- Rename the product to VersionSec: canonical distribution `versionsec`, canonical import
+  `versionsec`, canonical CLI `versionsec`, canonical site <https://versionsec.com>,
+  canonical repository `gexiro-global/versionsec`.
+- Keep every existing capability: Gitea and Forgejo providers, read-only bounded live
+  assessment, offline configuration review, offline runner review with the eight
+  `FG-RUNNER-*` checks, Markdown/JSON/SARIF exports, deterministic completeness semantics
+  and the existing qualification targets.
+- Compatibility, all covered by `tests/test_migration_0_7.py`: `import forgeguard` and
+  `import forgeguard.cli` resolve to the same module objects as `versionsec.*`; the
+  `forgeguard` console script remains installed and runs the canonical CLI; the legacy
+  import path is silent so automation does not break; `forgeguard==0.7.0` is published as a
+  thin bridge depending on `versionsec==0.7.0` with no duplicated implementation.
+- Environment variables: canonical `VERSIONSEC_TOKEN`, legacy `FORGEGUARD_TOKEN` still
+  accepted, canonical wins deterministically when both are set.
+- Deliberately unchanged for consumer compatibility: all `FG-*` finding identifiers and the
+  machine-readable schema identifiers `forgeguard.assessment.v1`,
+  `forgeguard.config-snapshot.v1`, `forgeguard.runner-snapshot.v1`,
+  `forgeguard.scan-result.v0.3`. Human-facing branding (report title, Markdown header and
+  footer, SARIF driver name, User-Agent) now reads VersionSec.
+- Add `MIGRATION.md`.
+
 ## [0.6.0] - 2026-09-11
 
 Control Plane Hardening.

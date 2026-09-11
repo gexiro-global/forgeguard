@@ -1,0 +1,43 @@
+# ForgeGuard -> VersionSec compatibility bridge.
+#
+# This distribution deliberately contains NO modules. `import forgeguard` and the
+# `forgeguard` console script are both provided by the canonical `versionsec`
+# distribution, which this package pins exactly. Shipping a second copy of the
+# implementation here would let the two drift apart and would also collide on install
+# with the compatibility shim inside `versionsec`.
+
+[build-system]
+requires = ["setuptools==84.0.0", "wheel==0.48.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "forgeguard"
+version = "0.7.0"
+description = "Compatibility bridge: ForgeGuard is now VersionSec. Installs versionsec."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+  {name = "Gexiro Global Enterprises Ltd"}
+]
+keywords = ["gitea", "forgejo", "security", "posture", "self-hosted", "versionsec"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Security",
+]
+dependencies = [
+  "versionsec==0.7.0"
+]
+
+[project.urls]
+Homepage = "https://versionsec.com"
+Repository = "https://github.com/gexiro-global/versionsec"
+Migration = "https://github.com/gexiro-global/versionsec/blob/main/MIGRATION.md"
+
+[tool.setuptools]
+# Metadata-only bridge: no packages, no modules.
+packages = []

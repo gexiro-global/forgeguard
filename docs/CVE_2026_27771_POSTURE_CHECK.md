@@ -1,6 +1,6 @@
 # CVE-2026-27771 Version Posture Check
 
-ForgeGuard treats CVE-2026-27771 as a Gitea version/advisory posture check, not an exploit or exposure test.
+VersionSec treats CVE-2026-27771 as a Gitea version/advisory posture check, not an exploit or exposure test.
 
 ## Official baseline
 
@@ -43,8 +43,8 @@ A FAIL result does not prove exploitability, compromise, or data exposure. A PAS
 
 The anonymous OCI `/v2/` registry-root response, sign-in responses, and anonymous repository/API responses do not change the CVE verdict. They are independent posture observations.
 
-ForgeGuard does not use registry-root reachability or inferred sign-in behavior as proof of exposure or mitigation for CVE-2026-27771.
+VersionSec does not use registry-root reachability or inferred sign-in behavior as proof of exposure or mitigation for CVE-2026-27771.
 
 ## Artifact boundary
 
-ForgeGuard does not request Composer source links, private package content, OCI manifests, OCI blobs, layers, or repository content. It performs no exploitation.
+VersionSec does not request Composer source links, private package content, OCI manifests, OCI blobs, layers, or repository content. It performs no exploitation.

@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "cases": 2,
+  "requests": [
+    {
+      "path": "/api/v1/version",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/explore/repos",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/v2/",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/api/v1/repos/search?limit=1",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/api/v1/users/search?limit=1",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/api/v1/version",
+      "authenticated": true,
+      "cookie": false
+    },
+    {
+      "path": "/explore/repos",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/v2/",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/api/v1/repos/search?limit=1",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/api/v1/users/search?limit=1",
+      "authenticated": false,
+      "cookie": false
+    },
+    {
+      "path": "/",
+      "authenticated": false,
+      "cookie": false
+    }
+  ],
+  "scope": "Real Gitea 1.27.3 behind a controlled local TLS/subpath reverse proxy; local CA verified; synthetic lab token only; token on the version read only; no cookies elsewhere."
+}

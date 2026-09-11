@@ -1,0 +1,63 @@
+{
+  "schema": "forgeguard.efinal-accounting.v1",
+  "version": "0.5.0",
+  "envs": {
+    "runtime": {
+      "label": "runtime",
+      "inventory_count": 19,
+      "audited_count": 18,
+      "vulnerabilities": 0,
+      "exit_code": 0,
+      "missing": [
+        "pip"
+      ],
+      "unexpected": [],
+      "version_mismatches": [],
+      "ok": false,
+      "missing_reason": {
+        "pip": "pip-audit returned no record for this package in -r mode"
+      }
+    },
+    "dev": {
+      "label": "dev",
+      "inventory_count": 54,
+      "audited_count": 52,
+      "vulnerabilities": 0,
+      "exit_code": 0,
+      "missing": [
+        "packaging",
+        "pip"
+      ],
+      "unexpected": [],
+      "version_mismatches": [],
+      "ok": false,
+      "missing_reason": {
+        "packaging": "pip-audit returned no record for this package in -r mode",
+        "pip": "pip-audit returned no record for this package in -r mode"
+      }
+    },
+    "build": {
+      "label": "build",
+      "inventory_count": 36,
+      "audited_count": 34,
+      "vulnerabilities": 0,
+      "exit_code": 0,
+      "missing": [
+        "packaging",
+        "pip"
+      ],
+      "unexpected": [],
+      "version_mismatches": [],
+      "ok": false,
+      "missing_reason": {
+        "packaging": "pip-audit returned no record for this package in -r mode",
+        "pip": "pip-audit returned no record for this package in -r mode"
+      }
+    }
+  },
+  "total_vulnerabilities": 0,
+  "self_excluded": [
+    "forgeguard"
+  ],
+  "note": "missing=['pip','packaging'] per env is pip-audit -r mode not self-auditing its own resolver deps; documented per-package in missing_reason, not a silent gap."
+}

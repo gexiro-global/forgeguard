@@ -155,12 +155,12 @@
     },
     "config_readback": {
       "variant_id": "gitea-1.26.4-public-reg0",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
       "declared_fixture": "config/gitea-1.26.4-public-reg0/declared_fixture.json",
       "observed_config": "config/gitea-1.26.4-public-reg0/observed_config.json",
       "config_snapshot": "config/gitea-1.26.4-public-reg0/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "info",
@@ -333,12 +333,12 @@
     },
     "config_readback": {
       "variant_id": "gitea-1.26.4-public-reg1",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
       "declared_fixture": "config/gitea-1.26.4-public-reg1/declared_fixture.json",
       "observed_config": "config/gitea-1.26.4-public-reg1/observed_config.json",
       "config_snapshot": "config/gitea-1.26.4-public-reg1/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "info",
@@ -507,12 +507,12 @@
     },
     "config_readback": {
       "variant_id": "gitea-1.26.4-private-reg0",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
       "declared_fixture": "config/gitea-1.26.4-private-reg0/declared_fixture.json",
       "observed_config": "config/gitea-1.26.4-private-reg0/observed_config.json",
       "config_snapshot": "config/gitea-1.26.4-private-reg0/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "warn",
@@ -681,12 +681,12 @@
     },
     "config_readback": {
       "variant_id": "gitea-1.26.4-private-reg1",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
       "declared_fixture": "config/gitea-1.26.4-private-reg1/declared_fixture.json",
       "observed_config": "config/gitea-1.26.4-private-reg1/observed_config.json",
       "config_snapshot": "config/gitea-1.26.4-private-reg1/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "warn",
@@ -859,12 +859,12 @@
     },
     "config_readback": {
       "variant_id": "gitea-1.27.3-public-reg0",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
       "declared_fixture": "config/gitea-1.27.3-public-reg0/declared_fixture.json",
       "observed_config": "config/gitea-1.27.3-public-reg0/observed_config.json",
       "config_snapshot": "config/gitea-1.27.3-public-reg0/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "info",
@@ -1037,12 +1037,12 @@
     },
     "config_readback": {
       "variant_id": "gitea-1.27.3-public-reg1",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
       "declared_fixture": "config/gitea-1.27.3-public-reg1/declared_fixture.json",
       "observed_config": "config/gitea-1.27.3-public-reg1/observed_config.json",
       "config_snapshot": "config/gitea-1.27.3-public-reg1/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "info",
@@ -1211,12 +1211,12 @@
     },
     "config_readback": {
       "variant_id": "gitea-1.27.3-private-reg0",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
       "declared_fixture": "config/gitea-1.27.3-private-reg0/declared_fixture.json",
       "observed_config": "config/gitea-1.27.3-private-reg0/observed_config.json",
       "config_snapshot": "config/gitea-1.27.3-private-reg0/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "warn",
@@ -1385,12 +1385,12 @@
     },
     "config_readback": {
       "variant_id": "gitea-1.27.3-private-reg1",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
       "declared_fixture": "config/gitea-1.27.3-private-reg1/declared_fixture.json",
       "observed_config": "config/gitea-1.27.3-private-reg1/observed_config.json",
       "config_snapshot": "config/gitea-1.27.3-private-reg1/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "warn",
@@ -1563,12 +1563,12 @@
     },
     "config_readback": {
       "variant_id": "forgejo-16.0.4-public-reg0",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
       "declared_fixture": "config/forgejo-16.0.4-public-reg0/declared_fixture.json",
       "observed_config": "config/forgejo-16.0.4-public-reg0/observed_config.json",
       "config_snapshot": "config/forgejo-16.0.4-public-reg0/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "info",
@@ -1741,12 +1741,12 @@
     },
     "config_readback": {
       "variant_id": "forgejo-16.0.4-public-reg1",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
       "declared_fixture": "config/forgejo-16.0.4-public-reg1/declared_fixture.json",
       "observed_config": "config/forgejo-16.0.4-public-reg1/observed_config.json",
       "config_snapshot": "config/forgejo-16.0.4-public-reg1/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "info",
@@ -1915,12 +1915,12 @@
     },
     "config_readback": {
       "variant_id": "forgejo-16.0.4-private-reg0",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
       "declared_fixture": "config/forgejo-16.0.4-private-reg0/declared_fixture.json",
       "observed_config": "config/forgejo-16.0.4-private-reg0/observed_config.json",
       "config_snapshot": "config/forgejo-16.0.4-private-reg0/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "warn",
@@ -2089,12 +2089,12 @@
     },
     "config_readback": {
       "variant_id": "forgejo-16.0.4-private-reg1",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
       "declared_fixture": "config/forgejo-16.0.4-private-reg1/declared_fixture.json",
       "observed_config": "config/forgejo-16.0.4-private-reg1/observed_config.json",
       "config_snapshot": "config/forgejo-16.0.4-private-reg1/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "warn",
@@ -2267,12 +2267,12 @@
     },
     "config_readback": {
       "variant_id": "forgejo-15.0.8-public-reg0",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
       "declared_fixture": "config/forgejo-15.0.8-public-reg0/declared_fixture.json",
       "observed_config": "config/forgejo-15.0.8-public-reg0/observed_config.json",
       "config_snapshot": "config/forgejo-15.0.8-public-reg0/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "info",
@@ -2445,12 +2445,12 @@
     },
     "config_readback": {
       "variant_id": "forgejo-15.0.8-public-reg1",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
       "declared_fixture": "config/forgejo-15.0.8-public-reg1/declared_fixture.json",
       "observed_config": "config/forgejo-15.0.8-public-reg1/observed_config.json",
       "config_snapshot": "config/forgejo-15.0.8-public-reg1/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "info",
@@ -2619,12 +2619,12 @@
     },
     "config_readback": {
       "variant_id": "forgejo-15.0.8-private-reg0",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
       "declared_fixture": "config/forgejo-15.0.8-private-reg0/declared_fixture.json",
       "observed_config": "config/forgejo-15.0.8-private-reg0/observed_config.json",
       "config_snapshot": "config/forgejo-15.0.8-private-reg0/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "warn",
@@ -2793,12 +2793,12 @@
     },
     "config_readback": {
       "variant_id": "forgejo-15.0.8-private-reg1",
-      "container_id": "fg05-63870a056d19-server",
+      "container_id": "fg05-56b1c5e3f6be-server",
       "image_digest": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
       "declared_fixture": "config/forgejo-15.0.8-private-reg1/declared_fixture.json",
       "observed_config": "config/forgejo-15.0.8-private-reg1/observed_config.json",
       "config_snapshot": "config/forgejo-15.0.8-private-reg1/config_snapshot.json",
-      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "installed_artifact_sha256": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e",
       "readback_mismatches": {},
       "per_finding": {
         "FG-CONFIG-MFA": "warn",

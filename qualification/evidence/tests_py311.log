@@ -1,3 +1,4 @@
-2026-09-11T13:00:22Z run=34601829228 job=test(3.11) job_id=103270750112
-python 3.11.16; 356 passed in 4.44s; coverage 95.09% (required 91.28%); pip check: No broken requirements found.
-Run: https://github.com/gexiro-global/forgeguard/actions/runs/34601829228/job/103270750112
+2026-09-11T16:04:47Z run=34619892271 job=test(3.11) job_id=103330939966
+python 3.11.16; 383 passed in 6.73s; coverage 95.58% (required 91.28%); pip check: No broken requirements found.
+Run: https://github.com/gexiro-global/forgeguard/actions/runs/34619892271/job/103330939966
+Source: ea589c6e88115f2ec1a4b5012fdacd070e14e4c7 (feat/forgeguard-v0.6-control-plane-hardening)

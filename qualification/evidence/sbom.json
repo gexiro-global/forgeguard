@@ -192,7 +192,7 @@
       "version": "2026.7.22"
     },
     {
-      "bom-ref": "forgeguard==0.5.0",
+      "bom-ref": "forgeguard==0.6.0",
       "description": "Read-only security posture self-check for one authorized self-hosted Gitea or Forgejo instance.",
       "externalReferences": [
         {
@@ -200,11 +200,11 @@
           "hashes": [
             {
               "alg": "SHA-256",
-              "content": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c"
+              "content": "c8e36e185bee439668b3b00408234925af449d731d97c83060a436930ad97c7e"
             }
           ],
           "type": "distribution",
-          "url": "file:///workspace/codex_stages/forgeguard-v0.5.0-release-20260911/artifacts/forgeguard-0.5.0-py3-none-any.whl"
+          "url": "file:///workspace/codex_stages/forgeguard-v0.5-multiforge/dist/forgeguard-0.6.0-py3-none-any.whl"
         },
         {
           "comment": "from packaging metadata Project-URL: Documentation",
@@ -242,7 +242,7 @@
       ],
       "name": "forgeguard",
       "type": "library",
-      "version": "0.5.0"
+      "version": "0.6.0"
     },
     {
       "bom-ref": "h11==0.16.0",
@@ -754,7 +754,7 @@
         "pydantic==2.13.5",
         "typer==0.27.2"
       ],
-      "ref": "forgeguard==0.5.0"
+      "ref": "forgeguard==0.6.0"
     },
     {
       "ref": "h11==0.16.0"
@@ -837,7 +837,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2026-09-11T13:22:51.786475+00:00",
+    "timestamp": "2026-09-11T16:13:51.753455+00:00",
     "tools": {
       "components": [
         {
@@ -941,7 +941,7 @@
       ]
     }
   },
-  "serialNumber": "urn:uuid:bb6058e3-7b00-4eb2-a983-f709581153f4",
+  "serialNumber": "urn:uuid:3cb3204b-e453-4dd2-9524-0cac59b055ad",
   "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",

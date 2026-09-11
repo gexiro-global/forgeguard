@@ -14,11 +14,19 @@ FG-FJ-TEMPLATE-20260910      forgejo: Template initialization security update ve
 FG-HTTP                      Bounded transport/header observations
 FG-REG                       OCI root HTTP status only
 FG-ROOT-HTTP                 Extended root HTTP observation
+FG-RUNNER-DOCKER             Offline declared runner: Docker socket exposure to job containers
+FG-RUNNER-EPHEMERAL          Offline declared runner: Runner credential/registration lifetime
+FG-RUNNER-EXECUTION          Offline declared runner: Execution engine isolation level
+FG-RUNNER-NETWORK            Offline declared runner: Job container network mode
+FG-RUNNER-PLUGIN             Offline declared runner: Experimental plugin execution engine usage
+FG-RUNNER-PRIVILEGED         Offline declared runner: Privileged container mode
+FG-RUNNER-VERSION            Offline declared runner: Runner version provenance
+FG-RUNNER-VOLUMES            Offline declared runner: Host volume mount allowlist
 FG-SIGNIN                    Repository-browser HTTP status only
 FG-VER                       Operator product and version provenance
 FG-VER-DISCLOSE              Observed anonymous version
 ```
 
-HTTP controls require complete response status evidence. Their interpretation is status-only; no runtime settings or private-data access are inferred. FG-HTTP/FG-ROOT-HTTP summarize existing response headers without full policy validation. Version controls use operator identity plus consistent version evidence and the finite provider catalog. Config controls use only qualified declared snapshots. Every serialized finding includes check version, source, observed, expected, evidence_state, applicability, reason, remediation and references.
+HTTP controls require complete response status evidence. Their interpretation is status-only; no runtime settings or private-data access are inferred. FG-HTTP/FG-ROOT-HTTP summarize existing response headers without full policy validation. Version controls use operator identity plus consistent version evidence and the finite provider catalog. Config and runner controls use only qualified declared snapshots — see [runner review](RUNNER_REVIEW.md) for the FG-RUNNER-* trust-boundary semantics and the not_applicable rule that avoids penalizing one root cause through multiple derivative checks. Every serialized finding includes check version, source, observed, expected, evidence_state, applicability, reason, remediation and references.
 
-See [security model](SECURITY_MODEL.md), [configuration keys](CONFIG_REVIEW.md), [catalog sources](UPSTREAM.md), and [scoring](SCORING.md) for exact conditions and limitations.
+See [security model](SECURITY_MODEL.md), [configuration keys](CONFIG_REVIEW.md), [runner review](RUNNER_REVIEW.md), [catalog sources](UPSTREAM.md), and [scoring](SCORING.md) for exact conditions and limitations.

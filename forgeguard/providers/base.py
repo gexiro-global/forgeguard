@@ -26,6 +26,14 @@ def release_version(raw: str | None) -> tuple[int, int, int] | None:
 
 
 @dataclass(frozen=True)
+class RunnerInfo:
+    product: str
+    qualified_versions: tuple[str, ...]
+    config_source: str
+    security_source: str
+
+
+@dataclass(frozen=True)
 class Setting:
     key: str
     values: tuple[object, ...]
@@ -40,6 +48,7 @@ class ForgeProvider(Protocol):
     config_source: str
     api_source: str
     settings: tuple[Setting, ...]
+    runner: RunnerInfo
 
     def request_plan(self, profile: str) -> tuple[str, ...]: ...
     def normalize_version(self, raw: str | None) -> tuple[int, int, int] | None: ...

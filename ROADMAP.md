@@ -1,6 +1,20 @@
 # Roadmap
 
-## 0.5 preview implementation
+## 0.6.0 Control Plane Hardening
+
+Adds offline runner posture review (`forgeguard runner review`): execution engine isolation,
+privileged mode, host volume mounts, Docker socket exposure, job network mode, ephemeral
+registration, and the experimental Forgejo plugin engine. Closes the "explicitly scoped
+runner/token controls" item named as future work in 0.5's own entry below. See
+[docs/RUNNER_REVIEW.md](docs/RUNNER_REVIEW.md) and [CHANGELOG.md](CHANGELOG.md).
+
+Under consideration, not committed: widening the runner qualification matrix to additional
+point releases once each can be fully qualified; SSRF/outbound mirror-hardening config posture
+(`[migrations]` ALLOWED_DOMAINS/BLOCKED_DOMAINS/ALLOW_LOCALNETWORKS); additional advisory catalog
+records with authoritative, reproducibly-frozen sources. No SaaS, hosted control plane, or
+general compliance certification is planned.
+
+## 0.5.0 implementation
 
 Separate Gitea/Forgejo providers, bounded profiles, exposure policy, offline configuration snapshots, finite advisory catalogs and versioned JSON/SARIF exports are implemented in the candidate. Qualification and delivery gates remain tracked in the PR and candidate notes.
 

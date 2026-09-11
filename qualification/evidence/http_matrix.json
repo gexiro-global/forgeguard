@@ -1,0 +1,2818 @@
+[
+  {
+    "product": "gitea",
+    "version": "1.26.4",
+    "image": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
+    "private": false,
+    "registration": false,
+    "variant": "gitea-1.26.4-public-reg0",
+    "kind": "real-upstream-container",
+    "expected_exit": 5,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 200,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    },
+    "exit_code": 5,
+    "observed": "1.26.4",
+    "assessment_complete": true,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        }
+      },
+      "FG-VER-DISCLOSE": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      }
+    },
+    "config_readback": {
+      "variant_id": "gitea-1.26.4-public-reg0",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
+      "declared_fixture": "config/gitea-1.26.4-public-reg0/declared_fixture.json",
+      "observed_config": "config/gitea-1.26.4-public-reg0/observed_config.json",
+      "config_snapshot": "config/gitea-1.26.4-public-reg0/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "info",
+        "FG-CONFIG-PRIVACY": "info",
+        "FG-CONFIG-REGISTRATION": "info",
+        "FG-CONFIG-SIGNIN": "info"
+      },
+      "exits_by_format": {
+        "json": 0,
+        "md": 0,
+        "sarif": 0
+      },
+      "expected_exit": 0,
+      "assessed": true
+    }
+  },
+  {
+    "product": "gitea",
+    "version": "1.26.4",
+    "image": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
+    "private": false,
+    "registration": true,
+    "variant": "gitea-1.26.4-public-reg1",
+    "kind": "real-upstream-container",
+    "expected_exit": 5,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 200,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    },
+    "exit_code": 5,
+    "observed": "1.26.4",
+    "assessment_complete": true,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        }
+      },
+      "FG-VER-DISCLOSE": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      }
+    },
+    "config_readback": {
+      "variant_id": "gitea-1.26.4-public-reg1",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
+      "declared_fixture": "config/gitea-1.26.4-public-reg1/declared_fixture.json",
+      "observed_config": "config/gitea-1.26.4-public-reg1/observed_config.json",
+      "config_snapshot": "config/gitea-1.26.4-public-reg1/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "info",
+        "FG-CONFIG-PRIVACY": "info",
+        "FG-CONFIG-REGISTRATION": "info",
+        "FG-CONFIG-SIGNIN": "info"
+      },
+      "exits_by_format": {
+        "json": 0,
+        "md": 0,
+        "sarif": 0
+      },
+      "expected_exit": 0,
+      "assessed": true
+    }
+  },
+  {
+    "product": "gitea",
+    "version": "1.26.4",
+    "image": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
+    "private": true,
+    "registration": false,
+    "variant": "gitea-1.26.4-private-reg0",
+    "kind": "real-upstream-container",
+    "expected_exit": 4,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 303,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    },
+    "exit_code": 4,
+    "observed": "1.26.4",
+    "assessment_complete": false,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        }
+      }
+    },
+    "config_readback": {
+      "variant_id": "gitea-1.26.4-private-reg0",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
+      "declared_fixture": "config/gitea-1.26.4-private-reg0/declared_fixture.json",
+      "observed_config": "config/gitea-1.26.4-private-reg0/observed_config.json",
+      "config_snapshot": "config/gitea-1.26.4-private-reg0/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "warn",
+        "FG-CONFIG-PRIVACY": "warn",
+        "FG-CONFIG-REGISTRATION": "pass",
+        "FG-CONFIG-SIGNIN": "pass"
+      },
+      "exits_by_format": {
+        "json": 5,
+        "md": 5,
+        "sarif": 5
+      },
+      "expected_exit": 5,
+      "assessed": true
+    }
+  },
+  {
+    "product": "gitea",
+    "version": "1.26.4",
+    "image": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
+    "private": true,
+    "registration": true,
+    "variant": "gitea-1.26.4-private-reg1",
+    "kind": "real-upstream-container",
+    "expected_exit": 4,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 303,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    },
+    "exit_code": 4,
+    "observed": "1.26.4",
+    "assessment_complete": false,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        }
+      }
+    },
+    "config_readback": {
+      "variant_id": "gitea-1.26.4-private-reg1",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "docker.gitea.com/gitea@sha256:8e25c717b8f748445e15ec46e0390f577cb628101184cb0a150d1dae126c1f39",
+      "declared_fixture": "config/gitea-1.26.4-private-reg1/declared_fixture.json",
+      "observed_config": "config/gitea-1.26.4-private-reg1/observed_config.json",
+      "config_snapshot": "config/gitea-1.26.4-private-reg1/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "warn",
+        "FG-CONFIG-PRIVACY": "warn",
+        "FG-CONFIG-REGISTRATION": "warn",
+        "FG-CONFIG-SIGNIN": "pass"
+      },
+      "exits_by_format": {
+        "json": 5,
+        "md": 5,
+        "sarif": 5
+      },
+      "expected_exit": 5,
+      "assessed": true
+    }
+  },
+  {
+    "product": "gitea",
+    "version": "1.27.3",
+    "image": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+    "private": false,
+    "registration": false,
+    "variant": "gitea-1.27.3-public-reg0",
+    "kind": "real-upstream-container",
+    "expected_exit": 0,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 200,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    },
+    "exit_code": 0,
+    "observed": "1.27.3",
+    "assessment_complete": true,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 200
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": true,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-VER-DISCLOSE": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      }
+    },
+    "config_readback": {
+      "variant_id": "gitea-1.27.3-public-reg0",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+      "declared_fixture": "config/gitea-1.27.3-public-reg0/declared_fixture.json",
+      "observed_config": "config/gitea-1.27.3-public-reg0/observed_config.json",
+      "config_snapshot": "config/gitea-1.27.3-public-reg0/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "info",
+        "FG-CONFIG-PRIVACY": "info",
+        "FG-CONFIG-REGISTRATION": "info",
+        "FG-CONFIG-SIGNIN": "info"
+      },
+      "exits_by_format": {
+        "json": 0,
+        "md": 0,
+        "sarif": 0
+      },
+      "expected_exit": 0,
+      "assessed": true
+    }
+  },
+  {
+    "product": "gitea",
+    "version": "1.27.3",
+    "image": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+    "private": false,
+    "registration": true,
+    "variant": "gitea-1.27.3-public-reg1",
+    "kind": "real-upstream-container",
+    "expected_exit": 0,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 200,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    },
+    "exit_code": 0,
+    "observed": "1.27.3",
+    "assessment_complete": true,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 200
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": true,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-VER-DISCLOSE": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      }
+    },
+    "config_readback": {
+      "variant_id": "gitea-1.27.3-public-reg1",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+      "declared_fixture": "config/gitea-1.27.3-public-reg1/declared_fixture.json",
+      "observed_config": "config/gitea-1.27.3-public-reg1/observed_config.json",
+      "config_snapshot": "config/gitea-1.27.3-public-reg1/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "info",
+        "FG-CONFIG-PRIVACY": "info",
+        "FG-CONFIG-REGISTRATION": "info",
+        "FG-CONFIG-SIGNIN": "info"
+      },
+      "exits_by_format": {
+        "json": 0,
+        "md": 0,
+        "sarif": 0
+      },
+      "expected_exit": 0,
+      "assessed": true
+    }
+  },
+  {
+    "product": "gitea",
+    "version": "1.27.3",
+    "image": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+    "private": true,
+    "registration": false,
+    "variant": "gitea-1.27.3-private-reg0",
+    "kind": "real-upstream-container",
+    "expected_exit": 4,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 303,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    },
+    "exit_code": 4,
+    "observed": "1.27.3",
+    "assessment_complete": false,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 303
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": true,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 303
+        }
+      }
+    },
+    "config_readback": {
+      "variant_id": "gitea-1.27.3-private-reg0",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+      "declared_fixture": "config/gitea-1.27.3-private-reg0/declared_fixture.json",
+      "observed_config": "config/gitea-1.27.3-private-reg0/observed_config.json",
+      "config_snapshot": "config/gitea-1.27.3-private-reg0/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "warn",
+        "FG-CONFIG-PRIVACY": "warn",
+        "FG-CONFIG-REGISTRATION": "pass",
+        "FG-CONFIG-SIGNIN": "pass"
+      },
+      "exits_by_format": {
+        "json": 5,
+        "md": 5,
+        "sarif": 5
+      },
+      "expected_exit": 5,
+      "assessed": true
+    }
+  },
+  {
+    "product": "gitea",
+    "version": "1.27.3",
+    "image": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+    "private": true,
+    "registration": true,
+    "variant": "gitea-1.27.3-private-reg1",
+    "kind": "real-upstream-container",
+    "expected_exit": 4,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 303,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    },
+    "exit_code": 4,
+    "observed": "1.27.3",
+    "assessment_complete": false,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 303
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": true,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": true,
+          "status": 303
+        }
+      }
+    },
+    "config_readback": {
+      "variant_id": "gitea-1.27.3-private-reg1",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "docker.gitea.com/gitea@sha256:87a67ee09d3ae0d1df5fda5dcda3e2a1f9236a45b0a59025d6e00e46adc43bef",
+      "declared_fixture": "config/gitea-1.27.3-private-reg1/declared_fixture.json",
+      "observed_config": "config/gitea-1.27.3-private-reg1/observed_config.json",
+      "config_snapshot": "config/gitea-1.27.3-private-reg1/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "warn",
+        "FG-CONFIG-PRIVACY": "warn",
+        "FG-CONFIG-REGISTRATION": "warn",
+        "FG-CONFIG-SIGNIN": "pass"
+      },
+      "exits_by_format": {
+        "json": 5,
+        "md": 5,
+        "sarif": 5
+      },
+      "expected_exit": 5,
+      "assessed": true
+    }
+  },
+  {
+    "product": "forgejo",
+    "version": "16.0.4",
+    "image": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
+    "private": false,
+    "registration": false,
+    "variant": "forgejo-16.0.4-public-reg0",
+    "kind": "real-upstream-container",
+    "expected_exit": 0,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 200,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    },
+    "exit_code": 0,
+    "observed": "16.0.4+gitea-1.22.0",
+    "assessment_complete": true,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        }
+      },
+      "FG-VER-DISCLOSE": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      }
+    },
+    "config_readback": {
+      "variant_id": "forgejo-16.0.4-public-reg0",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
+      "declared_fixture": "config/forgejo-16.0.4-public-reg0/declared_fixture.json",
+      "observed_config": "config/forgejo-16.0.4-public-reg0/observed_config.json",
+      "config_snapshot": "config/forgejo-16.0.4-public-reg0/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "info",
+        "FG-CONFIG-PRIVACY": "info",
+        "FG-CONFIG-REGISTRATION": "info",
+        "FG-CONFIG-SIGNIN": "info"
+      },
+      "exits_by_format": {
+        "json": 0,
+        "md": 0,
+        "sarif": 0
+      },
+      "expected_exit": 0,
+      "assessed": true
+    }
+  },
+  {
+    "product": "forgejo",
+    "version": "16.0.4",
+    "image": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
+    "private": false,
+    "registration": true,
+    "variant": "forgejo-16.0.4-public-reg1",
+    "kind": "real-upstream-container",
+    "expected_exit": 0,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 200,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    },
+    "exit_code": 0,
+    "observed": "16.0.4+gitea-1.22.0",
+    "assessment_complete": true,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        }
+      },
+      "FG-VER-DISCLOSE": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      }
+    },
+    "config_readback": {
+      "variant_id": "forgejo-16.0.4-public-reg1",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
+      "declared_fixture": "config/forgejo-16.0.4-public-reg1/declared_fixture.json",
+      "observed_config": "config/forgejo-16.0.4-public-reg1/observed_config.json",
+      "config_snapshot": "config/forgejo-16.0.4-public-reg1/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "info",
+        "FG-CONFIG-PRIVACY": "info",
+        "FG-CONFIG-REGISTRATION": "info",
+        "FG-CONFIG-SIGNIN": "info"
+      },
+      "exits_by_format": {
+        "json": 0,
+        "md": 0,
+        "sarif": 0
+      },
+      "expected_exit": 0,
+      "assessed": true
+    }
+  },
+  {
+    "product": "forgejo",
+    "version": "16.0.4",
+    "image": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
+    "private": true,
+    "registration": false,
+    "variant": "forgejo-16.0.4-private-reg0",
+    "kind": "real-upstream-container",
+    "expected_exit": 4,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 303,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    },
+    "exit_code": 4,
+    "observed": "16.0.4+gitea-1.22.0",
+    "assessment_complete": false,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        }
+      }
+    },
+    "config_readback": {
+      "variant_id": "forgejo-16.0.4-private-reg0",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
+      "declared_fixture": "config/forgejo-16.0.4-private-reg0/declared_fixture.json",
+      "observed_config": "config/forgejo-16.0.4-private-reg0/observed_config.json",
+      "config_snapshot": "config/forgejo-16.0.4-private-reg0/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "warn",
+        "FG-CONFIG-PRIVACY": "warn",
+        "FG-CONFIG-REGISTRATION": "pass",
+        "FG-CONFIG-SIGNIN": "pass"
+      },
+      "exits_by_format": {
+        "json": 5,
+        "md": 5,
+        "sarif": 5
+      },
+      "expected_exit": 5,
+      "assessed": true
+    }
+  },
+  {
+    "product": "forgejo",
+    "version": "16.0.4",
+    "image": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
+    "private": true,
+    "registration": true,
+    "variant": "forgejo-16.0.4-private-reg1",
+    "kind": "real-upstream-container",
+    "expected_exit": 4,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 303,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    },
+    "exit_code": 4,
+    "observed": "16.0.4+gitea-1.22.0",
+    "assessment_complete": false,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        }
+      }
+    },
+    "config_readback": {
+      "variant_id": "forgejo-16.0.4-private-reg1",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "codeberg.org/forgejo/forgejo@sha256:a3e33d03e771d3e58b27de5573c3a25dc4f670583a6724c1878a6d0bbecf3556",
+      "declared_fixture": "config/forgejo-16.0.4-private-reg1/declared_fixture.json",
+      "observed_config": "config/forgejo-16.0.4-private-reg1/observed_config.json",
+      "config_snapshot": "config/forgejo-16.0.4-private-reg1/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "warn",
+        "FG-CONFIG-PRIVACY": "warn",
+        "FG-CONFIG-REGISTRATION": "warn",
+        "FG-CONFIG-SIGNIN": "pass"
+      },
+      "exits_by_format": {
+        "json": 5,
+        "md": 5,
+        "sarif": 5
+      },
+      "expected_exit": 5,
+      "assessed": true
+    }
+  },
+  {
+    "product": "forgejo",
+    "version": "15.0.8",
+    "image": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
+    "private": false,
+    "registration": false,
+    "variant": "forgejo-15.0.8-public-reg0",
+    "kind": "real-upstream-container",
+    "expected_exit": 0,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 200,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    },
+    "exit_code": 0,
+    "observed": "15.0.8+gitea-1.22.0",
+    "assessment_complete": true,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        }
+      },
+      "FG-VER-DISCLOSE": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      }
+    },
+    "config_readback": {
+      "variant_id": "forgejo-15.0.8-public-reg0",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
+      "declared_fixture": "config/forgejo-15.0.8-public-reg0/declared_fixture.json",
+      "observed_config": "config/forgejo-15.0.8-public-reg0/observed_config.json",
+      "config_snapshot": "config/forgejo-15.0.8-public-reg0/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "info",
+        "FG-CONFIG-PRIVACY": "info",
+        "FG-CONFIG-REGISTRATION": "info",
+        "FG-CONFIG-SIGNIN": "info"
+      },
+      "exits_by_format": {
+        "json": 0,
+        "md": 0,
+        "sarif": 0
+      },
+      "expected_exit": 0,
+      "assessed": true
+    }
+  },
+  {
+    "product": "forgejo",
+    "version": "15.0.8",
+    "image": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
+    "private": false,
+    "registration": true,
+    "variant": "forgejo-15.0.8-public-reg1",
+    "kind": "real-upstream-container",
+    "expected_exit": 0,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 200,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    },
+    "exit_code": 0,
+    "observed": "15.0.8+gitea-1.22.0",
+    "assessment_complete": true,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 200
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        }
+      },
+      "FG-VER-DISCLOSE": {
+        "disclosed": true,
+        "endpoint": "/api/v1/version"
+      }
+    },
+    "config_readback": {
+      "variant_id": "forgejo-15.0.8-public-reg1",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
+      "declared_fixture": "config/forgejo-15.0.8-public-reg1/declared_fixture.json",
+      "observed_config": "config/forgejo-15.0.8-public-reg1/observed_config.json",
+      "config_snapshot": "config/forgejo-15.0.8-public-reg1/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "info",
+        "FG-CONFIG-PRIVACY": "info",
+        "FG-CONFIG-REGISTRATION": "info",
+        "FG-CONFIG-SIGNIN": "info"
+      },
+      "exits_by_format": {
+        "json": 0,
+        "md": 0,
+        "sarif": 0
+      },
+      "expected_exit": 0,
+      "assessed": true
+    }
+  },
+  {
+    "product": "forgejo",
+    "version": "15.0.8",
+    "image": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
+    "private": true,
+    "registration": false,
+    "variant": "forgejo-15.0.8-private-reg0",
+    "kind": "real-upstream-container",
+    "expected_exit": 4,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 303,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    },
+    "exit_code": 4,
+    "observed": "15.0.8+gitea-1.22.0",
+    "assessment_complete": false,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        }
+      }
+    },
+    "config_readback": {
+      "variant_id": "forgejo-15.0.8-private-reg0",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
+      "declared_fixture": "config/forgejo-15.0.8-private-reg0/declared_fixture.json",
+      "observed_config": "config/forgejo-15.0.8-private-reg0/observed_config.json",
+      "config_snapshot": "config/forgejo-15.0.8-private-reg0/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "warn",
+        "FG-CONFIG-PRIVACY": "warn",
+        "FG-CONFIG-REGISTRATION": "pass",
+        "FG-CONFIG-SIGNIN": "pass"
+      },
+      "exits_by_format": {
+        "json": 5,
+        "md": 5,
+        "sarif": 5
+      },
+      "expected_exit": 5,
+      "assessed": true
+    }
+  },
+  {
+    "product": "forgejo",
+    "version": "15.0.8",
+    "image": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
+    "private": true,
+    "registration": true,
+    "variant": "forgejo-15.0.8-private-reg1",
+    "kind": "real-upstream-container",
+    "expected_exit": 4,
+    "status": "PASS",
+    "expected_statuses": {
+      "/explore/repos": 303,
+      "/v2/": 401,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    },
+    "exit_code": 4,
+    "observed": "15.0.8+gitea-1.22.0",
+    "assessment_complete": false,
+    "responses": {
+      "FG-ANON": {
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        }
+      },
+      "FG-HTTP": {
+        "/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 200
+        },
+        "/api/v1/repos/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/users/search?limit=1": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/api/v1/version": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": true,
+          "status": 403
+        },
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        },
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-REG": {
+        "/v2/": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": false,
+          "hsts_present": false,
+          "html": false,
+          "https": false,
+          "json": true,
+          "nosniff": false,
+          "status": 401
+        }
+      },
+      "FG-ROOT-HTTP": {
+        "complete": true,
+        "csp_present": false,
+        "frame_policy": true,
+        "hsts_present": false,
+        "html": true,
+        "https": false,
+        "json": false,
+        "nosniff": false,
+        "status": 200
+      },
+      "FG-SIGNIN": {
+        "/explore/repos": {
+          "complete": true,
+          "csp_present": false,
+          "frame_policy": true,
+          "hsts_present": false,
+          "html": true,
+          "https": false,
+          "json": false,
+          "nosniff": false,
+          "status": 303
+        }
+      }
+    },
+    "config_readback": {
+      "variant_id": "forgejo-15.0.8-private-reg1",
+      "container_id": "fg05-63870a056d19-server",
+      "image_digest": "codeberg.org/forgejo/forgejo@sha256:0a2e377fd3c5af3451bfa1f44e6f198f322b6d5e03f04a028b8e672f1ccddc9f",
+      "declared_fixture": "config/forgejo-15.0.8-private-reg1/declared_fixture.json",
+      "observed_config": "config/forgejo-15.0.8-private-reg1/observed_config.json",
+      "config_snapshot": "config/forgejo-15.0.8-private-reg1/config_snapshot.json",
+      "installed_artifact_sha256": "cee0a168c93cb3590937251d1cbc28656948e731382a2141d9136c95926b0d4c",
+      "readback_mismatches": {},
+      "per_finding": {
+        "FG-CONFIG-MFA": "warn",
+        "FG-CONFIG-PRIVACY": "warn",
+        "FG-CONFIG-REGISTRATION": "warn",
+        "FG-CONFIG-SIGNIN": "pass"
+      },
+      "exits_by_format": {
+        "json": 5,
+        "md": 5,
+        "sarif": 5
+      },
+      "expected_exit": 5,
+      "assessed": true
+    }
+  }
+]

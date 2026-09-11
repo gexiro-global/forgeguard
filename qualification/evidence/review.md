@@ -1,0 +1,3 @@
+# 06 Przeglad (SELF_REVIEW) - wydanie 0.5.0
+
+SELF_REVIEW. Kod identyczny funkcjonalnie z rc4 (6efbfcf9), zmiana wylacznie wersji/README/CHANGELOG/goldenow (version-only) na commicie 5bd1dc9. Pelna kwalifikacja G01-G15 powtorzona na dokladnych finalnych paczkach 0.5.0 z zaufanego run 34601829228/1: 356 testow x2 (py3.11/3.12), 16/16 realnych wariantow HTTP, 2/2 TLS, instalacje wheel/sdist poza checkoutem, SBOM+audyt 0 podatnosci, skan sekretow bez nowych trafien, attestacja zweryfikowana niezaleznie (w tym test negatywny z 1-bajtowa mutacja odrzucony). Akceptacja wlasciciela i decyzja o wydaniu byly udzielone explicite w tym zadaniu (dokument SONNET_WYDANIE).

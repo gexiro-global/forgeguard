@@ -1,0 +1,70 @@
+{
+  "description": "Structured provenance manifest for advisory catalog records (R06). Each entry pins the exact retrieved bytes frozen alongside this file. Hashes are of raw bytes as retrieved; no normalized representation substitutes the raw hash. forgeguard scan never fetches these; verification is offline against the frozen copies.",
+  "retrieved_at_utc": "2026-09-11",
+  "entries": [
+    {
+      "source_id": "gitea-GHSA-8qw8-rq86-9pc2",
+      "file": "gitea-GHSA-8qw8-rq86-9pc2.json",
+      "canonical_advisory_url": "https://github.com/go-gitea/gitea/security/advisories/GHSA-8qw8-rq86-9pc2",
+      "retrieval_url": "https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-8qw8-rq86-9pc2",
+      "resolved_url": "https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-8qw8-rq86-9pc2",
+      "retrieved_at_utc": "2026-09-11",
+      "media_type": "application/vnd.github+json",
+      "upstream_revision_or_tag": "GHSA-8qw8-rq86-9pc2",
+      "raw_bytes_sha256": "09a541436af61a369d038203d01c9bd1bb4c903b1bc6ab19f7694da62f4f52f5",
+      "selected_record_id": "GHSA-8qw8-rq86-9pc2",
+      "selected_record_location": "Single advisory record endpoint; the whole response body is the one record.",
+      "supported_conclusion": "Version posture only for the advisory's affected/fixed intervals; not an exploitability claim.",
+      "limitations": "GitHub advisory API bodies carry review timestamps and may be edited upstream; the frozen bytes define the checked hash.",
+      "catalog_record_id": "FG-CVE-27771"
+    },
+    {
+      "source_id": "gitea-GHSA-frpv-2xgv-wxpq",
+      "file": "gitea-GHSA-frpv-2xgv-wxpq.json",
+      "canonical_advisory_url": "https://github.com/go-gitea/gitea/security/advisories/GHSA-frpv-2xgv-wxpq",
+      "retrieval_url": "https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-frpv-2xgv-wxpq",
+      "resolved_url": "https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-frpv-2xgv-wxpq",
+      "retrieved_at_utc": "2026-09-11",
+      "media_type": "application/vnd.github+json",
+      "upstream_revision_or_tag": "GHSA-frpv-2xgv-wxpq",
+      "raw_bytes_sha256": "c8e6cec99c7f6fc41a4b18b6cb0cff9e2c86561dec7952d63176a52aee7a5110",
+      "selected_record_id": "GHSA-frpv-2xgv-wxpq",
+      "selected_record_location": "Single advisory record endpoint for this GHSA. NOT the security-advisories collection listing (per_page query), whose bytes differ and drift as new advisories are published.",
+      "supported_conclusion": "Version posture only for affected 1.26.0-1.27.2 and fixed 1.27.3; medium severity per upstream record.",
+      "limitations": "The prior candidate bound this record to the collection listing hash; corrected here to the single-record bytes.",
+      "catalog_record_id": "FG-CVE-78433"
+    },
+    {
+      "source_id": "forgejo-notes-15.0.8",
+      "file": "forgejo-notes-15.0.8.md",
+      "canonical_advisory_url": "https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/15.0.8.md",
+      "retrieval_url": "https://codeberg.org/forgejo/forgejo/raw/branch/forgejo/release-notes-published/15.0.8.md",
+      "resolved_url": "https://codeberg.org/forgejo/forgejo/raw/branch/forgejo/release-notes-published/15.0.8.md",
+      "retrieved_at_utc": "2026-09-11",
+      "media_type": "text/markdown",
+      "upstream_revision_or_tag": "release-notes-published/15.0.8.md",
+      "raw_bytes_sha256": "d0ca357d547734c72b2956ba5fd36784ce3a37f1c2fb3c1c28cf870ff25dd7d4",
+      "selected_record_id": "forgejo-release-notes-15.0.8",
+      "selected_record_location": "Whole release-note document for the exact fixed release.",
+      "supported_conclusion": "Fixed release 15.0.8 only; no affected introduction boundary.",
+      "limitations": "Release notes establish fixed releases, not an affected range; other versions remain undetermined. Bytes re-verified unchanged on 2026-09-11.",
+      "catalog_record_id": "FG-FJ-TEMPLATE-20260910"
+    },
+    {
+      "source_id": "forgejo-notes-16.0.4",
+      "file": "forgejo-notes-16.0.4.md",
+      "canonical_advisory_url": "https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/16.0.4.md",
+      "retrieval_url": "https://codeberg.org/forgejo/forgejo/raw/branch/forgejo/release-notes-published/16.0.4.md",
+      "resolved_url": "https://codeberg.org/forgejo/forgejo/raw/branch/forgejo/release-notes-published/16.0.4.md",
+      "retrieved_at_utc": "2026-09-11",
+      "media_type": "text/markdown",
+      "upstream_revision_or_tag": "release-notes-published/16.0.4.md",
+      "raw_bytes_sha256": "5769d9d511c035f29e0c345718f4a2cc1f9567f9f93895005e038cafd2c4b99a",
+      "selected_record_id": "forgejo-release-notes-16.0.4",
+      "selected_record_location": "Whole release-note document for the exact fixed release.",
+      "supported_conclusion": "Fixed release 16.0.4 only; no affected introduction boundary.",
+      "limitations": "Release notes establish fixed releases, not an affected range; other versions remain undetermined. Bytes re-verified unchanged on 2026-09-11.",
+      "catalog_record_id": "FG-FJ-TEMPLATE-20260910"
+    }
+  ]
+}

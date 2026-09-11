@@ -1,0 +1,98 @@
+{
+  "complete": {
+    "kind": "http",
+    "product": "gitea",
+    "version": "1.27.3",
+    "policy": "private",
+    "profile": "standard",
+    "responses": {
+      "/api/v1/version": 200,
+      "/explore/repos": 403,
+      "/v2/": 403,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    }
+  },
+  "confirmed": {
+    "kind": "http",
+    "product": "gitea",
+    "version": "1.26.1",
+    "policy": "private",
+    "profile": "standard",
+    "responses": {
+      "/api/v1/version": 200,
+      "/explore/repos": 403,
+      "/v2/": 403,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    }
+  },
+  "mixed": {
+    "kind": "http",
+    "product": "forgejo",
+    "version": "16.0.4",
+    "policy": "private",
+    "profile": "standard",
+    "responses": {
+      "/api/v1/version": 200,
+      "/explore/repos": 403,
+      "/v2/": 403,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 503
+    }
+  },
+  "unsupported": {
+    "kind": "http",
+    "product": "gitea",
+    "version": "99.0.0",
+    "policy": "unspecified",
+    "profile": "standard",
+    "responses": {
+      "/api/v1/version": 200,
+      "/explore/repos": 403,
+      "/v2/": 403,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    }
+  },
+  "public": {
+    "kind": "http",
+    "product": "forgejo",
+    "version": "16.0.4",
+    "policy": "public",
+    "profile": "standard",
+    "responses": {
+      "/api/v1/version": 200,
+      "/explore/repos": 200,
+      "/v2/": 200,
+      "/api/v1/repos/search?limit=1": 200,
+      "/api/v1/users/search?limit=1": 200
+    }
+  },
+  "complete-forgejo": {
+    "kind": "http",
+    "product": "forgejo",
+    "version": "15.0.8",
+    "policy": "private",
+    "profile": "standard",
+    "responses": {
+      "/api/v1/version": 200,
+      "/explore/repos": 403,
+      "/v2/": 403,
+      "/api/v1/repos/search?limit=1": 403,
+      "/api/v1/users/search?limit=1": 403
+    }
+  },
+  "offline": {
+    "kind": "offline",
+    "product": "gitea",
+    "policy": "public",
+    "snapshot": "examples/gitea-snapshot.json"
+  },
+  "offline-forgejo": {
+    "kind": "offline",
+    "product": "forgejo",
+    "policy": "public",
+    "snapshot": "examples/forgejo-snapshot.json"
+  }
+}

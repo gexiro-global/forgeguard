@@ -1,0 +1,493 @@
+{
+  "$defs": {
+    "EvidenceFinding": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "evidence": {
+          "additionalProperties": true,
+          "title": "Evidence",
+          "type": "object"
+        },
+        "rationale": {
+          "default": "",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "remediation": {
+          "default": "",
+          "title": "Remediation",
+          "type": "string"
+        },
+        "references": {
+          "items": {
+            "type": "string"
+          },
+          "title": "References",
+          "type": "array"
+        },
+        "cwe": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cwe"
+        },
+        "evidence_state": {
+          "$ref": "#/$defs/EvidenceState",
+          "default": "assessed"
+        },
+        "check_version": {
+          "default": "1",
+          "title": "Check Version",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "http",
+            "version",
+            "operator-snapshot"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "observed": {
+          "additionalProperties": true,
+          "title": "Observed",
+          "type": "object"
+        },
+        "expected": {
+          "title": "Expected",
+          "type": "string"
+        },
+        "applicability": {
+          "enum": [
+            "applicable",
+            "undetermined",
+            "not_applicable",
+            "skipped_by_profile"
+          ],
+          "title": "Applicability",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "penalty_group": {
+          "title": "Penalty Group",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "severity",
+        "status",
+        "scope",
+        "source",
+        "expected",
+        "applicability",
+        "reason",
+        "penalty_group"
+      ],
+      "title": "EvidenceFinding",
+      "type": "object"
+    },
+    "EvidenceState": {
+      "enum": [
+        "assessed",
+        "indeterminate",
+        "informational"
+      ],
+      "title": "EvidenceState",
+      "type": "string"
+    },
+    "Identity": {
+      "additionalProperties": false,
+      "properties": {
+        "declared_product": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Declared Product"
+        },
+        "declared_version_marker": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared Version Marker"
+        },
+        "observed_product_marker": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed Product Marker"
+        },
+        "product_source": {
+          "title": "Product Source",
+          "type": "string"
+        },
+        "declared_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Declared Version"
+        },
+        "observed_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed Version"
+        },
+        "normalized_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Normalized Version"
+        },
+        "product_conflict": {
+          "title": "Product Conflict",
+          "type": "boolean"
+        },
+        "version_conflict": {
+          "title": "Version Conflict",
+          "type": "boolean"
+        },
+        "support": {
+          "enum": [
+            "qualified",
+            "unsupported",
+            "unknown"
+          ],
+          "title": "Support",
+          "type": "string"
+        },
+        "provider_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Provider Revision"
+        }
+      },
+      "required": [
+        "declared_product",
+        "observed_product_marker",
+        "product_source",
+        "declared_version",
+        "observed_version",
+        "normalized_version",
+        "product_conflict",
+        "version_conflict",
+        "support",
+        "provider_revision"
+      ],
+      "title": "Identity",
+      "type": "object"
+    },
+    "Score": {
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "grade": {
+          "title": "Grade",
+          "type": "string"
+        },
+        "assessed": {
+          "default": true,
+          "title": "Assessed",
+          "type": "boolean"
+        },
+        "max": {
+          "default": 100,
+          "title": "Max",
+          "type": "integer"
+        },
+        "sub": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Sub",
+          "type": "object"
+        },
+        "incomplete_checks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Incomplete Checks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "value",
+        "grade"
+      ],
+      "title": "Score",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "Status": {
+      "enum": [
+        "fail",
+        "warn",
+        "pass",
+        "info"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "Target": {
+      "properties": {
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "forge": {
+          "default": "unknown",
+          "title": "Forge",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "authorized": {
+          "default": false,
+          "title": "Authorized",
+          "type": "boolean"
+        },
+        "scope": {
+          "default": "own-instance",
+          "title": "Scope",
+          "type": "string"
+        },
+        "product_confirmed": {
+          "default": false,
+          "title": "Product Confirmed",
+          "type": "boolean"
+        },
+        "product_source": {
+          "default": "unconfirmed",
+          "title": "Product Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "title": "Target",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "tool": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Tool",
+      "type": "object"
+    },
+    "scan_id": {
+      "title": "Scan Id",
+      "type": "string"
+    },
+    "target": {
+      "$ref": "#/$defs/Target"
+    },
+    "score": {
+      "$ref": "#/$defs/Score"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/EvidenceFinding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "summary": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Summary",
+      "type": "object"
+    },
+    "schema_id": {
+      "const": "forgeguard.assessment.v1",
+      "default": "forgeguard.assessment.v1",
+      "title": "Schema Id",
+      "type": "string"
+    },
+    "profile": {
+      "title": "Profile",
+      "type": "string"
+    },
+    "profile_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Profile Version",
+      "type": "string"
+    },
+    "policy": {
+      "enum": [
+        "public",
+        "private",
+        "unspecified"
+      ],
+      "title": "Policy",
+      "type": "string"
+    },
+    "policy_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "scoring_version": {
+      "const": "2",
+      "default": "2",
+      "title": "Scoring Version",
+      "type": "string"
+    },
+    "identity": {
+      "$ref": "#/$defs/Identity"
+    },
+    "catalog": {
+      "additionalProperties": true,
+      "title": "Catalog",
+      "type": "object"
+    },
+    "skipped_checks": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Skipped Checks",
+      "type": "array"
+    },
+    "request_count": {
+      "title": "Request Count",
+      "type": "integer"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "run": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Run",
+      "type": "object"
+    }
+  },
+  "required": [
+    "scan_id",
+    "target",
+    "score",
+    "findings",
+    "profile",
+    "policy",
+    "identity",
+    "catalog",
+    "skipped_checks",
+    "request_count",
+    "limitations"
+  ],
+  "title": "Assessment",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/gexiro-global/forgeguard/schemas/assessment-v1.json"
+}

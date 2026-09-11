@@ -1,5 +1,15 @@
 # Roadmap
 
+## 0.5 preview implementation
+
+Separate Gitea/Forgejo providers, bounded profiles, exposure policy, offline configuration snapshots, finite advisory catalogs and versioned JSON/SARIF exports are implemented in the candidate. Qualification and delivery gates remain tracked in the PR and candidate notes.
+
+Future work: additional qualified releases, reviewed advisory coverage, explicitly scoped runner/token controls. No SaaS, automatic remediation, customer-code scanning or additional forge provider is part of this milestone.
+
+## Historical 0.2.2 roadmap
+
+# Roadmap
+
 Items below are planned and are not implemented in ForgeGuard 0.2.2 unless stated otherwise.
 
 ## Truth-correct current scope

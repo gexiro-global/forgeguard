@@ -8,51 +8,13 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/gexiro-global/forgeguard/badge)](https://scorecard.dev/viewer/?uri=github.com/gexiro-global/forgeguard)
 [Security and trust evidence](docs/SECURITY-TRUST.md) documents the project's policies and automated checks. No certification or badge level is claimed.
 
-Read-only security posture self-check for one explicitly authorized self-hosted Gitea instance.
+Read-only posture assessment for one explicitly authorized self-hosted Gitea or Forgejo instance, or an explicitly supplied anonymized configuration snapshot.
 
-ForgeGuard gives Gitea operators repeatable evidence about version posture, the fixed-version baseline for CVE-2026-27771, anonymous OCI registry-root behavior, and anonymous responses on a small allowlist of repository/API paths. It uses no exploit probes, performs no internet-wide discovery, and does not request private package contents, manifests, or blobs.
+## Multi-Forge Support — 0.5.0
 
-Official product page: [gexiro.com/forgeguard](https://gexiro.com/forgeguard)
+Adds Gitea or Forgejo as separate providers, with operator-declared product identity, finite provider-specific advisory catalogs, exposure intent, request profiles, offline configuration review of an explicitly supplied snapshot, and JSON/Markdown/SARIF exports. It does not scan application source code or private artifact contents.
 
-## Supported scope in 0.2.2
-
-ForgeGuard 0.2.2 supports self-hosted Gitea. Gitea-specific conclusions require the trusted operator declaration `--product gitea`; a compatible version endpoint or `--known-version` alone does not confirm product identity.
-
-Forgejo is not supported. An explicit Forgejo version marker overrides a conflicting Gitea declaration and fails safe as unsupported. ForgeGuard does not apply Gitea version or advisory conclusions to that target.
-
-One invocation accepts one target URL and refuses to run without the operator's `--authorized` affirmation.
-
-## What it checks
-
-- Informational product/version evidence.
-- CVE-2026-27771 affected/fixed/unknown version posture for operator-confirmed Gitea.
-- Anonymous OCI `/v2/` registry-root response posture as an independent observation.
-- Repository browsing posture on the allowlisted `/explore/repos` path.
-- Anonymous HTTP responses on the two allowlisted repository and user-search API paths.
-- Non-overlapping score ownership between the browsing and API observations.
-- Markdown and JSON evidence with deterministic scoring and explicit completeness.
-
-## Evidence and completeness semantics
-
-- `PASS` means evidence supports only the named checked condition.
-- `WARN` or `FAIL` means the named observation produced an actionable result.
-- `INFO / UNDETERMINED` means evidence was insufficient or ambiguous.
-- If any core check is undetermined, the final assessment is `value: null`, `grade: "N/A"`, `assessed: false` rather than a normal A–F grade.
-- HTTP 404, redirects, 429, 5xx and network failures do not become PASS.
-- A CVE version result does not prove exploitability, compromise, or data exposure.
-- OCI `/v2/` HTTP 200 does not prove access to private packages, manifests, or blobs.
-- ForgeGuard does not infer `REQUIRE_SIGNIN_VIEW` or any specific configuration key from HTTP behavior.
-- Registration posture is not checked in 0.2.2.
-
-## What it does not do
-
-- No mass scanning or target discovery.
-- No exploit proof of concept.
-- No unauthenticated third-party assessment.
-- No private repository, package, blob, manifest, or layer retrieval.
-- No state-changing remote requests.
-- No AI in scoring.
-- No security certification, vulnerability oracle, or guarantee of complete security.
+Qualification targets are Gitea 1.26.4 / 1.27.3 and Forgejo 15.0.8 / 16.0.4 — these are the exact tested targets, not a universal support promise; see [release notes](docs/RELEASE_CANDIDATE_0_5.md) and the CI evidence linked from the release.
 
 ## Install
 
@@ -60,116 +22,53 @@ One invocation accepts one target URL and refuses to run without the operator's 
 python -m pip install forgeguard
 ```
 
-Or install the latest source revision:
+Or pin the exact release:
 
 ```bash
-python -m pip install "git+https://github.com/gexiro-global/forgeguard.git"
+python -m pip install forgeguard==0.5.0
 ```
 
-For local development:
+## Usage
 
 ```bash
-git clone https://github.com/gexiro-global/forgeguard.git
-cd forgeguard
-python -m pip install -e ".[dev]"
+forgeguard providers
+forgeguard checks
+forgeguard scan --url https://git.example.com/team --authorized --product forgejo --profile standard --policy public --dry-run
+forgeguard scan --url https://git.example.com/team --authorized --product forgejo --profile standard --policy public --format json
+forgeguard config review --snapshot anonymized-snapshot.json --policy private --format json
 ```
 
-Raw source-tree execution can inherit metadata from a different installed ForgeGuard distribution. Install the source/editable package before relying on runtime version metadata.
+Use minimal for one version request, standard for five bounded existing requests, or extended for those requests plus root. The profiles change scope, not aggressiveness. Exposure intent (public/private/unspecified) is independent; unspecified is the default.
 
-## Quickstart
+The operator declares product identity. Compatible APIs and inventory versions alone do not identify a product. Opposing markers, conflicting versions, unknown syntax and unsupported evidence remain explicitly incomplete. No Gitea advisory is applied to Forgejo.
 
-```bash
-mkdir -p reports
-forgeguard scan \
-  --url https://git.example.com \
-  --authorized \
-  --product gitea \
-  --out ./reports/scan_report.md
-```
+## Evidence boundaries
 
-Use a version from trusted operator inventory when the authorized version endpoint is intentionally hidden:
+HTTP 200 on a checked path is only a status observation, not proof of repository readability, private data access or loaded configuration. Public-by-design status observations are informational. Private intent creates a bounded review warning. HTTP 401/403 may support denial on that path only. Errors, redirects, 404, 429, malformed version JSON, timeouts and truncation remain incomplete.
 
-```bash
-forgeguard scan \
-  --url https://git.example.com/gitea \
-  --authorized \
-  --product gitea \
-  --known-version 1.26.2 \
-  --format md,json \
-  --out ./reports/scan_report.md
-```
+Incomplete assessments have null score, N/A grade and assessed=false, even when another check warns. Skipped checks remain listed. Version 2 scores are not comparable with 0.2.2. No score is security certification or a claim of no vulnerabilities.
 
-`--out` names the Markdown artifact. JSON replaces that suffix with `.json`;
-ForgeGuard refuses a dual-format invocation if both names resolve to the same file.
+Offline review performs zero requests and evaluates only the supplied snapshot. It supports a closed key list for registration, sign-in, new-repository privacy and product-specific MFA. It never reads app.ini, production files, tokens, databases or private keys. See [config review](docs/CONFIG_REVIEW.md).
 
-Omitting `--product` keeps the product unknown and prevents a Gitea-specific A–F grade, even if a generic version value is returned.
+## Transport and reports
 
-Target URLs must use HTTP or HTTPS, include a hostname, and contain no embedded credentials, query, fragment, decoded `.`/`..` segment, or backslash separator at any of eight decoded layers. Excessive nested encoding is refused. Legal subpaths such as `/team/gitea` are preserved.
+One target, GET only, finite allowlist, no retries or redirects, serial requests, at most 12 requests, 10 seconds each and 60 seconds overall. Responses are streamed with a 256 KiB decompressed limit. HTTPS verifies certificates; --ca-bundle explicitly supplies a private CA. Ambient proxy/CA settings are ignored. HTTP never transmits a token. Anonymous requests do not inherit authentication or cookies.
 
-## Token handling
+Prefer FORGEGUARD_TOKEN for the optional version-read token. The legacy --token option warns because shell history/process listings may retain it. Reports do not contain the token.
 
-Prefer an environment variable so the token is not placed directly in shell history or process arguments:
+Use --format md,json,sarif with --out reports/result.md for separate files. The directory must exist. Existing files, symlinks and collisions are refused, and writes are atomic. Multiple formats require files; single machine-readable stdout is clean.
 
-```bash
-FORGEGUARD_TOKEN='replace-with-authorized-token' \
-  forgeguard scan \
-  --url https://git.example.com \
-  --authorized \
-  --product gitea
-```
+JSON uses forgeguard.assessment.v1 with a packaged schema. SARIF 2.1.0 is schema-validated against frozen OASIS errata01. No source locations are invented. No DevGuard or GitHub Code Scanning importer integration is claimed.
 
-The backward-compatible `--token` option remains available, but ForgeGuard emits a security warning because command-line values may be visible in shell history or process listings. Tokens are used only for the authorized version read and are not included in Markdown or JSON reports.
+## Documentation
 
-## Synthetic before/after
+- [Migration and exit codes](docs/MIGRATION_0_5.md)
+- [Security model](docs/SECURITY_MODEL.md) and [authorized use](AUTHORIZED_USE.md)
+- [Scoring](docs/SCORING.md), [checks](docs/CHECKS.md), [upstream evidence](docs/UPSTREAM.md)
+- [Provider guide](docs/PROVIDERS.md) and [integration lab](docs/INTEGRATION_TESTING.md)
+- [Candidate notes](docs/RELEASE_CANDIDATE_0_5.md) and [release checklist](docs/RELEASE_CHECKLIST.md)
 
-The synthetic example uses an operator-confirmed Gitea target and explicit 401/403 access-control observations. It does not claim that ForgeGuard tested exploitation or private data access.
-
-**Before** — Gitea `1.26.1`, within the affected version range:
-
-```text
-Product: gitea 1.26.1 | Score: 80/100 (B)
-Summary: critical 0 | high 1 | medium 0 | low 0 | pass 4
-Top action: P1 - Upgrade Gitea to >=1.26.2
-```
-
-**After** — Gitea `1.26.2`, at the first fixed release:
-
-```text
-Product: gitea 1.26.2 | Score: 100/100 (A)
-Summary: critical 0 | high 0 | medium 0 | low 0 | pass 5
-Top action: None - no FAIL or WARN findings and all core checks were assessed.
-```
-
-| Finding | Affected version (1.26.1) | First fixed release (1.26.2) |
-|---|---|---|
-| FG-VER — version evidence | PASS / informational | PASS / informational |
-| FG-CVE-27771 — version posture | FAIL / HIGH | PASS |
-| FG-SIGNIN / FG-REG / FG-ANON | PASS | PASS |
-| Assessment | complete | complete |
-| **Score** | **80/100 (B)** | **100/100 (A)** |
-
-Full mechanically generated artifacts:
-
-- [Affected version Markdown](examples/scan_report_affected_pre_update.md)
-- [Affected version JSON](examples/scan_result_affected_pre_update.json)
-- [First fixed release Markdown](examples/scan_report_patched_post_update.md)
-- [First fixed release JSON](examples/scan_result_patched_post_update.json)
-
-## Scoring
-
-Scoring is deterministic and does not use AI. `FG-VER` is informational. `FG-CVE-27771` is the only finding that penalizes the CVE affected-version condition, so the same version fact is not counted twice.
-
-Likewise, `FG-SIGNIN` owns only the browser path and `FG-ANON` owns only the API paths, so one HTTP observation cannot be charged twice.
-
-FAIL findings subtract the full severity weight: critical 40, high 20, medium 10, low 4. WARN findings subtract `int(weight * 0.35)`. A–F grades are emitted only when every core check is assessed. Otherwise the assessment is N/A, not zero and not A.
-
-The score summarizes only ForgeGuard's limited checks. It is not a complete hardening, exploitability, compromise, registration, or private-artifact assessment. See [Scoring](docs/SCORING.md).
-
-## Security and ethics
-
-Run ForgeGuard only on a Gitea instance you own or are explicitly authorized to assess. ForgeGuard uses read-only HTTP GET requests to an exact allowlist and stops at version, root-response, and status-code evidence.
-
-See [Authorized Use](AUTHORIZED_USE.md), [Security Policy](SECURITY.md), and [Security Model](docs/SECURITY_MODEL.md).
+Historical 0.2.2 before/after examples remain in examples/ for migration context. Current examples use the golden- prefix and are synthetic offline fixtures, not production scans.
 
 ## Commercial hardening
 
@@ -180,10 +79,6 @@ A Remediation Sprint is a separate engagement: scope and acceptance criteria are
 ForgeGuard remains usable as a free OSS CLI without a hosted account or control plane. Heavy SaaS and recurring monitoring are not offered at this stage.
 
 [Request a scoped ForgeGuard Hardening Report](mailto:contact@gexiro.com?subject=ForgeGuard%20Hardening%20Report)
-
-## Roadmap
-
-Forgejo support and registration posture are future, product-specific work and are not implemented in 0.2.2. See [ROADMAP.md](ROADMAP.md).
 
 ## License
 

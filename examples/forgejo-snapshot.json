@@ -1,0 +1,17 @@
+{
+  "schema_id": "forgeguard.config-snapshot.v1",
+  "product": "forgejo",
+  "version": "16.0.4",
+  "instance_alias": "synthetic-forgejo",
+  "snapshot_at": "2026-09-10T12:00:00Z",
+  "provenance": "Synthetic fixture; not a runtime observation.",
+  "settings": {
+    "service.DISABLE_REGISTRATION": false,
+    "service.REGISTER_EMAIL_CONFIRM": false,
+    "service.REGISTER_MANUAL_CONFIRM": false,
+    "service.REQUIRE_SIGNIN_VIEW": false,
+    "repository.FORCE_PRIVATE": false,
+    "repository.DEFAULT_PRIVATE": "last",
+    "security.GLOBAL_TWO_FACTOR_REQUIREMENT": "none"
+  }
+}

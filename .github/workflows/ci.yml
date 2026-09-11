@@ -28,7 +28,7 @@ jobs:
       - name: Compile
         run: python -m compileall forgeguard
       - name: Test
-        run: python -m pytest -q
+        run: python -m pytest -q --cov=forgeguard --cov-fail-under=91.28
       - name: Check installed dependencies
         run: python -m pip check
 
@@ -41,7 +41,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install build tools
-        run: python -m pip install "build>=1,<2" "twine>=6.1,<7"
+        run: python -m pip install "build==1.6.1" "twine==6.2.0" "jsonschema==4.26.0"
       - name: Build distributions
         run: python -m build
       - name: Check distributions
@@ -56,3 +56,48 @@ jobs:
           .wheel-smoke/bin/forgeguard --help
           .wheel-smoke/bin/forgeguard scan --help
           .wheel-smoke/bin/forgeguard checks
+
+      - name: Validate exact distributions outside checkout
+        run: python tools/validate_dist.py dist
+      - name: Preserve candidate distributions
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: candidate-dist
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 5
+
+  candidate-provenance:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: candidate-dist
+          path: dist
+      - name: Attest candidate without publishing a release
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: dist/*
+      - name: Verify exact candidate files and signer workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_REPO: ${{ github.repository }}
+        run: |
+          mkdir verification
+          for artifact in dist/*; do
+            gh attestation verify "$artifact" --repo "$EXPECTED_REPO" --signer-workflow "$EXPECTED_REPO/.github/workflows/ci.yml" --format json > "verification/$(basename "$artifact").json"
+          done
+      - name: Preserve verification evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: candidate-verification
+          path: verification/*
+          if-no-files-found: error
+          retention-days: 5

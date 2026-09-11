@@ -1,0 +1,117 @@
+{
+  "ghsa_id": "GHSA-8qw8-rq86-9pc2",
+  "cve_id": "CVE-2026-27771",
+  "url": "https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-8qw8-rq86-9pc2",
+  "html_url": "https://github.com/go-gitea/gitea/security/advisories/GHSA-8qw8-rq86-9pc2",
+  "summary": "Critical Vulnerability - Already emailed",
+  "description": "### Summary\r\nHi team, We believe we've identified a critical vulnerability in Gitea. We've already reported it via the email listed on your site (security@gitea.io) from (dev@noscope.com), and submitted an encrypted report.\r\n\r\nPlease let us know if you've received it, and whether you'd prefer us to also report it here. Looking forward to hearing from you.",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+    "login": "lunny",
+    "id": 81045,
+    "node_id": "MDQ6VXNlcjgxMDQ1",
+    "avatar_url": "https://avatars.githubusercontent.com/u/81045?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/lunny",
+    "html_url": "https://github.com/lunny",
+    "followers_url": "https://api.github.com/users/lunny/followers",
+    "following_url": "https://api.github.com/users/lunny/following{/other_user}",
+    "gists_url": "https://api.github.com/users/lunny/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/lunny/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/lunny/subscriptions",
+    "organizations_url": "https://api.github.com/users/lunny/orgs",
+    "repos_url": "https://api.github.com/users/lunny/repos",
+    "events_url": "https://api.github.com/users/lunny/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/lunny/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "identifiers": [
+    {
+      "value": "GHSA-8qw8-rq86-9pc2",
+      "type": "GHSA"
+    },
+    {
+      "value": "CVE-2026-27771",
+      "type": "CVE"
+    }
+  ],
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-06-05T22:21:49Z",
+  "published_at": "2026-06-05T22:21:49Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "submission": null,
+  "vulnerabilities": [
+    {
+      "package": {
+        "ecosystem": "go",
+        "name": "code.gitea.io/gitea"
+      },
+      "vulnerable_version_range": "<= 1.26.1",
+      "patched_versions": "1.26.2",
+      "vulnerable_functions": [
+
+      ]
+    }
+  ],
+  "cvss_severities": {
+    "cvss_v3": {
+      "vector_string": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+      "score": 8.2
+    },
+    "cvss_v4": {
+      "vector_string": null,
+      "score": null
+    }
+  },
+  "cwes": [
+
+  ],
+  "cwe_ids": [
+
+  ],
+  "credits": [
+    {
+      "login": "DevNoScope",
+      "type": "reporter"
+    }
+  ],
+  "credits_detailed": [
+    {
+      "user": {
+        "login": "DevNoScope",
+        "id": 270787429,
+        "node_id": "U_kgDOECPjZQ",
+        "avatar_url": "https://avatars.githubusercontent.com/u/270787429?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/DevNoScope",
+        "html_url": "https://github.com/DevNoScope",
+        "followers_url": "https://api.github.com/users/DevNoScope/followers",
+        "following_url": "https://api.github.com/users/DevNoScope/following{/other_user}",
+        "gists_url": "https://api.github.com/users/DevNoScope/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/DevNoScope/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/DevNoScope/subscriptions",
+        "organizations_url": "https://api.github.com/users/DevNoScope/orgs",
+        "repos_url": "https://api.github.com/users/DevNoScope/repos",
+        "events_url": "https://api.github.com/users/DevNoScope/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/DevNoScope/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "type": "reporter",
+      "state": "accepted"
+    }
+  ],
+  "collaborating_users": null,
+  "collaborating_teams": null,
+  "private_fork": null,
+  "cvss": {
+    "vector_string": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+    "score": 8.2
+  }
+}

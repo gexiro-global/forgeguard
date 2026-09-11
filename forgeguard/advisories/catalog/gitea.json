@@ -1,0 +1,68 @@
+{
+  "version": "2026-09-11.1",
+  "verified_at": "2026-09-11",
+  "records": [
+    {
+      "id": "FG-CVE-27771",
+      "product": "gitea",
+      "title": "CVE-2026-27771 version posture",
+      "sources": [
+        "https://github.com/go-gitea/gitea/security/advisories/GHSA-8qw8-rq86-9pc2"
+      ],
+      "source_sha256": [
+        "09a541436af61a369d038203d01c9bd1bb4c903b1bc6ab19f7694da62f4f52f5"
+      ],
+      "verified_at": "2026-09-11",
+      "retrieval_url": "https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-8qw8-rq86-9pc2",
+      "selected_record_id": "GHSA-8qw8-rq86-9pc2",
+      "selected_record_location": "Single advisory record endpoint; frozen exact bytes, not a collection listing.",
+      "affected": [
+        {
+          "lower": "0.0.0",
+          "upper": "1.26.1"
+        }
+      ],
+      "fixed": [
+        {
+          "lower": "1.26.2",
+          "upper": "1.27.3"
+        }
+      ],
+      "severity": "high",
+      "severity_source": "https://github.com/go-gitea/gitea/security/advisories/GHSA-8qw8-rq86-9pc2",
+      "limitations": "No custom vendor backports or future releases inferred.",
+      "applicability": "Unmodified upstream version; version posture only."
+    },
+    {
+      "id": "FG-CVE-78433",
+      "product": "gitea",
+      "title": "CVE-2026-78433 version posture",
+      "sources": [
+        "https://github.com/go-gitea/gitea/security/advisories/GHSA-frpv-2xgv-wxpq"
+      ],
+      "source_sha256": [
+        "c8e6cec99c7f6fc41a4b18b6cb0cff9e2c86561dec7952d63176a52aee7a5110"
+      ],
+      "verified_at": "2026-09-11",
+      "retrieval_url": "https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-frpv-2xgv-wxpq",
+      "selected_record_id": "GHSA-frpv-2xgv-wxpq",
+      "selected_record_location": "Single advisory record endpoint for this GHSA, not the security-advisories collection listing whose bytes and hash differ and drift.",
+      "affected": [
+        {
+          "lower": "1.26.0",
+          "upper": "1.27.2"
+        }
+      ],
+      "fixed": [
+        {
+          "lower": "1.27.3",
+          "upper": "1.27.3"
+        }
+      ],
+      "severity": "medium",
+      "severity_source": "https://github.com/go-gitea/gitea/security/advisories/GHSA-frpv-2xgv-wxpq",
+      "limitations": "No custom vendor backports or future releases inferred.",
+      "applicability": "Unmodified upstream version; version posture only."
+    }
+  ]
+}

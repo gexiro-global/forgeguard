@@ -1,0 +1,38 @@
+{
+  "version": "2026-09-11.1",
+  "verified_at": "2026-09-11",
+  "records": [
+    {
+      "id": "FG-FJ-TEMPLATE-20260910",
+      "product": "forgejo",
+      "title": "Template initialization security update version posture",
+      "sources": [
+        "https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/15.0.8.md",
+        "https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/16.0.4.md"
+      ],
+      "source_sha256": [
+        "d0ca357d547734c72b2956ba5fd36784ce3a37f1c2fb3c1c28cf870ff25dd7d4",
+        "5769d9d511c035f29e0c345718f4a2cc1f9567f9f93895005e038cafd2c4b99a"
+      ],
+      "verified_at": "2026-09-11",
+      "retrieval_url": "https://codeberg.org/forgejo/forgejo/raw/branch/forgejo/release-notes-published/15.0.8.md ; https://codeberg.org/forgejo/forgejo/raw/branch/forgejo/release-notes-published/16.0.4.md",
+      "selected_record_id": "forgejo-release-notes-15.0.8+16.0.4",
+      "selected_record_location": "Two exact release-note documents; bytes frozen and re-verified unchanged on 2026-09-11. Establishes fixed releases only; no affected introduction boundary is asserted.",
+      "affected": [],
+      "fixed": [
+        {
+          "lower": "15.0.8",
+          "upper": "15.0.8"
+        },
+        {
+          "lower": "16.0.4",
+          "upper": "16.0.4"
+        }
+      ],
+      "severity": "critical",
+      "severity_source": "https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/16.0.4.md",
+      "limitations": "Release notes prove fixes in these exact releases. They do not establish an introduction boundary; all other versions remain undetermined. No CVE ID is assigned by this catalog.",
+      "applicability": "Unmodified upstream release; no feature activation or exploitability claim."
+    }
+  ]
+}

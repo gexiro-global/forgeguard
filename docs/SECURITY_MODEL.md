@@ -1,80 +1,60 @@
-# Security Model
+# Security model — 0.5 preview
 
-ForgeGuard 0.2.2 is a read-only, GET-only posture self-check for one self-hosted target.
+ForgeGuard assesses one explicitly authorized base URL or one operator-supplied
+offline snapshot. It performs no discovery, exploitation, auth bypass, writes,
+account creation, private content retrieval or automatic remediation.
 
-## Scope
+Product identity is an operator declaration, separate from version evidence.
+A compatible API does not identify Gitea or Forgejo. Opposing markers in inventory
+or observations and conflicting versions stop dependent inference. Catalog
+version ranges are finite and provider-specific. Vendor/backport uncertainty
+never becomes fixed or affected automatically.
 
-- One target URL per invocation.
-- Own or explicitly authorized instances only.
-- Gitea-specific conclusions require trusted `--product gitea` confirmation.
-- No write-path checks, issue creation, remote mutation, target discovery, or mass scanning.
-- Forgejo is not a supported product in 0.2.2.
-- Registration posture is not implemented.
+## HTTP boundary
 
-## Authorization metadata
+Central transport enforces the existing finite GET allowlist:
+`/api/v1/version`, `/explore/repos`, `/v2/`,
+`/api/v1/repos/search?limit=1`, `/api/v1/users/search?limit=1`, `/`.
+No private repository contents, OCI manifests, blobs, layers or attachments.
+No new enumeration endpoints are introduced.
 
-A new `Target` defaults to `authorized: false`. The high-level CLI sets it true only after the required `--authorized` affirmation passes. Low-level Python clients cannot enforce legal authorization; the metadata represents the executed workflow truthfully.
+Minimal uses one version request; standard five existing requests; extended also
+reads root. Plans are independent of exposure intent. Dry-run performs no DNS or
+HTTP. Profile limits are below the hard ceiling of 12 requests.
+One request at a time, no retries, at most 10 seconds per request, 60 seconds
+overall, and at most 256 KiB after decompression while streaming. Errors and
+truncation preserve incompleteness.
 
-## Product boundary
+Redirects are not followed. The validated base origin and legal subpath are
+preserved. Embedded credentials, queries, fragments, dot segments, backslashes
+and excessive nested encodings are refused. Loopback/private addresses remain
+valid for an operator's own instances.
 
-Product identity starts as `unknown`. A generic version response or `--known-version` does not establish Gitea. The operator declaration `--product gitea` is trusted inventory input.
+HTTPS verifies certificates. `--ca-bundle` explicitly selects trust for a private
+CA; disabling verification is not supported. HTTP never transmits a token.
+Ambient proxy and CA environment variables are ignored through trust_env=false;
+proxy configuration is not supported by this preview.
 
-An explicit Forgejo version marker overrides a conflicting Gitea declaration and prevents a Gitea advisory PASS or FAIL.
+Only the version request may authenticate, using FORGEGUARD_TOKEN preferably.
+The legacy token argument warns on stderr. Anonymous and authenticated clients
+have separate state and discard cookies before/after requests.
+Bodies from status-only controls are discarded without retaining names or data.
+Only a bounded version field and closed-value header summaries survive.
+Raw arbitrary headers, cookies and server exception details do not enter reports.
 
-## Target URL boundary
+HTTP 401/403 confirms only denial on the named path. HTTP 200 confirms status,
+not repository contents, private-data access or runtime settings. Redirects,
+404, 429, 5xx, timeouts, malformed version JSON and truncated bodies are incomplete.
+CSP/HSTS presence is informational; no full CSP/TLS audit is claimed.
 
-A target must:
+## Offline and output boundary
 
-- use HTTP or HTTPS;
-- include a hostname;
-- contain no embedded username/password;
-- contain no query or fragment;
-- contain no decoded `.` or `..` segment or backslash separator across up to eight decoding layers;
-- avoid excessive nested percent-encoding.
+Configuration review accepts a closed, anonymized JSON schema, never raw server
+configuration. Snapshot declarations do not establish runtime behavior, existing
+repository visibility or completed MFA enrollment. Missing keys and stale or
+unsupported snapshots stay unknown.
 
-A legal subpath is preserved. Unsafe URLs are rejected before the HTTP client is created or a report is written.
-
-## Allowlisted endpoints
-
-- `/api/v1/version`
-- `/v2/`
-- `/`
-- `/api/v1/repos/search?limit=1`
-- `/explore/repos`
-- `/api/v1/users/search?limit=1`
-
-Every request path is checked at runtime. Non-allowlisted paths are refused before a network call.
-
-`FG-SIGNIN` owns the browser observation at `/explore/repos`. `FG-ANON`
-owns the two API-search observations. No endpoint/status observation is requested
-or scored twice.
-
-## Authentication
-
-Prefer `FORGEGUARD_TOKEN` for an optional token. The token is used only for the authenticated version read. Anonymous posture checks remain anonymous. Redirect following is disabled.
-
-The legacy `--token` option remains available with a warning because command-line values may be visible in shell history or process listings. Token values are not fields in reports.
-
-## Report integrity
-
-Markdown rendering treats target, scan, finding, rationale, remediation, reference,
-and evidence values as untrusted. Control characters become visible escapes,
-Markdown metacharacters are escaped, and raw HTML is neutralized. JSON preserves
-the original structured values under JSON escaping.
-
-## HTTP evidence taxonomy
-
-- 200 records anonymous readability/reachability and produces a bounded warning.
-- 401/403 are explicit authentication/access-denial evidence and may produce a narrowly scoped PASS.
-- 404, redirects, 429, 5xx, unclassified statuses and network failures are INFO/UNDETERMINED.
-- ForgeGuard does not infer a global sign-in configuration from these responses.
-
-## Advisory and completeness boundary
-
-CVE-2026-27771 is evaluated only from operator-confirmed Gitea version posture. Registry-root and sign-in responses do not affect that result. `FG-VER` is informational; only `FG-CVE-27771` scores the CVE affected-version condition.
-
-If any core check is indeterminate, the assessment is N/A rather than A–F. Missing evidence is not interpreted as either risk or security.
-
-## Registry and data boundary
-
-ForgeGuard stops at the OCI registry root and status-code evidence. It does not request private package contents, Composer source links, OCI manifests, blobs, layers, repository contents, or protected artifacts.
+Export is offline. Markdown neutralizes untrusted text. JSON/SARIF use serializers.
+Output collisions, existing files and symlinks are rejected; atomic writes do not
+overwrite input or an existing report. Reports may contain operator-provided
+aliases/provenance; the operator must sanitize these inputs before sharing.

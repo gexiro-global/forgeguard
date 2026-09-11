@@ -1,9 +1,48 @@
 name: publish
 
-# Publish to PyPI via OIDC Trusted Publishing (no API token) with PEP 740 attestations.
-# Runs when a GitHub Release is published. Requires a matching Trusted Publisher on PyPI.
-# Guards: Python 3.11/3.12 quality gates, tag/version truth, and exact-wheel checks.
+# Promote an ALREADY-QUALIFIED candidate to PyPI. Qualification (test, build,
+# attest) happens on the trusted push in ci.yml. This workflow never rebuilds: it
+# downloads the exact artifacts of a referenced completed+successful push run,
+# re-verifies their attestation and digests against a qualification manifest, and
+# only on an explicit workflow_dispatch with publish=true hands those exact bytes
+# to the publisher. No PR, branch/main push, tag or GitHub Release can reach the
+# upload job; id-token write is scoped to the publish job alone. The release
+# trigger is retained for verification only and cannot reach publishing.
 on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Actually upload to PyPI. false = prepare-only (validate + attest, no upload)."
+        type: boolean
+        default: false
+      version:
+        description: "Exact project version to publish; must equal pyproject and manifest version."
+        type: string
+        default: ""
+      source_sha:
+        description: "Full 40-char commit SHA of the qualified candidate."
+        type: string
+        default: ""
+      source_ref:
+        description: "Exact allowed source ref (e.g. refs/heads/feat/forgeguard-v0.5-multiforge)."
+        type: string
+        default: ""
+      run_id:
+        description: "Completed successful trusted PUSH run id whose exact artifacts are promoted."
+        type: string
+        default: ""
+      run_attempt:
+        description: "Attempt number of that run."
+        type: string
+        default: "1"
+      manifest_json:
+        description: "Qualification manifest JSON (owner-supplied data; cross-checked against the run and digests)."
+        type: string
+        default: ""
+      manifest_sha256:
+        description: "Expected SHA-256 of the manifest JSON."
+        type: string
+        default: ""
   release:
     types: [published]
 
@@ -11,68 +50,111 @@ permissions:
   contents: read
 
 jobs:
-  quality-gate:
-    name: Quality gate (Python ${{ matrix.python-version }})
+  promote:
+    name: Promote qualified candidate (prepare-only; never rebuilds, never uploads)
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.12"]
+    permissions:
+      contents: read
+      actions: read        # read referenced run metadata + download its artifacts
+      attestations: read   # gh attestation verify
+    outputs:
+      prepared: ${{ steps.gate.outputs.prepared }}
+      publish_allowed: ${{ steps.gate.outputs.publish_allowed }}
     steps:
+      # Trusted dispatch ref only (for tools/ + pyproject), never inputs.source_sha.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install
-        run: python -m pip install -e ".[dev]"
-      - name: Lint
-        run: ruff check .
-      - name: Format
-        run: ruff format --check .
-      - name: Compile
-        run: python -m compileall forgeguard
-      - name: Test
-        run: python -m pytest -q
-      - name: Check installed dependencies
-        run: python -m pip check
+          python-version: "3.12"
+      - name: Materialise qualification manifest (as data, not shell)
+        env:
+          FG_MANIFEST_JSON: ${{ inputs.manifest_json }}
+        run: printf '%s' "$FG_MANIFEST_JSON" > qualification_manifest.json
+      - name: Download the exact frozen artifacts of the referenced run (no rebuild)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FG_RUN_ID: ${{ inputs.run_id }}
+        run: |
+          mkdir -p dist
+          gh run download "$FG_RUN_ID" --repo "${{ github.repository }}" -n candidate-dist -D dist
+          ls -l dist
+      - name: Fetch qualification evidence package (owner-supplied; hash-bound by manifest)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FG_RUN_ID: ${{ inputs.run_id }}
+        run: |
+          mkdir -p qualification_evidence
+          # optional: an owner-provided evidence artifact bound by the manifest hashes.
+          gh run download "$FG_RUN_ID" --repo "${{ github.repository }}" -n qualification-evidence -D qualification_evidence 2>/dev/null || true
+      - name: Preflight gate (validates data + real attestation; no upload)
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FG_EVENT_NAME: ${{ github.event_name }}
+          FG_REPOSITORY: ${{ github.repository }}
+          FG_EXPECTED_REPOSITORY: gexiro-global/forgeguard
+          FG_PUBLISH: ${{ inputs.publish }}
+          FG_INPUT_VERSION: ${{ inputs.version }}
+          FG_SOURCE_SHA: ${{ inputs.source_sha }}
+          FG_SOURCE_REF: ${{ inputs.source_ref }}
+          FG_RUN_ID: ${{ inputs.run_id }}
+          FG_RUN_ATTEMPT: ${{ inputs.run_attempt }}
+          FG_MANIFEST_PATH: qualification_manifest.json
+          FG_MANIFEST_SHA256: ${{ inputs.manifest_sha256 }}
+          FG_EVIDENCE_DIR: qualification_evidence
+          FG_DIST_DIR: dist
+          FG_BUILT_IN_PROMOTION: "false"
+        run: python tools/release_preflight.py
 
   pypi-publish:
-    name: Build and publish
-    needs: quality-gate
+    name: Publish the exact promoted set
+    needs: promote
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.publish == true &&
+      needs.promote.outputs.publish_allowed == 'true'
     runs-on: ubuntu-latest
     permissions:
       id-token: write   # OIDC token for Trusted Publishing + signed attestations
       contents: read
+      actions: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - name: Install pinned build toolchain
-        run: python -m pip install "build~=1.2" "twine~=6.1"
-      - name: Verify release tag matches project version
+      - name: Download the same qualified artifacts (no rebuild)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FG_RUN_ID: ${{ inputs.run_id }}
         run: |
-          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
-          tag="${GITHUB_REF_NAME#v}"
-          echo "project version: $version | release tag: $tag"
-          if [ "$version" != "$tag" ]; then
-            echo "::error::release tag '$tag' does not match project version '$version'"
-            exit 1
-          fi
-      - name: Build sdist and wheel
-        run: python -m build
-      - name: Check distributions
-        run: python -m twine check dist/*
-      - name: Install exact wheel in clean environment
+          mkdir -p dist
+          gh run download "$FG_RUN_ID" --repo "${{ github.repository }}" -n candidate-dist -D dist
+      - name: Validate the exact two-file set and digests via the shared handoff
+        env:
+          FG_MANIFEST_JSON: ${{ inputs.manifest_json }}
         run: |
-          python -m venv .wheel-smoke
-          .wheel-smoke/bin/python -m pip install dist/*.whl
-          .wheel-smoke/bin/python -m pip check
-      - name: Verify exact-wheel metadata and CLI
-        run: |
-          .wheel-smoke/bin/python -c "import importlib.metadata as m, tomllib; expected = tomllib.load(open('pyproject.toml', 'rb'))['project']['version']; assert m.version('forgeguard') == expected"
-          .wheel-smoke/bin/forgeguard --help
-          .wheel-smoke/bin/forgeguard scan --help
-          .wheel-smoke/bin/forgeguard checks
+          printf '%s' "$FG_MANIFEST_JSON" > qualification_manifest.json
+          python - <<'PY'
+          import json, sys
+          from tools.release_preflight import promote_handoff, HandoffError
+          m = json.load(open("qualification_manifest.json"))
+          want = {".whl": m["wheel_sha256"], ".tar.gz": m["sdist_sha256"]}
+          def check(payload):
+              for name, _size, sha in payload:
+                  suffix = ".whl" if name.endswith(".whl") else ".tar.gz"
+                  if sha != want[suffix]:
+                      raise SystemExit(f"digest mismatch {name}")
+              return [n for n, _s, _h in payload]
+          try:
+              names = promote_handoff("dist", check)
+          except HandoffError as e:
+              raise SystemExit(f"handoff refused: {e}")
+          print("exact frozen set verified against manifest:", names)
+          PY
+          rm -f qualification_manifest.json
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist

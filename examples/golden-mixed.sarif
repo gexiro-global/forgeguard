@@ -1,0 +1,177 @@
+{
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "properties": {
+        "assessmentComplete": false,
+        "catalog": {
+          "coverage": "Curated records only; absence is not evidence of safety.",
+          "sha256": "1acebe5d0e06891909237623912f224bce1ac886157eb402dfb9e925dc6a15f3",
+          "verified_at": "2026-09-11",
+          "version": "2026-09-11.1"
+        },
+        "incompleteChecks": [
+          "FG-ANON",
+          "FG-HTTP"
+        ],
+        "limitations": [
+          "Operator declarations are not independent product detection.",
+          "A complete result covers selected checks only; no security certification.",
+          "HTTP status does not prove data access or loaded configuration.",
+          "Catalog coverage is finite; no runtime feeds or exploit tests."
+        ],
+        "policy": "private",
+        "profile": "standard",
+        "skippedChecks": [
+          "FG-ROOT-HTTP"
+        ]
+      },
+      "results": [
+        {
+          "level": "warning",
+          "message": {
+            "text": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning."
+          },
+          "partialFingerprints": {
+            "forgeguard/v1": "d6e98c43e7e38a45751429d702b63239cb283d258ea374e4fb692f788fd3c35f"
+          },
+          "properties": {
+            "evidence_state": "indeterminate",
+            "versionOnly": false
+          },
+          "ruleId": "FG-ANON",
+          "ruleIndex": 0
+        }
+      ],
+      "tool": {
+        "driver": {
+          "informationUri": "https://github.com/gexiro-global/forgeguard",
+          "name": "ForgeGuard",
+          "rules": [
+            {
+              "fullDescription": {
+                "text": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning."
+              },
+              "help": {
+                "text": "Review the named condition against operator policy; confirm configuration locally."
+              },
+              "id": "FG-ANON",
+              "properties": {
+                "references": [
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/templates/swagger/v1_json.tmpl"
+                ]
+              },
+              "shortDescription": {
+                "text": "Allowlisted API HTTP responses"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Version is within the catalog's explicit fixed interval. Version assessment does not prove exploitability. Release notes prove fixes in these exact releases. They do not establish an introduction boundary; all other versions remain undetermined. No CVE ID is assigned by this catalog."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-FJ-TEMPLATE-20260910",
+              "properties": {
+                "references": [
+                  "https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/15.0.8.md",
+                  "https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/16.0.4.md"
+                ]
+              },
+              "shortDescription": {
+                "text": "Template initialization security update version posture"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "HTTPS means certificate verification on this request, not a TLS audit. X-Frame-Options only describes embedding protection for HTML; nosniff is a limited response observation. HSTS/CSP presence is informational and is not policy validation. Reverse proxies may supply headers. No penalty from presence alone."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-HTTP",
+              "properties": {
+                "references": []
+              },
+              "shortDescription": {
+                "text": "Transport and HTTP protection observations"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-REG",
+              "properties": {
+                "references": [
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/templates/swagger/v1_json.tmpl"
+                ]
+              },
+              "shortDescription": {
+                "text": "OCI registry-root HTTP response"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-SIGNIN",
+              "properties": {
+                "references": [
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/templates/swagger/v1_json.tmpl"
+                ]
+              },
+              "shortDescription": {
+                "text": "Repository browser HTTP response"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "Product is an operator declaration; version conflicts stop advisory inference."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-VER",
+              "properties": {
+                "references": []
+              },
+              "shortDescription": {
+                "text": "Product and version provenance"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "An explicit version value was returned anonymously; no independent penalty."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-VER-DISCLOSE",
+              "properties": {
+                "references": []
+              },
+              "shortDescription": {
+                "text": "Anonymous version disclosure"
+              }
+            }
+          ],
+          "version": "0.5.0"
+        }
+      }
+    }
+  ],
+  "version": "2.1.0"
+}

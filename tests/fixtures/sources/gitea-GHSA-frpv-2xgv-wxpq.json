@@ -1,0 +1,164 @@
+{
+  "ghsa_id": "GHSA-frpv-2xgv-wxpq",
+  "cve_id": "CVE-2026-78433",
+  "url": "https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-frpv-2xgv-wxpq",
+  "html_url": "https://github.com/go-gitea/gitea/security/advisories/GHSA-frpv-2xgv-wxpq",
+  "summary": "Attachments created before the January 2026 cutoff skip the cross repository check entirely, and permission is then evaluated against the repository named in the URL rather than the repository owning the attachment, so a private repository's attachment is served through any public repository's path",
+  "description": "### Summary\nThe web attachment handler contains a guard that rejects a request for an attachment made through a repository other than the one that owns it. That guard is applied only to attachments created after 16 January 2026; older attachments skip it even when their owning-repository id is correctly populated. When the guard is skipped, the handler evaluates permission against the repository named in the request URL instead of the repository that owns the attachment. An attachment belonging to a private repository can therefore be retrieved by requesting it through any public repository's attachment path. The route allows anonymous access, so no authentication is required.\n\n### Details\nIn `routers/web/repo/attachment.go` the cross-repository check is gated only on the attachment's creation timestamp, unlike its two sibling call sites which also require the owning-repository id to be unset. A migration backfills that id on upgrade, so the timestamp-only exemption protects no legitimate rows and instead allows permission to be checked against the wrong repository. Downstream draft-release and token-scope checks inherit the same wrong subject. Attachment UUIDs are random and not enumerable, so exploitation requires knowledge of a specific attachment UUID (for example from a removed collaborator, a public-to-private conversion, notification mail, webhook payloads, or proxy/CDN logs).\n\n### Impact\nDisclosure of private-repository attachment contents — issue and pull request attachments and release assets — to an unauthenticated caller who knows the attachment UUID. Incorrect authorization / cross-repository access control bypass. Affects any instance that held attachments created before 16 January 2026.\n\n### Affected versions\nGitea `>= 1.26.0, <= 1.27.2`.\n\n### Patches\nFixed in Gitea 1.27.3 (#39048, #39077).\n\n### Workarounds\nNone. Upgrade to 1.27.3.\n",
+  "severity": "medium",
+  "author": null,
+  "publisher": {
+    "login": "bircni",
+    "id": 75789103,
+    "node_id": "MDQ6VXNlcjc1Nzg5MTAz",
+    "avatar_url": "https://avatars.githubusercontent.com/u/75789103?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/bircni",
+    "html_url": "https://github.com/bircni",
+    "followers_url": "https://api.github.com/users/bircni/followers",
+    "following_url": "https://api.github.com/users/bircni/following{/other_user}",
+    "gists_url": "https://api.github.com/users/bircni/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/bircni/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/bircni/subscriptions",
+    "organizations_url": "https://api.github.com/users/bircni/orgs",
+    "repos_url": "https://api.github.com/users/bircni/repos",
+    "events_url": "https://api.github.com/users/bircni/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/bircni/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "identifiers": [
+    {
+      "value": "GHSA-frpv-2xgv-wxpq",
+      "type": "GHSA"
+    },
+    {
+      "value": "CVE-2026-78433",
+      "type": "CVE"
+    }
+  ],
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-08-29T19:07:45Z",
+  "published_at": "2026-08-29T19:07:45Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "submission": null,
+  "vulnerabilities": [
+    {
+      "package": {
+        "ecosystem": "go",
+        "name": "gitea.dev"
+      },
+      "vulnerable_version_range": ">= 1.26.0, <= 1.27.2",
+      "patched_versions": "1.27.3",
+      "vulnerable_functions": [
+
+      ]
+    }
+  ],
+  "cvss_severities": {
+    "cvss_v3": {
+      "vector_string": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+      "score": 5.9
+    },
+    "cvss_v4": {
+      "vector_string": null,
+      "score": null
+    }
+  },
+  "cwes": [
+    {
+      "cwe_id": "CWE-284",
+      "name": "Improper Access Control"
+    },
+    {
+      "cwe_id": "CWE-639",
+      "name": "Authorization Bypass Through User-Controlled Key"
+    },
+    {
+      "cwe_id": "CWE-863",
+      "name": "Incorrect Authorization"
+    },
+    {
+      "cwe_id": "CWE-1220",
+      "name": "Insufficient Granularity of Access Control"
+    }
+  ],
+  "cwe_ids": [
+    "CWE-284",
+    "CWE-639",
+    "CWE-863",
+    "CWE-1220"
+  ],
+  "credits": [
+    {
+      "login": "iabdullah215",
+      "type": "reporter"
+    },
+    {
+      "login": "bircni",
+      "type": "remediation_developer"
+    }
+  ],
+  "credits_detailed": [
+    {
+      "user": {
+        "login": "iabdullah215",
+        "id": 121729444,
+        "node_id": "U_kgDOB0FxpA",
+        "avatar_url": "https://avatars.githubusercontent.com/u/121729444?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/iabdullah215",
+        "html_url": "https://github.com/iabdullah215",
+        "followers_url": "https://api.github.com/users/iabdullah215/followers",
+        "following_url": "https://api.github.com/users/iabdullah215/following{/other_user}",
+        "gists_url": "https://api.github.com/users/iabdullah215/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/iabdullah215/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/iabdullah215/subscriptions",
+        "organizations_url": "https://api.github.com/users/iabdullah215/orgs",
+        "repos_url": "https://api.github.com/users/iabdullah215/repos",
+        "events_url": "https://api.github.com/users/iabdullah215/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/iabdullah215/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "type": "reporter",
+      "state": "accepted"
+    },
+    {
+      "user": {
+        "login": "bircni",
+        "id": 75789103,
+        "node_id": "MDQ6VXNlcjc1Nzg5MTAz",
+        "avatar_url": "https://avatars.githubusercontent.com/u/75789103?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/bircni",
+        "html_url": "https://github.com/bircni",
+        "followers_url": "https://api.github.com/users/bircni/followers",
+        "following_url": "https://api.github.com/users/bircni/following{/other_user}",
+        "gists_url": "https://api.github.com/users/bircni/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/bircni/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/bircni/subscriptions",
+        "organizations_url": "https://api.github.com/users/bircni/orgs",
+        "repos_url": "https://api.github.com/users/bircni/repos",
+        "events_url": "https://api.github.com/users/bircni/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/bircni/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "type": "remediation_developer",
+      "state": "accepted"
+    }
+  ],
+  "collaborating_users": null,
+  "collaborating_teams": null,
+  "private_fork": null,
+  "cvss": {
+    "vector_string": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
+    "score": 5.9
+  }
+}

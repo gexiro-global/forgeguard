@@ -1,0 +1,107 @@
+{
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "properties": {
+        "assessmentComplete": true,
+        "catalog": {
+          "coverage": "Not evaluated in config review"
+        },
+        "incompleteChecks": [],
+        "limitations": [
+          "Operator declarations are not independent product detection.",
+          "A complete result covers selected checks only; no security certification.",
+          "HTTP status does not prove data access or loaded configuration.",
+          "Catalog coverage is finite; no runtime feeds or exploit tests."
+        ],
+        "policy": "public",
+        "profile": "config-review",
+        "skippedChecks": []
+      },
+      "results": [],
+      "tool": {
+        "driver": {
+          "informationUri": "https://github.com/gexiro-global/forgeguard",
+          "name": "ForgeGuard",
+          "rules": [
+            {
+              "fullDescription": {
+                "text": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-CONFIG-MFA",
+              "properties": {
+                "references": [
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
+                ]
+              },
+              "shortDescription": {
+                "text": "MFA declared configuration"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-CONFIG-PRIVACY",
+              "properties": {
+                "references": [
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
+                ]
+              },
+              "shortDescription": {
+                "text": "PRIVACY declared configuration"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-CONFIG-REGISTRATION",
+              "properties": {
+                "references": [
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
+                ]
+              },
+              "shortDescription": {
+                "text": "REGISTRATION declared configuration"
+              }
+            },
+            {
+              "fullDescription": {
+                "text": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment."
+              },
+              "help": {
+                "text": "Review the limited evidence."
+              },
+              "id": "FG-CONFIG-SIGNIN",
+              "properties": {
+                "references": [
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
+                ]
+              },
+              "shortDescription": {
+                "text": "SIGNIN declared configuration"
+              }
+            }
+          ],
+          "version": "0.5.0"
+        }
+      }
+    }
+  ],
+  "version": "2.1.0"
+}

@@ -1,0 +1,129 @@
+# Publish the metadata-only ForgeGuard compatibility bridge.
+#
+# The bridge is deliberately not part of the qualified candidate-dist set: it contains no code,
+# only metadata that pins `versionsec==<version>`. There is therefore nothing to promote from a
+# previous run, and this workflow builds it from the immutable release tag instead. Every
+# property that makes the bridge safe is asserted here before anything is uploaded:
+#
+#   * the distribution is named forgeguard and carries the requested version;
+#   * it depends on exactly versionsec==<version>;
+#   * the wheel ships dist-info only, so it can never shadow the real implementation;
+#   * the canonical versionsec release is already public, so the pin is satisfiable.
+#
+# Trusted Publishing (OIDC) only; id-token is scoped to the publish job.
+
+name: publish-bridge
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Immutable release tag to build the bridge from, e.g. v0.7.1."
+        type: string
+        required: true
+      version:
+        description: "Expected bridge version; must equal the tag's bridge pyproject version."
+        type: string
+        required: true
+      publish:
+        description: "Actually upload to PyPI. false = build and verify only."
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-verify:
+    name: Build and verify the bridge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Build the metadata-only distribution
+        working-directory: packaging/forgeguard-bridge
+        run: |
+          python -m pip install --upgrade build twine
+          python -m build
+          ls -l dist
+      - name: Verify the bridge contract before anything is uploaded
+        working-directory: packaging/forgeguard-bridge
+        env:
+          FG_EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          python - <<'PY'
+          import os, sys, zipfile, glob, tarfile
+          want = os.environ["FG_EXPECTED_VERSION"]
+          wheels = glob.glob("dist/*.whl")
+          sdists = glob.glob("dist/*.tar.gz")
+          if len(wheels) != 1 or len(sdists) != 1:
+              sys.exit(f"expected exactly one wheel and one sdist, got {wheels} {sdists}")
+          z = zipfile.ZipFile(wheels[0])
+          names = z.namelist()
+          stray = [n for n in names if not n.startswith(f"forgeguard-{want}.dist-info/")]
+          if stray:
+              sys.exit(f"bridge wheel must contain dist-info only, found: {stray}")
+          meta = z.read(f"forgeguard-{want}.dist-info/METADATA").decode()
+          fields = dict(
+              line.split(": ", 1)
+              for line in meta.splitlines()
+              if ": " in line and not line.startswith(" ")
+          )
+          if fields.get("Name") != "forgeguard":
+              sys.exit(f"unexpected distribution name: {fields.get('Name')}")
+          if fields.get("Version") != want:
+              sys.exit(f"unexpected version: {fields.get('Version')} != {want}")
+          requires = [
+              line.split(": ", 1)[1]
+              for line in meta.splitlines()
+              if line.startswith("Requires-Dist: ")
+          ]
+          if requires != [f"versionsec=={want}"]:
+              sys.exit(f"unexpected dependency set: {requires}")
+          print("bridge verified:", fields["Name"], fields["Version"], requires)
+          print("wheel contents:", names)
+          PY
+          python -m twine check dist/*
+      - name: Refuse to publish a bridge whose pin cannot be satisfied
+        env:
+          FG_EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          python - <<'PY'
+          import json, os, sys, urllib.request
+          want = os.environ["FG_EXPECTED_VERSION"]
+          with urllib.request.urlopen("https://pypi.org/pypi/versionsec/json", timeout=30) as r:
+              data = json.load(r)
+          if want not in data["releases"]:
+              sys.exit(f"versionsec=={want} is not public yet; refusing to publish the bridge")
+          print(f"versionsec=={want} is public; the bridge pin is satisfiable")
+          PY
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: bridge-dist
+          path: packaging/forgeguard-bridge/dist
+          if-no-files-found: error
+
+  pypi-publish:
+    name: Publish the bridge
+    needs: build-verify
+    if: inputs.publish == true
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # OIDC for Trusted Publishing
+      contents: read
+    steps:
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f28c025a5622ab2f339 # v6.0.0
+        with:
+          name: bridge-dist
+          path: dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist

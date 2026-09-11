@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "forgeguard"
-version = "0.5.0rc1"
+version = "0.5.0rc2"
 description = "Read-only security posture self-check for one authorized self-hosted Gitea or Forgejo instance."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -46,6 +46,7 @@ dev = [
   "twine==6.2.0",
   "pytest-cov==7.1.0",
   "jsonschema==4.26.0",
+  "PyYAML==6.0.3",
 ]
 
 [tool.setuptools.packages.find]

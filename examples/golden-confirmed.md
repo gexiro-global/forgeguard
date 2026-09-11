@@ -7,7 +7,7 @@ Skipped by profile: FG-ROOT-HTTP
 
 Product and version provenance: {"declared\_product": "gitea", "declared\_version": null, "declared\_version\_marker": null, "normalized\_version": "1.26.1", "observed\_product\_marker": null, "observed\_version": "1.26.1", "product\_conflict": false, "product\_source": "operator-declared", "provider\_revision": "1", "support": "unsupported", "version\_conflict": false}
 
-Catalog: {"coverage": "Curated records only; absence is not evidence of safety.", "sha256": "49037c6b5c32ed89508ab5280bc527062ce44e4ece27039fd18bd66de4de8a37", "verified\_at": "2026-09-10", "version": "2026-09-10.1"}
+Catalog: {"coverage": "Curated records only; absence is not evidence of safety.", "sha256": "9960f9fbc1384bf76d0974c668d0e5d40b463d0063641b620d543fb3e1cda2d9", "verified\_at": "2026-09-11", "version": "2026-09-11.1"}
 
 ## FG-ANON — Allowlisted API HTTP responses
 pass | assessed | applicable

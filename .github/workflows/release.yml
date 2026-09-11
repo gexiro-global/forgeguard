@@ -1,9 +1,34 @@
 name: publish
 
-# Publish to PyPI via OIDC Trusted Publishing (no API token) with PEP 740 attestations.
-# Runs when a GitHub Release is published. Requires a matching Trusted Publisher on PyPI.
-# Guards: Python 3.11/3.12 quality gates, tag/version truth, and exact-wheel checks.
+# Prepare a release candidate and, only on an explicit manual dispatch with
+# publish=true, upload it to PyPI via OIDC Trusted Publishing (no API token) with
+# PEP 740 attestations. No pull request, branch/main push, tag, or GitHub Release
+# can reach the upload job: the publish job requires a workflow_dispatch event, an
+# opt-in boolean, and an approved data-validated preflight, and id-token write is
+# scoped to that job alone. The release trigger is retained for verification only.
 on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Actually upload to PyPI. Leave false to only prepare and qualify."
+        type: boolean
+        default: false
+      version:
+        description: "Exact project version to publish; must equal pyproject version."
+        type: string
+        default: ""
+      source_sha:
+        description: "Full 40-character commit SHA the artifacts must be built from."
+        type: string
+        default: ""
+      run_id:
+        description: "Completed, successful workflow run id that qualified this candidate."
+        type: string
+        default: ""
+      attestation_verified:
+        description: "Set true only after artifact attestations were independently verified."
+        type: boolean
+        default: false
   release:
     types: [published]
 
@@ -14,6 +39,8 @@ jobs:
   quality-gate:
     name: Quality gate (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -36,30 +63,26 @@ jobs:
       - name: Check installed dependencies
         run: python -m pip check
 
-  pypi-publish:
-    name: Build and publish
+  preflight:
+    name: Manual publish preflight (prepare only, never uploads)
     needs: quality-gate
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # OIDC token for Trusted Publishing + signed attestations
       contents: read
+      actions: read
+    outputs:
+      approved: ${{ steps.gate.outputs.approved }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.source_sha }}
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
       - name: Install pinned build toolchain
         run: python -m pip install "build~=1.2" "twine~=6.1"
-      - name: Verify release tag matches project version
-        run: |
-          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")
-          tag="${GITHUB_REF_NAME#v}"
-          echo "project version: $version | release tag: $tag"
-          if [ "$version" != "$tag" ]; then
-            echo "::error::release tag '$tag' does not match project version '$version'"
-            exit 1
-          fi
-      - name: Build sdist and wheel
+      - name: Build exact distributions from the pinned source
         run: python -m build
       - name: Check distributions
         run: python -m twine check dist/*
@@ -70,9 +93,70 @@ jobs:
           .wheel-smoke/bin/python -m pip check
       - name: Verify exact-wheel metadata and CLI
         run: |
-          .wheel-smoke/bin/python -c "import importlib.metadata as m, tomllib; expected = tomllib.load(open('pyproject.toml', 'rb'))['project']['version']; assert m.version('forgeguard') == expected"
+          .wheel-smoke/bin/python -c "import importlib.metadata as m, tomllib; expected = tomllib.load(open('pyproject.toml','rb'))['project']['version']; assert m.version('forgeguard') == expected"
           .wheel-smoke/bin/forgeguard --help
           .wheel-smoke/bin/forgeguard scan --help
           .wheel-smoke/bin/forgeguard checks
+      - name: Resolve referenced run conclusion
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FG_RUN_ID: ${{ inputs.run_id }}
+        run: |
+          conclusion=""
+          if [ -n "$FG_RUN_ID" ]; then
+            conclusion=$(gh api "repos/${{ github.repository }}/actions/runs/${FG_RUN_ID}" --jq '.conclusion' 2>/dev/null || echo "")
+          fi
+          echo "FG_RUN_CONCLUSION=${conclusion}" >> "$GITHUB_ENV"
+      - name: Preflight gate (validates inputs as data; refuses on any mismatch)
+        id: gate
+        env:
+          FG_EVENT_NAME: ${{ github.event_name }}
+          FG_REPOSITORY: ${{ github.repository }}
+          FG_EXPECTED_REPOSITORY: gexiro-global/forgeguard
+          FG_PUBLISH: ${{ inputs.publish }}
+          FG_INPUT_VERSION: ${{ inputs.version }}
+          FG_SOURCE_SHA: ${{ inputs.source_sha }}
+          FG_RUN_ID: ${{ inputs.run_id }}
+          FG_ATTESTATION_VERIFIED: ${{ inputs.attestation_verified }}
+          FG_DIST_DIR: dist
+        run: python tools/release_preflight.py
+      - name: Upload prepared candidate distributions
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: candidate-dist
+          path: |
+            dist/*
+          if-no-files-found: error
+          retention-days: 7
+
+  pypi-publish:
+    name: Build and publish
+    needs: [quality-gate, preflight]
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.publish == true &&
+      inputs.attestation_verified == true &&
+      needs.preflight.outputs.approved == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # OIDC token for Trusted Publishing + signed attestations
+      contents: read
+    steps:
+      - name: Download the exact prepared distributions
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: candidate-dist
+          path: dist
+      - name: Re-verify exact bytes before upload (no rebuild)
+        run: |
+          cd dist
+          if [ ! -f SHA256SUMS.txt ]; then
+            echo "::error::missing SHA256SUMS manifest; refusing to publish"
+            exit 1
+          fi
+          sha256sum -c SHA256SUMS.txt
+          rm -f SHA256SUMS.txt   # leave only the exact wheel/sdist for upload
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist

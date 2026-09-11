@@ -1,20 +1,22 @@
 # Upstream evidence
 
-Retrieved 2026-09-10. Configuration is independently checked against the stated release tags; release-note branch content is frozen by its captured SHA-256. No upstream code is copied into the Python implementation.
+Configuration is independently checked against the stated release tags; release-note branch content is frozen by its captured SHA-256. No upstream code is copied into the Python implementation. Config sources were retrieved 2026-09-10; advisory records were re-frozen 2026-09-11 (see below).
 
 | Source | SHA-256 of retrieved bytes |
 |---|---|
 | [gitea-config](https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini) | e84218d594230f62eb15d4e5615f25dc16ca21303339585a80a79f103c1fa785 |
 | [forgejo-config](https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini) | c78f4ed6a3457261ae1725f4f77b6bb6a49c4234faa58a1c134a44657c041757 |
 | [forgejo-lts-config](https://codeberg.org/forgejo/forgejo/src/tag/v15.0.8/custom/conf/app.example.ini) | 6759febe183afefcb4139e073746b89a09c40fdeae79084f1848ad253be2e035 |
-| [gitea-cve](https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-8qw8-rq86-9pc2) | d29ed4507db13ad48fa9e54c7ecc0800256b9ca6c95e5a1a453cd59e8778e95b |
-| [gitea-advisories](https://api.github.com/repos/go-gitea/gitea/security-advisories?per_page=5) | c381d4438154ab147710216e4fe7639029a5ab9c8f08101d4abfed57b1b400b3 |
+| [gitea-GHSA-8qw8-rq86-9pc2 (single record)](https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-8qw8-rq86-9pc2) | 09a541436af61a369d038203d01c9bd1bb4c903b1bc6ab19f7694da62f4f52f5 |
+| [gitea-GHSA-frpv-2xgv-wxpq (single record)](https://api.github.com/repos/go-gitea/gitea/security-advisories/GHSA-frpv-2xgv-wxpq) | c8e6cec99c7f6fc41a4b18b6cb0cff9e2c86561dec7952d63176a52aee7a5110 |
 | [forgejo-16.0.4-notes](https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/16.0.4.md) | 5769d9d511c035f29e0c345718f4a2cc1f9567f9f93895005e038cafd2c4b99a |
 | [forgejo-15.0.8-notes](https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/15.0.8.md) | d0ca357d547734c72b2956ba5fd36784ce3a37f1c2fb3c1c28cf870ff25dd7d4 |
 
+Each advisory catalog record binds to the exact single-record retrieval, not a collection listing. The prior candidate hashed record `FG-CVE-78433` against the `security-advisories?per_page=5` collection listing, whose bytes and hash drift as new advisories are published; it now binds to the single `GHSA-frpv-2xgv-wxpq` record endpoint. The exact retrieved bytes for every advisory record are frozen under `tests/fixtures/sources/` with a structured manifest (`manifest.json`: source_id, canonical_advisory_url, retrieval_url, resolved_url, retrieved_at_utc, media_type, upstream_revision_or_tag, raw_bytes_sha256, selected_record_id, selected_record_location, supported_conclusion, limitations). `tests/test_sources.py` re-verifies the hashes offline; `forgeguard scan` never fetches them.
+
 Gitea config includes [security] TWO_FACTOR_AUTH and [repository] FORCE_PRIVATE/DEFAULT_PRIVATE. Forgejo v15/v16 independently includes [security] GLOBAL_TWO_FACTOR_REQUIREMENT. service registration/sign-in keys are mapped separately from repository keys.
 
-Gitea advisory records retain upstream GHSA severity and affected/fixed metadata. The first additional record has explicit affected range 1.26.0–1.27.2 and fixed 1.27.3. Fixed extrapolation stops at 1.27.3. Forgejo release notes establish exact fixes at 15.0.8 and 16.0.4, not an affected introduction boundary; other versions are undetermined.
+Gitea advisory records retain upstream GHSA severity and affected/fixed metadata (GHSA-8qw8-rq86-9pc2 high; GHSA-frpv-2xgv-wxpq medium). The GHSA-frpv record has explicit affected range 1.26.0–1.27.2 and fixed 1.27.3. Fixed extrapolation stops at 1.27.3. Forgejo release notes establish exact fixes at 15.0.8 and 16.0.4, not an affected introduction boundary; other versions are undetermined.
 
 The unchanged OASIS schema and complete copyright notice are included under forgeguard/schemas. Its SHA-256 is checked by tests. The project remains Apache-2.0; the OASIS schema retains its own notice.
 

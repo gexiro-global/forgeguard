@@ -39,7 +39,7 @@
               "id": "FG-CONFIG-MFA",
               "properties": {
                 "references": [
-                  "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
                 ]
               },
               "shortDescription": {
@@ -56,7 +56,7 @@
               "id": "FG-CONFIG-PRIVACY",
               "properties": {
                 "references": [
-                  "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
                 ]
               },
               "shortDescription": {
@@ -73,7 +73,7 @@
               "id": "FG-CONFIG-REGISTRATION",
               "properties": {
                 "references": [
-                  "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
                 ]
               },
               "shortDescription": {
@@ -90,7 +90,7 @@
               "id": "FG-CONFIG-SIGNIN",
               "properties": {
                 "references": [
-                  "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+                  "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
                 ]
               },
               "shortDescription": {

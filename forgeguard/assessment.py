@@ -55,6 +55,12 @@ class Assessment(ScanResult):
 
     def normalized(self) -> dict:
         result = self.model_dump(mode="json")
-        result.pop("run")
+        result["run"] = {
+            k: v
+            for k, v in result["run"].items()
+            if k not in {"timestamp", "reviewed_at"}
+        }
+        if not result["run"]:
+            result.pop("run")
         result.pop("scan_id")
         return result

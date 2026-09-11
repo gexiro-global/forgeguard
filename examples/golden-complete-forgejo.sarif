@@ -22,7 +22,7 @@
           "HTTP status does not prove data access or loaded configuration.",
           "Catalog coverage is finite; no runtime feeds or exploit tests."
         ],
-        "policy": "public",
+        "policy": "private",
         "profile": "standard",
         "skippedChecks": [
           "FG-ROOT-HTTP"

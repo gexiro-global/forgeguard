@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to semantic versioning.
 
+## [0.5.0rc2] - Unreleased
+
+- Separate release preparation from PyPI publication: `release.yml` now prepares and qualifies candidates on every trigger but uploads only on an explicit manual `workflow_dispatch` with `publish=true`, an approved data-validated preflight, and independently verified attestations; `id-token: write` is scoped to the publish job and the `release` trigger can no longer reach publishing (R01).
+- Assert real CLI exit codes against a pre-declared oracle in the integration lab and add a Docker-free unit test of the qualification helper (R02).
+- Add real-engine golden regression across both providers, including material-change and snapshot-provenance guards (R03).
+- Add numeric `assess_score` oracle tests with permutation invariance and incomplete-dominates-confirmed behaviour (R04).
+- Bind each advisory catalog record to exact frozen single-record source bytes via a structured provenance manifest, correcting the prior collection-listing hash ambiguity, and verify it offline (R06).
+- Derive packaging version expectations from the trusted manifest instead of hardcoding; bump candidate to 0.5.0rc2.
+
 ## [0.5.0rc1] - Unreleased
 
 - Add separate Gitea and Forgejo providers with explicit identity/version provenance.

@@ -7,7 +7,7 @@ Skipped by profile: FG-ROOT-HTTP
 
 Product and version provenance: {"declared\_product": "forgejo", "declared\_version": null, "declared\_version\_marker": null, "normalized\_version": "16.0.4", "observed\_product\_marker": null, "observed\_version": "16.0.4", "product\_conflict": false, "product\_source": "operator-declared", "provider\_revision": "1", "support": "qualified", "version\_conflict": false}
 
-Catalog: {"coverage": "Curated records only; absence is not evidence of safety.", "sha256": "bc8058df1974d17f91bcfcfb83f6bbb366692dfaf17ee23a4db9083e048db7aa", "verified\_at": "2026-09-10", "version": "2026-09-10.1"}
+Catalog: {"coverage": "Curated records only; absence is not evidence of safety.", "sha256": "1acebe5d0e06891909237623912f224bce1ac886157eb402dfb9e925dc6a15f3", "verified\_at": "2026-09-11", "version": "2026-09-11.1"}
 
 ## FG-ANON — Allowlisted API HTTP responses
 info | assessed | applicable

@@ -7,6 +7,11 @@ from pathlib import Path
 
 import jsonschema
 
+try:
+    from tools.lab_contract import evaluate_matrix, expected_exit, qualify
+except ImportError:  # invoked as a plain script from the tools/ directory
+    from lab_contract import evaluate_matrix, expected_exit, qualify
+
 parser = argparse.ArgumentParser(
     description="Ephemeral, isolated forge integration lab; no production targets"
 )
@@ -178,6 +183,7 @@ try:
                     "registration": registration,
                     "variant": variant,
                     "kind": "real-upstream-container",
+                    "expected_exit": expected_exit(private, version),
                     "status": "FAIL",
                 }
                 created = False
@@ -234,48 +240,21 @@ try:
                     (e / "logs" / (variant + ".json")).write_text(
                         json.dumps(report, indent=2)
                     )
-                    assert report["identity"]["normalized_version"] == version, (
-                        "normalized version mismatch: " + str(report["identity"])
-                    )
-                    assert report["request_count"] == 6
-                    assert (
-                        all(
-                            not f["id"].startswith("FG-CVE") for f in report["findings"]
-                        )
-                        if product == "forgejo"
-                        else True
-                    )
-                    if not private:
-                        assert not [
-                            f
-                            for f in report["findings"]
-                            if f["status"] in ["warn", "fail"]
-                            and not (version == "1.26.4" and f["id"] == "FG-CVE-78433")
-                        ]
-                    if version == "1.26.4":
-                        assert any(
-                            f["id"] == "FG-CVE-78433" and f["status"] == "fail"
-                            for f in report["findings"]
-                        )
                     statuses = {
                         f["id"]: f["observed"]
                         for f in report["findings"]
                         if f["scope"] == "http"
                     }
-                    expected = {
-                        "/explore/repos": 303 if private else 200,
-                        "/v2/": 401,
-                        "/api/v1/repos/search?limit=1": 403 if private else 200,
-                        "/api/v1/users/search?limit=1": 403 if private else 200,
-                    }
-                    actual = {
-                        path: obs["status"]
-                        for key, values in statuses.items()
-                        if key in ("FG-SIGNIN", "FG-REG", "FG-ANON")
-                        for path, obs in values.items()
-                    }
-                    assert actual == expected, "native status contract changed"
-                    assert report["score"]["assessed"] is (not private)
+                    details = qualify(
+                        product=product,
+                        version=version,
+                        private=private,
+                        registration=registration,
+                        report=report,
+                        exit_code=r.returncode,
+                        native_statuses=statuses,
+                    )
+                    expected = details["expected_statuses"]
                     from importlib.resources import files
 
                     from forgeguard.assessment import Assessment
@@ -295,6 +274,7 @@ try:
                     row["expected_statuses"] = expected
                     row.update(
                         status="PASS",
+                        expected_exit=details["expected_exit"],
                         exit_code=r.returncode,
                         observed=observed,
                         assessment_complete=report["score"]["assessed"],
@@ -342,5 +322,7 @@ finally:
             indent=2,
         )
     )
-if cleanup_failures or any(row["status"] != "PASS" for row in matrix):
+problems = evaluate_matrix(matrix, cleanup_failures)
+(e / "matrix_gate.json").write_text(json.dumps({"problems": problems}, indent=2))
+if problems:
     raise SystemExit(1)

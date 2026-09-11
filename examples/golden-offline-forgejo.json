@@ -10,7 +10,7 @@
       "evidence": {
         "declared_defaults": [],
         "values": {
-          "security.TWO_FACTOR_AUTH": ""
+          "security.GLOBAL_TWO_FACTOR_REQUIREMENT": "none"
         }
       },
       "evidence_state": "assessed",
@@ -19,14 +19,14 @@
       "observed": {
         "declared_defaults": [],
         "values": {
-          "security.TWO_FACTOR_AUTH": ""
+          "security.GLOBAL_TWO_FACTOR_REQUIREMENT": "none"
         }
       },
       "penalty_group": "FG-CONFIG-MFA",
       "rationale": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
       "reason": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
       "references": [
-        "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+        "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
       ],
       "remediation": "",
       "scope": "operator-snapshot",
@@ -60,7 +60,7 @@
       "rationale": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
       "reason": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
       "references": [
-        "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+        "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
       ],
       "remediation": "",
       "scope": "operator-snapshot",
@@ -96,7 +96,7 @@
       "rationale": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
       "reason": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
       "references": [
-        "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+        "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
       ],
       "remediation": "",
       "scope": "operator-snapshot",
@@ -128,7 +128,7 @@
       "rationale": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
       "reason": "In the supplied snapshot only; loaded runtime configuration is not verified. Default privacy does not establish existing repository privacy; MFA settings do not establish completed enrollment.",
       "references": [
-        "https://github.com/go-gitea/gitea/blob/v1.27.3/custom/conf/app.example.ini"
+        "https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/custom/conf/app.example.ini"
       ],
       "remediation": "",
       "scope": "operator-snapshot",
@@ -139,10 +139,10 @@
     }
   ],
   "identity": {
-    "declared_product": "gitea",
-    "declared_version": "1.27.3",
+    "declared_product": "forgejo",
+    "declared_version": "16.0.4",
     "declared_version_marker": null,
-    "normalized_version": "1.27.3",
+    "normalized_version": "16.0.4",
     "observed_product_marker": null,
     "observed_version": null,
     "product_conflict": false,
@@ -189,12 +189,12 @@
   },
   "target": {
     "authorized": false,
-    "forge": "gitea",
+    "forge": "forgejo",
     "product_confirmed": false,
     "product_source": "operator-declared",
     "scope": "operator-snapshot",
-    "url": "synthetic-gitea",
-    "version": "1.27.3"
+    "url": "synthetic-forgejo",
+    "version": "16.0.4"
   },
   "tool": {
     "brand": "by Gexiro",

@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import tomllib
 import zipfile
 from pathlib import Path
 
@@ -12,6 +13,9 @@ import jsonschema
 
 dist = Path(sys.argv[1] if len(sys.argv) > 1 else "dist").resolve()
 root = Path(__file__).resolve().parents[1]
+expected_version = tomllib.loads((root / "pyproject.toml").read_text())["project"][
+    "version"
+]
 required = [
     "forgeguard/providers/gitea.py",
     "forgeguard/providers/forgejo.py",
@@ -74,7 +78,7 @@ for artifact in artifacts:
             )
         raw = subprocess.check_output([str(python), "-c", snippet], cwd=tmp, text=True)
         data = json.loads(raw)
-        assert data["version"] == "0.5.0rc1"
+        assert data["version"] == expected_version
         assert not Path(data["module"]).is_relative_to(root)
         for report in data["reports"]:
             for fmt, schema in [

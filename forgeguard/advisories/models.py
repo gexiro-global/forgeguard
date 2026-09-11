@@ -36,6 +36,9 @@ class Advisory(BaseModel):
     severity_source: str
     limitations: str
     applicability: str
+    retrieval_url: str = ""
+    selected_record_id: str = ""
+    selected_record_location: str = ""
     conditions: dict[str, bool] = Field(default_factory=dict)
 
     @model_validator(mode="after")

@@ -3,9 +3,9 @@ requires = ["setuptools==84.0.0", "wheel==0.48.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "forgeguard"
-version = "0.6.0"
-description = "Read-only security posture self-check for one authorized self-hosted Gitea or Forgejo instance."
+name = "versionsec"
+version = "0.7.0"
+description = "Read-only security posture review for one authorized self-hosted Gitea or Forgejo instance, including offline configuration and runner review."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
@@ -13,7 +13,7 @@ license-files = ["LICENSE"]
 authors = [
   {name = "Gexiro Global Enterprises Ltd"}
 ]
-keywords = ["gitea", "security", "posture", "self-hosted", "cve-2026-27771"]
+keywords = ["gitea", "forgejo", "security", "posture", "self-hosted", "sarif", "runner"]
 classifiers = [
   "Intended Audience :: Developers",
   "Programming Language :: Python :: 3",
@@ -29,14 +29,16 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://gexiro.com/forgeguard"
-Repository = "https://github.com/gexiro-global/forgeguard"
-Documentation = "https://github.com/gexiro-global/forgeguard/tree/main/docs"
-Issues = "https://github.com/gexiro-global/forgeguard/issues"
-Changelog = "https://github.com/gexiro-global/forgeguard/blob/main/CHANGELOG.md"
+Homepage = "https://versionsec.com"
+Repository = "https://github.com/gexiro-global/versionsec"
+Documentation = "https://github.com/gexiro-global/versionsec/tree/main/docs"
+Issues = "https://github.com/gexiro-global/versionsec/issues"
+Changelog = "https://github.com/gexiro-global/versionsec/blob/main/CHANGELOG.md"
 
 [project.scripts]
-forgeguard = "forgeguard.cli:main"
+versionsec = "versionsec.cli:main"
+# Compatibility alias retained for the ForgeGuard -> VersionSec migration; see MIGRATION.md.
+forgeguard = "versionsec.cli:main"
 
 [project.optional-dependencies]
 dev = [
@@ -50,7 +52,8 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["forgeguard*"]
+# forgeguard* is the import-compatibility shim, not a second implementation.
+include = ["versionsec*", "forgeguard*"]
 
 [tool.setuptools.package-data]
-forgeguard = ["py.typed", "schemas/*.json", "schemas/*.md", "advisories/catalog/*.json"]
+versionsec = ["py.typed", "schemas/*.json", "schemas/*.md", "advisories/catalog/*.json"]

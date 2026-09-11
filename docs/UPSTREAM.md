@@ -12,13 +12,13 @@ Configuration is independently checked against the stated release tags; release-
 | [forgejo-16.0.4-notes](https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/16.0.4.md) | 5769d9d511c035f29e0c345718f4a2cc1f9567f9f93895005e038cafd2c4b99a |
 | [forgejo-15.0.8-notes](https://codeberg.org/forgejo/forgejo/src/branch/forgejo/release-notes-published/15.0.8.md) | d0ca357d547734c72b2956ba5fd36784ce3a37f1c2fb3c1c28cf870ff25dd7d4 |
 
-Each advisory catalog record binds to the exact single-record retrieval, not a collection listing. The prior candidate hashed record `FG-CVE-78433` against the `security-advisories?per_page=5` collection listing, whose bytes and hash drift as new advisories are published; it now binds to the single `GHSA-frpv-2xgv-wxpq` record endpoint. The exact retrieved bytes for every advisory record are frozen under `tests/fixtures/sources/` with a structured manifest (`manifest.json`: source_id, canonical_advisory_url, retrieval_url, resolved_url, retrieved_at_utc, media_type, upstream_revision_or_tag, raw_bytes_sha256, selected_record_id, selected_record_location, supported_conclusion, limitations). `tests/test_sources.py` re-verifies the hashes offline; `forgeguard scan` never fetches them.
+Each advisory catalog record binds to the exact single-record retrieval, not a collection listing. The prior candidate hashed record `FG-CVE-78433` against the `security-advisories?per_page=5` collection listing, whose bytes and hash drift as new advisories are published; it now binds to the single `GHSA-frpv-2xgv-wxpq` record endpoint. The exact retrieved bytes for every advisory record are frozen under `tests/fixtures/sources/` with a structured manifest (`manifest.json`: source_id, canonical_advisory_url, retrieval_url, resolved_url, retrieved_at_utc, media_type, upstream_revision_or_tag, raw_bytes_sha256, selected_record_id, selected_record_location, supported_conclusion, limitations). `tests/test_sources.py` re-verifies the hashes offline; `versionsec scan` never fetches them.
 
 Gitea config includes [security] TWO_FACTOR_AUTH and [repository] FORCE_PRIVATE/DEFAULT_PRIVATE. Forgejo v15/v16 independently includes [security] GLOBAL_TWO_FACTOR_REQUIREMENT. service registration/sign-in keys are mapped separately from repository keys.
 
 Gitea advisory records retain upstream GHSA severity and affected/fixed metadata (GHSA-8qw8-rq86-9pc2 high; GHSA-frpv-2xgv-wxpq medium). The GHSA-frpv record has explicit affected range 1.26.0–1.27.2 and fixed 1.27.3. Fixed extrapolation stops at 1.27.3. Forgejo release notes establish exact fixes at 15.0.8 and 16.0.4, not an affected introduction boundary; other versions are undetermined.
 
-The unchanged OASIS schema and complete copyright notice are included under forgeguard/schemas. Its SHA-256 is checked by tests. The project remains Apache-2.0; the OASIS schema retains its own notice.
+The unchanged OASIS schema and complete copyright notice are included under versionsec/schemas. Its SHA-256 is checked by tests. The project remains Apache-2.0; the OASIS schema retains its own notice.
 
 Forgejo v16.0.4 Makefile appends GITEA_COMPATIBILITY=gitea-1.22.0 to its API version. Source: https://codeberg.org/forgejo/forgejo/src/tag/v16.0.4/Makefile (SHA-256 acf93a41758c7b70eb899a69f34ed76788dc863c5f0020aa97f4015766a49b77). Both v15/v16 version handlers return setting.AppVer; source handlers SHA-256 478bd137f67e29a045e6b8ff55073d4d473028f1d6e6889cec1cff81af8046b0. Real integration observed the compatibility suffix in both exact target releases. It is a compatibility marker, not independent product confirmation.
 
@@ -42,7 +42,7 @@ execution) rather than trusting a blog post.
 
 Gitea Runner's Docker Hub image `gitea/act_runner:latest` was checked and found to self-report
 `version=v0.6.1` — a stale/mismatched tag scheme relative to the real `gitea.com/gitea/runner`
-source releases (`v3.4.2` at the time of this qualification). ForgeGuard's citations and
+source releases (`v3.4.2` at the time of this qualification). VersionSec's citations and
 qualified-version list use the verified source-repo binary, not that Docker Hub image.
 
 ## Gitea previous-line qualification

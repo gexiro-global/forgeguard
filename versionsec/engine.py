@@ -124,7 +124,7 @@ def result_for(
         summary[key] += 1
     return Assessment(
         tool={
-            "name": "ForgeGuard",
+            "name": "VersionSec",
             "brand": "by Gexiro",
             "version": __version__,
             "schema": "forgeguard.assessment.v1",

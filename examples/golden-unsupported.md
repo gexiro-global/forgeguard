@@ -1,4 +1,4 @@
-# ForgeGuard — https://synthetic.invalid/team
+# VersionSec — https://synthetic.invalid/team
 
 Schema: forgeguard.assessment.v1 | Profile: standard | Policy: unspecified
 Score: N/A (N/A)

@@ -7,9 +7,9 @@ from pathlib import Path
 
 import httpx
 
-from forgeguard.client import ForgeClient
-from forgeguard.config_review import Snapshot, review
-from forgeguard.engine import assess
+from versionsec.client import ForgeClient
+from versionsec.config_review import Snapshot, review
+from versionsec.engine import assess
 
 CLOCK = datetime(2026, 9, 10, 18, tzinfo=UTC)
 ROOT = Path(__file__).resolve().parents[1]

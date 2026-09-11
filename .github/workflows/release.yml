@@ -24,7 +24,7 @@ on:
         type: string
         default: ""
       source_ref:
-        description: "Exact allowed source ref (e.g. refs/heads/feat/forgeguard-v0.5-multiforge)."
+        description: "Exact allowed source ref (e.g. refs/heads/feat/versionsec-0.7-rebrand)."
         type: string
         default: ""
       run_id:
@@ -93,7 +93,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           FG_EVENT_NAME: ${{ github.event_name }}
           FG_REPOSITORY: ${{ github.repository }}
-          FG_EXPECTED_REPOSITORY: gexiro-global/forgeguard
+          FG_EXPECTED_REPOSITORY: gexiro-global/versionsec
           FG_PUBLISH: ${{ inputs.publish }}
           FG_INPUT_VERSION: ${{ inputs.version }}
           FG_SOURCE_SHA: ${{ inputs.source_sha }}

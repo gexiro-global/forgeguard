@@ -7,7 +7,7 @@ from .models import EvidenceState, Finding, Severity, Status, Target
 from .safety import SAFE_GET_PATHS
 
 FIXED_VERSION = "1.26.2"
-# Back-compat alias; the canonical read-only allowlist lives in forgeguard.safety.
+# Back-compat alias; the canonical read-only allowlist lives in versionsec.safety.
 SAFE_ANON_PATHS = SAFE_GET_PATHS
 
 _ACCESS_CONTROL_STATUSES = frozenset({401, 403})
@@ -88,7 +88,7 @@ async def check_version(
                 status=Status.INFO,
                 evidence=evidence,
                 rationale=(
-                    "An explicit Forgejo version marker was observed. ForgeGuard 0.2.2 "
+                    "An explicit Forgejo version marker was observed. VersionSec 0.2.2 "
                     "does not apply Gitea advisory semantics to Forgejo."
                 ),
                 remediation="Use product-specific Forgejo guidance.",

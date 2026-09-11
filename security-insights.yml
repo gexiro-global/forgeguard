@@ -2,31 +2,31 @@ header:
   schema-version: 2.2.0
   last-updated: '2026-09-04'
   last-reviewed: '2026-09-04'
-  url: https://raw.githubusercontent.com/gexiro-global/forgeguard/main/security-insights.yml
+  url: https://raw.githubusercontent.com/gexiro-global/versionsec/main/security-insights.yml
   comment: This single-repository file reports current practices and makes no certification claim.
 project:
-  name: ForgeGuard
-  homepage: https://gexiro.com/forgeguard
+  name: VersionSec
+  homepage: https://versionsec.com
   administrators:
     - name: dzeusking-dev
       affiliation: Gexiro Global Enterprises Ltd.
       social: https://github.com/dzeusking-dev
       primary: true
   documentation:
-    quickstart-guide: https://github.com/gexiro-global/forgeguard#quickstart
-    detailed-guide: https://github.com/gexiro-global/forgeguard/blob/main/docs/USAGE.md
-    code-of-conduct: https://github.com/gexiro-global/forgeguard/blob/main/CODE_OF_CONDUCT.md
-    support-policy: https://github.com/gexiro-global/forgeguard/blob/main/SUPPORT.md
+    quickstart-guide: https://github.com/gexiro-global/versionsec#quickstart
+    detailed-guide: https://github.com/gexiro-global/versionsec/blob/main/docs/USAGE.md
+    code-of-conduct: https://github.com/gexiro-global/versionsec/blob/main/CODE_OF_CONDUCT.md
+    support-policy: https://github.com/gexiro-global/versionsec/blob/main/SUPPORT.md
   repositories:
-    - name: forgeguard
-      url: https://github.com/gexiro-global/forgeguard
+    - name: versionsec
+      url: https://github.com/gexiro-global/versionsec
       comment: Canonical source and release repository.
   vulnerability-reporting:
     reports-accepted: true
     bug-bounty-available: false
-    policy: https://github.com/gexiro-global/forgeguard/blob/main/SECURITY.md
+    policy: https://github.com/gexiro-global/versionsec/blob/main/SECURITY.md
 repository:
-  url: https://github.com/gexiro-global/forgeguard
+  url: https://github.com/gexiro-global/versionsec
   status: active
   accepts-change-request: true
   accepts-automated-change-request: true
@@ -37,19 +37,19 @@ repository:
       social: https://github.com/dzeusking-dev
       primary: true
   documentation:
-    contributing-guide: https://github.com/gexiro-global/forgeguard/blob/main/CONTRIBUTING.md
-    review-policy: https://github.com/gexiro-global/forgeguard/blob/main/GOVERNANCE.md
-    security-policy: https://github.com/gexiro-global/forgeguard/blob/main/SECURITY.md
-    governance: https://github.com/gexiro-global/forgeguard/blob/main/GOVERNANCE.md
-    dependency-management-policy: https://github.com/gexiro-global/forgeguard/blob/main/docs/SECURITY-TRUST.md
+    contributing-guide: https://github.com/gexiro-global/versionsec/blob/main/CONTRIBUTING.md
+    review-policy: https://github.com/gexiro-global/versionsec/blob/main/GOVERNANCE.md
+    security-policy: https://github.com/gexiro-global/versionsec/blob/main/SECURITY.md
+    governance: https://github.com/gexiro-global/versionsec/blob/main/GOVERNANCE.md
+    dependency-management-policy: https://github.com/gexiro-global/versionsec/blob/main/docs/SECURITY-TRUST.md
   license:
-    url: https://github.com/gexiro-global/forgeguard/blob/main/LICENSE
+    url: https://github.com/gexiro-global/versionsec/blob/main/LICENSE
     expression: Apache-2.0
   release:
-    changelog: https://github.com/gexiro-global/forgeguard/blob/main/CHANGELOG.md
+    changelog: https://github.com/gexiro-global/versionsec/blob/main/CHANGELOG.md
     automated-pipeline: true
     distribution-points:
-      - uri: https://pypi.org/project/forgeguard/
+      - uri: https://pypi.org/project/versionsec/
         comment: Published Python package.
   security:
     assessments:

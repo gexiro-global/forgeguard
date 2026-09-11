@@ -11,7 +11,7 @@ python -m pip install -e ".[dev]"
 ## Run Tests
 
 ```bash
-python -m compileall forgeguard
+python -m compileall versionsec
 python -m pytest -q
 ```
 
@@ -24,4 +24,4 @@ python -m pytest -q
 
 ## Scope Boundaries
 
-ForgeGuard is a defensive security tool. Contributions that add exploit payloads, third-party discovery, protected artifact retrieval, or write-path behavior are out of scope for v0.x.
+VersionSec is a defensive security tool. Contributions that add exploit payloads, third-party discovery, protected artifact retrieval, or write-path behavior are out of scope for v0.x.

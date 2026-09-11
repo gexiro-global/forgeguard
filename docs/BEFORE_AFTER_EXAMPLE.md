@@ -18,12 +18,12 @@ This is a version/advisory result. It does not prove exploitation or data exposu
 
 ## After: first fixed release
 
-The synthetic instance is operator-confirmed as Gitea and reports version `1.26.2`. ForgeGuard reports that this version is at the first release containing the fix. The independent checked paths return explicit access-control responses.
+The synthetic instance is operator-confirmed as Gitea and reports version `1.26.2`. VersionSec reports that this version is at the first release containing the fix. The independent checked paths return explicit access-control responses.
 
 Result: `100/100 (A)`
 
-The update closes the version-based CVE finding. A 100 score covers only ForgeGuard's limited assessed checks and is not a complete security guarantee.
+The update closes the version-based CVE finding. A 100 score covers only VersionSec's limited assessed checks and is not a complete security guarantee.
 
 ## Incomplete contrast
 
-If product identity, version, registry, sign-in, or anonymous core evidence is indeterminate, ForgeGuard reports `N/A` with `assessed: false`; it never substitutes `100/A` for missing evidence.
+If product identity, version, registry, sign-in, or anonymous core evidence is indeterminate, VersionSec reports `N/A` with `assessed: false`; it never substitutes `100/A` for missing evidence.

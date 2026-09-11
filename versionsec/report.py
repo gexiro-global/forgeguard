@@ -132,7 +132,7 @@ def render_markdown(result: ScanResult) -> str:
     scan_id = _markdown_text(result.scan_id)
     score_display = _markdown_text(score_display)
     out: list[str] = []
-    out.append(f"# ForgeGuard by Gexiro - {target_url}")
+    out.append(f"# VersionSec by Gexiro - {target_url}")
     out.append("")
     out.append(
         "Read-only security posture and supply-chain visibility for self-hosted Gitea."
@@ -210,5 +210,5 @@ def render_markdown(result: ScanResult) -> str:
         out.append(f"- **Evidence:** {evidence}")
         out.append("")
     out.append("---")
-    out.append("ForgeGuard by Gexiro | own/authorized Gitea instances only | read-only")
+    out.append("VersionSec by Gexiro | own/authorized Gitea instances only | read-only")
     return "\n".join(out)

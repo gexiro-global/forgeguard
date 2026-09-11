@@ -9,9 +9,9 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-import forgeguard.cli as cli_module
-from forgeguard import __version__
-from forgeguard.checks import (
+import versionsec.cli as cli_module
+from versionsec import __version__
+from versionsec.checks import (
     FIXED_VERSION,
     SAFE_ANON_PATHS,
     _is_vulnerable,
@@ -23,9 +23,9 @@ from forgeguard.checks import (
     check_version,
     run_all_checks,
 )
-from forgeguard.cli import app
-from forgeguard.client import _UA, ForgeClient
-from forgeguard.models import (
+from versionsec.cli import app
+from versionsec.client import _UA, ForgeClient
+from versionsec.models import (
     EvidenceState,
     Finding,
     ScanResult,
@@ -34,16 +34,16 @@ from forgeguard.models import (
     Status,
     Target,
 )
-from forgeguard.report import render_markdown
-from forgeguard.safety import SAFE_GET_PATHS
-from forgeguard.scoring import (
+from versionsec.report import render_markdown
+from versionsec.safety import SAFE_GET_PATHS
+from versionsec.scoring import (
     CORE_CHECK_IDS,
     WARN_FACTOR,
     grade_for,
     priority_key,
     score_findings,
 )
-from forgeguard.urls import InvalidTargetURL, normalize_target_url
+from versionsec.urls import InvalidTargetURL, normalize_target_url
 
 _ANSI = re.compile(r"\x1b\[[0-9;]*m")
 
@@ -790,13 +790,13 @@ def test_json_round_trip_schema_and_completeness_truth() -> None:
 
 
 def test_distribution_import_runtime_json_and_user_agent_versions_match() -> None:
-    installed = distribution_version("forgeguard")
+    installed = distribution_version("versionsec")
     result = ScanResult(
         scan_id="version-truth",
         target=Target(url="https://forge.example"),
         score=Score(value=100, grade="A"),
     )
-    assert installed == __version__ == result.tool["version"] == "0.6.0"
+    assert installed == __version__ == result.tool["version"] == "0.7.0"
     assert f"/{installed} " in _UA
 
 
@@ -1096,7 +1096,7 @@ def test_run_all_checks_is_single_target_and_safe_allowlist_only() -> None:
 
 
 def test_package_contains_no_state_changing_http_method_calls() -> None:
-    package_root = Path(__file__).parents[1] / "forgeguard"
+    package_root = Path(__file__).parents[1] / "versionsec"
     forbidden: list[tuple[str, int, str]] = []
     for path in package_root.glob("*.py"):
         tree = ast.parse(path.read_text(), filename=str(path))
@@ -1115,7 +1115,7 @@ def test_registration_is_not_claimed_as_implemented() -> None:
     implemented_copy = [
         root / "README.md",
         root / "docs" / "USAGE.md",
-        root / "forgeguard" / "cli.py",
+        root / "versionsec" / "cli.py",
         root / "pyproject.toml",
     ]
     for path in implemented_copy:
@@ -1132,9 +1132,9 @@ def test_forgejo_is_not_claimed_in_implemented_product_copy() -> None:
     implemented_copy = [
         root / "README.md",
         root / "docs" / "USAGE.md",
-        root / "forgeguard" / "__init__.py",
-        root / "forgeguard" / "cli.py",
-        root / "forgeguard" / "models.py",
+        root / "versionsec" / "__init__.py",
+        root / "versionsec" / "cli.py",
+        root / "versionsec" / "models.py",
         root / "pyproject.toml",
     ]
     for path in implemented_copy:
@@ -1149,7 +1149,7 @@ def test_authoritative_cwe_has_no_stale_value_in_public_text() -> None:
         root / "CHANGELOG.md",
         *sorted((root / "docs").glob("*.md")),
         *sorted((root / "examples").glob("*")),
-        *sorted((root / "forgeguard").glob("*.py")),
+        *sorted((root / "versionsec").glob("*.py")),
     ]
     for path in text_paths:
         text = path.read_text()
@@ -1178,11 +1178,11 @@ def test_release_publish_is_fail_closed_on_full_quality_gate() -> None:
     for command in [
         "ruff check .",
         "ruff format --check .",
-        "python -m compileall forgeguard",
+        "python -m compileall versionsec",
         "twine check dist/*",
         "python -m build",
         ".wheel-smoke/bin/python -m pip install dist/*.whl",
-        ".wheel-smoke/bin/forgeguard scan --help",
+        ".wheel-smoke/bin/versionsec scan --help",
     ]:
         assert command in ci, command
     assert 'python-version: ["3.11", "3.12"]' in ci

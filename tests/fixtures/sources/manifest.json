@@ -1,5 +1,5 @@
 {
-  "description": "Structured provenance manifest for advisory catalog records (R06). Each entry pins the exact retrieved bytes frozen alongside this file. Hashes are of raw bytes as retrieved; no normalized representation substitutes the raw hash. forgeguard scan never fetches these; verification is offline against the frozen copies.",
+  "description": "Structured provenance manifest for advisory catalog records (R06). Each entry pins the exact retrieved bytes frozen alongside this file. Hashes are of raw bytes as retrieved; no normalized representation substitutes the raw hash. versionsec scan never fetches these; verification is offline against the frozen copies.",
   "retrieved_at_utc": "2026-09-11",
   "entries": [
     {

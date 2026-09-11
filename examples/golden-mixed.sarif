@@ -38,7 +38,7 @@
             "text": "Only the named path statuses were observed. HTTP 200 may be a login page, proxy error or empty API; it does not prove data access. Unknown responses remain incomplete even alongside a warning."
           },
           "partialFingerprints": {
-            "forgeguard/v1": "d6e98c43e7e38a45751429d702b63239cb283d258ea374e4fb692f788fd3c35f"
+            "versionsec/v1": "d6e98c43e7e38a45751429d702b63239cb283d258ea374e4fb692f788fd3c35f"
           },
           "properties": {
             "evidence_state": "indeterminate",
@@ -50,8 +50,8 @@
       ],
       "tool": {
         "driver": {
-          "informationUri": "https://github.com/gexiro-global/forgeguard",
-          "name": "ForgeGuard",
+          "informationUri": "https://github.com/gexiro-global/versionsec",
+          "name": "VersionSec",
           "rules": [
             {
               "fullDescription": {
@@ -168,7 +168,7 @@
               }
             }
           ],
-          "version": "0.6.0"
+          "version": "0.7.0"
         }
       }
     }

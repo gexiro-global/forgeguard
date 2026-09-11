@@ -9,7 +9,7 @@ that was not actually observed must fail rather than silently become a default.
 
 from __future__ import annotations
 
-from forgeguard.providers.registry import get_provider
+from versionsec.providers.registry import get_provider
 
 CONFIG_FINDINGS = (
     "FG-CONFIG-REGISTRATION",

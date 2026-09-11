@@ -3,7 +3,7 @@
 The candidate is 0.5.0rc1. Nothing in this change publishes a release.
 
 The CLI now produces `forgeguard.assessment.v1`. Its packaged JSON Schema is
-`forgeguard/schemas/assessment-v1.json`. Historical v0.3 examples remain clearly
+`versionsec/schemas/assessment-v1.json`. Historical v0.3 examples remain clearly
 identified as 0.2.2 examples; they are not current 0.5 score examples.
 
 Existing `scan`, `checks`, `--authorized`, `--product`, `--known-version`,

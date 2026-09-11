@@ -20,7 +20,7 @@ from .urls import normalize_target_url
 
 app = typer.Typer(
     add_completion=False,
-    help="ForgeGuard by Gexiro. Bounded posture for one authorized forge.",
+    help="VersionSec by Gexiro. Bounded posture for one authorized forge.",
 )
 config_app = typer.Typer(
     help="Offline review of explicitly supplied anonymized snapshots."
@@ -98,8 +98,10 @@ def scan(
         str | None,
         typer.Option(
             "--token",
-            envvar="FORGEGUARD_TOKEN",
-            help="Prefer FORGEGUARD_TOKEN; legacy argument may enter shell history",
+            # Deterministic precedence: canonical VERSIONSEC_TOKEN wins over the
+            # retained legacy FORGEGUARD_TOKEN alias when both are set.
+            envvar=["VERSIONSEC_TOKEN", "FORGEGUARD_TOKEN"],
+            help="Prefer VERSIONSEC_TOKEN (legacy FORGEGUARD_TOKEN still accepted); legacy argument may enter shell history",
         ),
     ] = None,
     known_version: Annotated[
@@ -171,7 +173,7 @@ def scan(
     source = ctx.get_parameter_source("token")
     if token and source is not None and source.name == "COMMANDLINE":
         typer.echo(
-            "SECURITY WARNING: prefer FORGEGUARD_TOKEN; --token may enter shell history",
+            "SECURITY WARNING: prefer VERSIONSEC_TOKEN; --token may enter shell history",
             err=True,
         )
     try:

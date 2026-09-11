@@ -1,18 +1,18 @@
 # Runner review
 
-`forgeguard runner review` is an offline, zero-network assessment of one operator-declared
+`versionsec runner review` is an offline, zero-network assessment of one operator-declared
 Gitea or Forgejo Actions runner's security posture. It never contacts the forge instance or
 the runner, never reads a `.runner` registration file, Docker/registry credentials, repository
 secrets, or environment variables, and never accepts a raw secret dump.
 
 ```bash
-forgeguard runner review --snapshot runner-snapshot.json --format md,json,sarif --out reports/runner
+versionsec runner review --snapshot runner-snapshot.json --format md,json,sarif --out reports/runner
 ```
 
 ## Snapshot schema
 
 The input must validate against `forgeguard.runner-snapshot.v1`
-(`forgeguard/schemas/runner-snapshot-v1.json`, packaged and installed). It is a closed schema
+(`versionsec/schemas/runner-snapshot-v1.json`, packaged and installed). It is a closed schema
 (`additionalProperties: false`): any field not on this list, including a field literally named
 `token`, `password`, `secret`, or `cookie`, is refused before the snapshot is parsed further, and
 the CLI never echoes the rejected input or the underlying validation error text.

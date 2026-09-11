@@ -35,8 +35,8 @@
       "results": [],
       "tool": {
         "driver": {
-          "informationUri": "https://github.com/gexiro-global/forgeguard",
-          "name": "ForgeGuard",
+          "informationUri": "https://github.com/gexiro-global/versionsec",
+          "name": "VersionSec",
           "rules": [
             {
               "fullDescription": {
@@ -169,7 +169,7 @@
               }
             }
           ],
-          "version": "0.6.0"
+          "version": "0.7.0"
         }
       }
     }

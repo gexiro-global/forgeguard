@@ -1,6 +1,6 @@
 # Security model
 
-ForgeGuard assesses one explicitly authorized base URL, one operator-supplied
+VersionSec assesses one explicitly authorized base URL, one operator-supplied
 offline configuration snapshot, or one operator-supplied offline runner posture
 snapshot (see [runner review](RUNNER_REVIEW.md)). It performs no discovery,
 exploitation, auth bypass, writes, account creation, private content retrieval,
@@ -37,7 +37,7 @@ CA; disabling verification is not supported. HTTP never transmits a token.
 Ambient proxy and CA environment variables are ignored through trust_env=false;
 proxy configuration is not supported by this preview.
 
-Only the version request may authenticate, using FORGEGUARD_TOKEN preferably.
+Only the version request may authenticate, using VERSIONSEC_TOKEN preferably.
 The legacy token argument warns on stderr. Anonymous and authenticated clients
 have separate state and discard cookies before/after requests.
 Bodies from status-only controls are discarded without retaining names or data.

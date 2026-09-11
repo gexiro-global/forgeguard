@@ -38,7 +38,7 @@ def prepare_outputs(fmt: str, out: Path | None, input_path: Path | None = None):
 
 
 def write_atomic(path: Path, text: str):
-    fd, tmp = tempfile.mkstemp(prefix=".forgeguard-", dir=path.parent)
+    fd, tmp = tempfile.mkstemp(prefix=".versionsec-", dir=path.parent)
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as stream:
             stream.write(text)

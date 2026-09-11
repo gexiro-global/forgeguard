@@ -6,14 +6,14 @@ from pathlib import Path
 
 import pytest
 
-from forgeguard.assessment import Assessment
-from forgeguard.engine import finding
-from forgeguard.exporters.json import render_json
-from forgeguard.exporters.markdown import render_markdown
-from forgeguard.exporters.sarif import to_sarif
-from forgeguard.models import EvidenceState, Severity, Status
-from forgeguard.policy import assess_score
 from tools.golden_cases import CLOCK, cases, execute
+from versionsec.assessment import Assessment
+from versionsec.engine import finding
+from versionsec.exporters.json import render_json
+from versionsec.exporters.markdown import render_markdown
+from versionsec.exporters.sarif import to_sarif
+from versionsec.models import EvidenceState, Severity, Status
+from versionsec.policy import assess_score
 
 ROOT = Path(__file__).resolve().parents[1]
 

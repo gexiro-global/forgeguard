@@ -1,4 +1,4 @@
-# ForgeGuard — synthetic-gitea
+# VersionSec — synthetic-gitea
 
 Schema: forgeguard.assessment.v1 | Profile: config-review | Policy: public
 Score: 100 (A)

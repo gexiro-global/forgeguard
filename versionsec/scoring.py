@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from .models import EvidenceState, Finding, Score, Severity, Status
 
-# Deterministic scoring for ForgeGuard by Gexiro.
+# Deterministic scoring for VersionSec by Gexiro.
 # The tool does not infer risk with AI; operators can adjust these constants if
 # their environment needs a different calibration.
 SEVERITY_WEIGHT: dict[Severity, int] = {

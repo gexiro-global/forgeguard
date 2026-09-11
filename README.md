@@ -1,18 +1,28 @@
-# forgeguard
+# VersionSec
 
-[![CI](https://github.com/gexiro-global/forgeguard/actions/workflows/ci.yml/badge.svg)](https://github.com/gexiro-global/forgeguard/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/forgeguard.svg)](https://pypi.org/project/forgeguard/)
-[![Python](https://img.shields.io/pypi/pyversions/forgeguard.svg)](https://pypi.org/project/forgeguard/)
-[![License: Apache-2.0](https://img.shields.io/pypi/l/forgeguard.svg)](https://github.com/gexiro-global/forgeguard/blob/main/LICENSE)
+> **VersionSec was formerly ForgeGuard.** Releases up to and including 0.6.0 were published
+> as `forgeguard` and remain available and unchanged. From 0.7.0 the canonical name is
+> VersionSec (`pip install versionsec`). `forgeguard==0.7.0` is a compatibility bridge and
+> the `forgeguard` CLI/import keep working. Stable `FG-*` finding IDs are unchanged.
+> See [MIGRATION.md](MIGRATION.md).
 
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/gexiro-global/forgeguard/badge)](https://scorecard.dev/viewer/?uri=github.com/gexiro-global/forgeguard)
+[![CI](https://github.com/gexiro-global/versionsec/actions/workflows/ci.yml/badge.svg)](https://github.com/gexiro-global/versionsec/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/versionsec.svg)](https://pypi.org/project/versionsec/)
+[![Python](https://img.shields.io/pypi/pyversions/versionsec.svg)](https://pypi.org/project/versionsec/)
+[![License: Apache-2.0](https://img.shields.io/pypi/l/versionsec.svg)](https://github.com/gexiro-global/versionsec/blob/main/LICENSE)
+
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/gexiro-global/versionsec/badge)](https://scorecard.dev/viewer/?uri=github.com/gexiro-global/versionsec)
 [Security and trust evidence](docs/SECURITY-TRUST.md) documents the project's policies and automated checks. No certification or badge level is claimed.
 
 Read-only posture assessment for one explicitly authorized self-hosted Gitea or Forgejo instance, or an explicitly supplied anonymized configuration snapshot.
 
+## VersionSec — 0.7.0
+
+The ForgeGuard → VersionSec rebrand. No capability was removed: the separate Gitea or Forgejo providers, read-only live posture assessment, offline configuration review, offline runner review, Markdown/JSON/SARIF exports and deterministic completeness semantics all carry over unchanged. Canonical CLI is `versionsec`, canonical import is `versionsec`; the `forgeguard` CLI and `import forgeguard` continue to work through a compatibility shim that resolves to the same implementation. Machine-readable schema identifiers (`forgeguard.assessment.v1`, `forgeguard.config-snapshot.v1`, `forgeguard.runner-snapshot.v1`) and all `FG-*` finding IDs are deliberately unchanged so existing report consumers keep working. See [MIGRATION.md](MIGRATION.md).
+
 ## Control Plane Hardening — 0.6.0
 
-Adds an offline runner posture review (`forgeguard runner review`) for the trust boundaries that matter most to a Gitea or Forgejo administrator: execution engine isolation, privileged mode, host volume mounts, Docker socket exposure, job network mode, ephemeral registration, and the experimental Forgejo plugin engine. Runner review is zero-network, evaluates only an explicitly supplied `forgeguard.runner-snapshot.v1` snapshot, and never reads runner credentials, `.runner` files, or Docker/registry secrets. Runner qualification targets are Gitea Runner 3.4.2 and Forgejo Runner 13.0.0 / 13.1.0 — see [upstream evidence](docs/UPSTREAM.md) and [runner review](docs/RUNNER_REVIEW.md).
+Adds an offline runner posture review (`versionsec runner review`) for the trust boundaries that matter most to a Gitea or Forgejo administrator: execution engine isolation, privileged mode, host volume mounts, Docker socket exposure, job network mode, ephemeral registration, and the experimental Forgejo plugin engine. Runner review is zero-network, evaluates only an explicitly supplied `forgeguard.runner-snapshot.v1` snapshot, and never reads runner credentials, `.runner` files, or Docker/registry secrets. Runner qualification targets are Gitea Runner 3.4.2 and Forgejo Runner 13.0.0 / 13.1.0 — see [upstream evidence](docs/UPSTREAM.md) and [runner review](docs/RUNNER_REVIEW.md).
 
 ## Multi-Forge Support — 0.5.0
 
@@ -23,24 +33,24 @@ Qualification targets are Gitea 1.26.4 / 1.27.3 and Forgejo 15.0.8 / 16.0.4 — 
 ## Install
 
 ```bash
-python -m pip install forgeguard
+python -m pip install versionsec
 ```
 
 Or pin the exact release:
 
 ```bash
-python -m pip install forgeguard==0.6.0
+python -m pip install versionsec==0.7.0
 ```
 
 ## Usage
 
 ```bash
-forgeguard providers
-forgeguard checks
-forgeguard scan --url https://git.example.com/team --authorized --product forgejo --profile standard --policy public --dry-run
-forgeguard scan --url https://git.example.com/team --authorized --product forgejo --profile standard --policy public --format json
-forgeguard config review --snapshot anonymized-snapshot.json --policy private --format json
-forgeguard runner review --snapshot runner-snapshot.json --format json
+versionsec providers
+versionsec checks
+versionsec scan --url https://git.example.com/team --authorized --product forgejo --profile standard --policy public --dry-run
+versionsec scan --url https://git.example.com/team --authorized --product forgejo --profile standard --policy public --format json
+versionsec config review --snapshot anonymized-snapshot.json --policy private --format json
+versionsec runner review --snapshot runner-snapshot.json --format json
 ```
 
 Use minimal for one version request, standard for five bounded existing requests, or extended for those requests plus root. The profiles change scope, not aggressiveness. Exposure intent (public/private/unspecified) is independent; unspecified is the default.
@@ -59,7 +69,7 @@ Offline review performs zero requests and evaluates only the supplied snapshot. 
 
 One target, GET only, finite allowlist, no retries or redirects, serial requests, at most 12 requests, 10 seconds each and 60 seconds overall. Responses are streamed with a 256 KiB decompressed limit. HTTPS verifies certificates; --ca-bundle explicitly supplies a private CA. Ambient proxy/CA settings are ignored. HTTP never transmits a token. Anonymous requests do not inherit authentication or cookies.
 
-Prefer FORGEGUARD_TOKEN for the optional version-read token. The legacy --token option warns because shell history/process listings may retain it. Reports do not contain the token.
+Prefer VERSIONSEC_TOKEN for the optional version-read token. The legacy --token option warns because shell history/process listings may retain it. Reports do not contain the token.
 
 Use --format md,json,sarif with --out reports/result.md for separate files. The directory must exist. Existing files, symlinks and collisions are refused, and writes are atomic. Multiple formats require files; single machine-readable stdout is clean.
 
@@ -81,9 +91,9 @@ Gexiro offers a paid Hardening Report for authorized Gitea operators who want hu
 
 A Remediation Sprint is a separate engagement: scope and acceptance criteria are frozen first, changes begin only after explicit approval, and the result includes before/after verification. Scope expansion, third-party targets, and remote changes require separate written authorization.
 
-ForgeGuard remains usable as a free OSS CLI without a hosted account or control plane. Heavy SaaS and recurring monitoring are not offered at this stage.
+VersionSec remains usable as a free OSS CLI without a hosted account or control plane. Heavy SaaS and recurring monitoring are not offered at this stage.
 
-[Request a scoped ForgeGuard Hardening Report](mailto:contact@gexiro.com?subject=ForgeGuard%20Hardening%20Report)
+[Request a scoped VersionSec Hardening Report](mailto:contact@gexiro.com?subject=VersionSec%20Hardening%20Report)
 
 ## License
 
@@ -93,6 +103,6 @@ Built and maintained by [Gexiro Global Enterprises Ltd](https://gexiro.com).
 
 Part of the [Gexiro open-source toolkit](https://github.com/gexiro-global).
 
-ForgeGuard by Gexiro
+VersionSec by Gexiro
 
 Not affiliated with Gitea, Forgejo, Codeberg, GitHub, or GitLab.

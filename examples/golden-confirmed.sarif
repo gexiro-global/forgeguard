@@ -37,7 +37,7 @@
             "text": "Version is within the catalog's explicit affected interval. Version assessment does not prove exploitability. No custom vendor backports or future releases inferred."
           },
           "partialFingerprints": {
-            "forgeguard/v1": "a42ca4c6fa47190ee2bae6d36b7c5b8ca7ed5b1ccfd4c2aaf27044d22ddbf787"
+            "versionsec/v1": "a42ca4c6fa47190ee2bae6d36b7c5b8ca7ed5b1ccfd4c2aaf27044d22ddbf787"
           },
           "properties": {
             "evidence_state": "assessed",
@@ -52,7 +52,7 @@
             "text": "Version is within the catalog's explicit affected interval. Version assessment does not prove exploitability. No custom vendor backports or future releases inferred."
           },
           "partialFingerprints": {
-            "forgeguard/v1": "a3262a08debfcbc1db0539e7e130123dfbc2812d125defec1e2cb0e8724d6944"
+            "versionsec/v1": "a3262a08debfcbc1db0539e7e130123dfbc2812d125defec1e2cb0e8724d6944"
           },
           "properties": {
             "evidence_state": "assessed",
@@ -64,8 +64,8 @@
       ],
       "tool": {
         "driver": {
-          "informationUri": "https://github.com/gexiro-global/forgeguard",
-          "name": "ForgeGuard",
+          "informationUri": "https://github.com/gexiro-global/versionsec",
+          "name": "VersionSec",
           "rules": [
             {
               "fullDescription": {
@@ -198,7 +198,7 @@
               }
             }
           ],
-          "version": "0.6.0"
+          "version": "0.7.0"
         }
       }
     }

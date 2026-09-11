@@ -8,7 +8,7 @@ There is no remote plugin discovery or executable rule input.
 
 Each provider also carries a `RunnerInfo` (`runner`): the runner_product identifier
 (`gitea-runner` or `forgejo-runner`), exact qualified runner versions, and the runner
-config/security source URLs used by `forgeguard runner review` (see
+config/security source URLs used by `versionsec runner review` (see
 [runner review](RUNNER_REVIEW.md)). Runner field names (`privileged`, `valid_volumes`,
 `network`, `docker_host`) are identical between the two providers' `config.yaml`, but
 version-gated security semantics are not assumed to be identical — each check cites its own

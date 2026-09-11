@@ -6,7 +6,7 @@ code and native HTTP status contract *before* a variant runs, so a correct
 report paired with a wrong exit code fails, an empty or partial matrix fails,
 and the oracle is not derived from the same assessor's own output.
 
-CLI exit contract (forgeguard.cli._finish): 0 clean, 2 usage/refusal,
+CLI exit contract (versionsec.cli._finish): 0 clean, 2 usage/refusal,
 3 execution/write error, 4 not assessed (incomplete), 5 warn/fail at full
 assessment. Exit 4 takes precedence over 5.
 """
@@ -83,7 +83,7 @@ def qualify(
 ) -> dict:
     """Return a details dict on success; raise QualifyError on any breach.
 
-    ``report`` is the parsed JSON from ``forgeguard scan`` or ``None`` when the
+    ``report`` is the parsed JSON from ``versionsec scan`` or ``None`` when the
     output was not valid JSON. ``native_statuses`` maps finding id -> {path: {"status": int}}.
     """
     if report is None:

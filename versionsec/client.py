@@ -11,7 +11,7 @@ from .safety import SAFE_GET_PATHS
 from .urls import normalize_target_url
 from .version import __version__
 
-_UA = f"ForgeGuard-by-Gexiro/{__version__} (read-only; own-authorized-only)"
+_UA = f"VersionSec-by-Gexiro/{__version__} (read-only; own-authorized-only)"
 
 
 class ForgeClient:

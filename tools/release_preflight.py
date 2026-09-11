@@ -29,7 +29,10 @@ from pathlib import Path
 EXPECTED_REPOSITORY = "gexiro-global/forgeguard"
 EXPECTED_WORKFLOW = ".github/workflows/ci.yml"
 EXPECTED_EVENT = "push"
-ALLOWED_SOURCE_REFS = {"refs/heads/feat/forgeguard-v0.5-multiforge"}
+ALLOWED_SOURCE_REFS = {
+    "refs/heads/feat/forgeguard-v0.5-multiforge",
+    "refs/heads/feat/forgeguard-v0.6-control-plane-hardening",
+}
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _DIGEST_RE = re.compile(r"^[0-9a-f]{64}$")
 REQUIRED_GATES = [f"G{i:02d}" for i in range(1, 16)]

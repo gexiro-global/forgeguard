@@ -104,15 +104,30 @@ def qualify(
         str(f.get("id", "")).startswith("FG-CVE") for f in findings
     ):
         raise QualifyError("forgejo report must not carry gitea FG-CVE findings")
-    if (
-        version in CONFIRMED_PUBLIC_FINDING_VERSIONS
-        and not private
-        and not any(
-            f.get("id") == "FG-CVE-78433" and f.get("status") == "fail"
-            for f in findings
-        )
+    known_advisory = product == "gitea" and version in CONFIRMED_PUBLIC_FINDING_VERSIONS
+    # R02-B: the known Gitea 1.26.4 advisory is a confirmed fail in ALL four
+    # variants (public and private); private stays incomplete with exit 4.
+    if known_advisory and not any(
+        f.get("id") == "FG-CVE-78433" and f.get("status") == "fail" for f in findings
     ):
-        raise QualifyError("expected confirmed FG-CVE-78433 fail on 1.26.4 public")
+        raise QualifyError(
+            f"expected FG-CVE-78433=fail on gitea {version} "
+            f"({'private' if private else 'public'})"
+        )
+    # R02-A: a public variant carries no unexpected warn/fail finding, checked
+    # independently of the CLI exit code. The only frozen exception is the known
+    # Gitea 1.26.4 advisory above.
+    if not private:
+        unexpected = [
+            f.get("id")
+            for f in findings
+            if f.get("status") in ("warn", "fail")
+            and not (known_advisory and f.get("id") == "FG-CVE-78433")
+        ]
+        if unexpected:
+            raise QualifyError(
+                f"unexpected warn/fail in clean public variant: {unexpected}"
+            )
     exp_native = expected_native_statuses(private)
     actual_native = flatten_native(native_statuses)
     if actual_native != exp_native:

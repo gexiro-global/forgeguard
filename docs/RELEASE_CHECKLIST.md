@@ -18,18 +18,26 @@
 
 ## Manual publish contract (no automatic publication)
 
-`release.yml` prepares and qualifies candidates on every trigger but never uploads
-automatically. A GitHub Release (`release: published`) can no longer reach the
-upload job. To publish in the future, a maintainer must:
+Qualification (test, build, attest) happens on the trusted push in `ci.yml`.
+`release.yml` only PROMOTES an already-qualified candidate and never rebuilds.
+A GitHub Release (`release: published`) cannot reach the upload job. To publish
+in the future, a maintainer must:
 
-1. Dispatch the `publish` workflow (`workflow_dispatch`) against the exact commit
-   to release; the preflight refuses unless `source_sha` equals the built HEAD.
-2. Provide `version` (must equal the project version), the qualifying `run_id`
-   (must be a completed successful run), and `attestation_verified=true`.
-3. Set `publish=true`. The upload job runs only when the data-validated preflight
-   approves, and `id-token: write` is scoped to that single job.
-4. The upload job downloads the exact prepared distributions and re-verifies their
-   SHA-256 before publishing; it never rebuilds.
+1. Dispatch the `publish` workflow (`workflow_dispatch`) providing `version`
+   (== project version == manifest version), the full `source_sha`, the trusted
+   push `run_id`/`run_attempt` that qualified the candidate, and the qualification
+   `manifest_json` (+ its `manifest_sha256`).
+2. The `promote` job downloads the exact frozen artifacts of that run (no rebuild),
+   independently reads the run metadata from the API, runs `gh attestation verify`
+   on the exact wheel and sdist, and validates every binding via
+   `tools/release_preflight.py`. This yields `prepared` and `publish_allowed`.
+3. `publish=false` is a successful prepare-only (exit 0, `publish_allowed=false`,
+   no upload). Any validation failure refuses with a non-zero code.
+4. `publish=true` reaches `pypi-publish` only when `publish_allowed==true`. That
+   job re-downloads the same frozen set, re-verifies digests against the manifest,
+   and hands exactly those bytes to the publisher. `id-token: write` is scoped to
+   that single job; the promotion path never rebuilds.
 
-Inputs are validated as data (`tools/release_preflight.py`), never interpolated
-into a shell. The contract is covered by `tests/test_release_workflow.py`.
+Inputs are validated as data (never interpolated into a shell). `attestation_verified`
+is not a sufficient input: a real verifier result is required. Covered by
+`tests/test_release_workflow.py`.

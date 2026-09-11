@@ -170,6 +170,65 @@ def test_missing_confirmed_finding_fails():
         )
 
 
+def test_r02a_unexpected_warn_in_public_with_exit0_fails():
+    # A WARN finding paired with exit 0 (inconsistent CLI) must be rejected
+    # independently of the exit code.
+    with pytest.raises(QualifyError):
+        qualify(
+            product="gitea",
+            version="1.27.3",
+            private=False,
+            registration=False,
+            report=report("1.27.3", False, [{"id": "FG-SOMETHING", "status": "warn"}]),
+            exit_code=0,
+            native_statuses=native(False),
+        )
+
+
+def test_r02a_public_1264_rejects_extra_warn_beyond_known_advisory():
+    with pytest.raises(QualifyError):
+        qualify(
+            product="gitea",
+            version="1.26.4",
+            private=False,
+            registration=False,
+            report=report(
+                "1.26.4",
+                False,
+                [*CONFIRMED, {"id": "FG-EXTRA", "status": "warn"}],
+            ),
+            exit_code=5,
+            native_statuses=native(False),
+        )
+
+
+def test_r02b_private_1264_requires_known_advisory():
+    # Private 1.26.4 stays incomplete (exit 4) but must still carry the finding.
+    with pytest.raises(QualifyError):
+        qualify(
+            product="gitea",
+            version="1.26.4",
+            private=True,
+            registration=False,
+            report=report("1.26.4", True, []),
+            exit_code=4,
+            native_statuses=native(True),
+        )
+
+
+def test_r02b_private_1264_with_advisory_and_exit4_qualifies():
+    d = qualify(
+        product="gitea",
+        version="1.26.4",
+        private=True,
+        registration=False,
+        report=report("1.26.4", True, CONFIRMED),
+        exit_code=4,
+        native_statuses=native(True),
+    )
+    assert d["expected_exit"] == 4
+
+
 def test_native_status_mismatch_fails():
     bad = {
         "FG-ANON": {"/explore/repos": {"status": 200}}

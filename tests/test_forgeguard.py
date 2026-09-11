@@ -796,7 +796,7 @@ def test_distribution_import_runtime_json_and_user_agent_versions_match() -> Non
         target=Target(url="https://forge.example"),
         score=Score(value=100, grade="A"),
     )
-    assert installed == __version__ == result.tool["version"] == "0.5.0rc2"
+    assert installed == __version__ == result.tool["version"] == "0.5.0rc3"
     assert f"/{installed} " in _UA
 
 
@@ -1173,26 +1173,30 @@ def test_ci_contains_required_semantic_integrity_gates() -> None:
 
 
 def test_release_publish_is_fail_closed_on_full_quality_gate() -> None:
-    workflow = (
-        Path(__file__).parents[1] / ".github" / "workflows" / "release.yml"
-    ).read_text()
+    # Qualification (test/build/attest) lives in ci.yml on the trusted push.
+    ci = (Path(__file__).parents[1] / ".github" / "workflows" / "ci.yml").read_text()
     for command in [
         "ruff check .",
         "ruff format --check .",
         "python -m compileall forgeguard",
-        "python -m pytest -q",
-        "python -m pip check",
+        "twine check dist/*",
         "python -m build",
-        "python -m twine check dist/*",
-        "python -m venv .wheel-smoke",
         ".wheel-smoke/bin/python -m pip install dist/*.whl",
         ".wheel-smoke/bin/forgeguard scan --help",
     ]:
-        assert command in workflow
-    assert 'python-version: ["3.11", "3.12"]' in workflow
-    assert "needs: quality-gate" in workflow
-    assert workflow.index("quality-gate:") < workflow.index("pypi-publish:")
-    assert workflow.count("id-token: write") == 1
+        assert command in ci, command
+    assert 'python-version: ["3.11", "3.12"]' in ci
+
+    # release.yml only promotes the already-qualified frozen set: no rebuild,
+    # download the referenced run's artifacts, id-token scoped to the publish job.
+    release = (
+        Path(__file__).parents[1] / ".github" / "workflows" / "release.yml"
+    ).read_text()
+    assert "python -m build" not in release
+    assert "gh run download" in release
+    assert "needs: promote" in release
+    assert release.index("promote:") < release.index("pypi-publish:")
+    assert release.count("id-token: write") == 1
 
 
 @pytest.mark.parametrize(

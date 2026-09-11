@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to semantic versioning.
 
+## [0.5.0rc3] - Unreleased
+
+- Release promotion no longer rebuilds: `release.yml` downloads the exact frozen artifacts of a referenced completed+successful trusted push run, and the preflight binds them to a qualification manifest (run/attempt/ref/SHA/version/digests) before any upload (R01-C).
+- Separate `prepared` from `publish_allowed`: a correct `publish=false` dispatch is a successful prepare-only (exit 0, no upload); only real validation failures refuse (R01-A).
+- The preflight actually runs `gh attestation verify` on the exact wheel and sdist and enforces repo/signer-workflow/source-digest/subject; the manual `attestation_verified` boolean is removed as a sufficient condition (R01-B).
+- Restore two independent lab findings invariants: public variants reject any unexpected warn/fail (only Gitea 1.26.4 `FG-CVE-78433=fail` excepted), and all four Gitea 1.26.4 variants require that finding while private stays incomplete with exit 4 (R02-A/B).
+- Add a real per-container configuration read-back to the lab: read the closed key list from each container's written `app.ini`, compare to the declared fixture, snapshot the measured data, and run `config review` on the installed wheel with per-finding assertions (R05).
+- Add a set-based dependency inventory/audit reconciliation helper and test (missing/unexpected/version-mismatch), so audit completeness is verified by set rather than count (E-FINAL).
+- Bump candidate to 0.5.0rc3.
+
 ## [0.5.0rc2] - Unreleased
 
 - Separate release preparation from PyPI publication: `release.yml` now prepares and qualifies candidates on every trigger but uploads only on an explicit manual `workflow_dispatch` with `publish=true`, an approved data-validated preflight, and independently verified attestations; `id-token: write` is scoped to the publish job and the `release` trigger can no longer reach publishing (R01).

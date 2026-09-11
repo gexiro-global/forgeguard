@@ -4,7 +4,7 @@ This distribution is a **compatibility bridge**. It contains no code of its own:
 installs [`versionsec`](https://pypi.org/project/versionsec/) at the matching version.
 
 ```bash
-python -m pip install forgeguard==0.7.0   # installs versionsec==0.7.0
+python -m pip install forgeguard==0.7.1   # installs versionsec==0.7.1
 forgeguard --help                          # still works
 ```
 

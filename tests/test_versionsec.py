@@ -796,7 +796,7 @@ def test_distribution_import_runtime_json_and_user_agent_versions_match() -> Non
         target=Target(url="https://forge.example"),
         score=Score(value=100, grade="A"),
     )
-    assert installed == __version__ == result.tool["version"] == "0.7.0"
+    assert installed == __version__ == result.tool["version"] == "0.7.1"
     assert f"/{installed} " in _UA
 
 

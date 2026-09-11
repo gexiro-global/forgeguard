@@ -41,21 +41,21 @@ Recommended - switch to the canonical distribution:
 
 ```bash
 python -m pip uninstall -y forgeguard
-python -m pip install versionsec==0.7.0
+python -m pip install versionsec==0.7.1
 versionsec --help
 ```
 
 No-code-change path - keep installing `forgeguard`:
 
 ```bash
-python -m pip install forgeguard==0.7.0
+python -m pip install forgeguard==0.7.1
 forgeguard --help
 ```
 
-`forgeguard==0.7.0` is a thin compatibility bridge: it depends on `versionsec==0.7.0` and
+`forgeguard==0.7.1` is a thin compatibility bridge: it depends on `versionsec==0.7.1` and
 contains no implementation of its own, so the two can never drift apart.
 
-## Compatibility guarantees for 0.7.0
+## Compatibility guarantees from 0.7.0 onward
 
 All of the following are covered by tests in `tests/test_migration_0_7.py`:
 
@@ -73,5 +73,5 @@ All of the following are covered by tests in `tests/test_migration_0_7.py`:
 ## Deprecation posture
 
 The compatibility surfaces are quiet and supported for this migration release. Nothing is
-removed in 0.7.0. Any future removal will be announced in the changelog before it happens,
+removed. Any future removal will be announced in the changelog before it happens,
 not silently.

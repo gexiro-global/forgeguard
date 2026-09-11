@@ -2,7 +2,7 @@
 
 > **VersionSec was formerly ForgeGuard.** Releases up to and including 0.6.0 were published
 > as `forgeguard` and remain available and unchanged. From 0.7.0 the canonical name is
-> VersionSec (`pip install versionsec`). `forgeguard==0.7.0` is a compatibility bridge and
+> VersionSec (`pip install versionsec`). `forgeguard==0.7.1` is a compatibility bridge and
 > the `forgeguard` CLI/import keep working. Stable `FG-*` finding IDs are unchanged.
 > See [MIGRATION.md](MIGRATION.md).
 
@@ -16,7 +16,7 @@
 
 Read-only posture assessment for one explicitly authorized self-hosted Gitea or Forgejo instance, or an explicitly supplied anonymized configuration snapshot.
 
-## VersionSec — 0.7.0
+## VersionSec — 0.7.1
 
 The ForgeGuard → VersionSec rebrand. No capability was removed: the separate Gitea or Forgejo providers, read-only live posture assessment, offline configuration review, offline runner review, Markdown/JSON/SARIF exports and deterministic completeness semantics all carry over unchanged. Canonical CLI is `versionsec`, canonical import is `versionsec`; the `forgeguard` CLI and `import forgeguard` continue to work through a compatibility shim that resolves to the same implementation. Machine-readable schema identifiers (`forgeguard.assessment.v1`, `forgeguard.config-snapshot.v1`, `forgeguard.runner-snapshot.v1`) and all `FG-*` finding IDs are deliberately unchanged so existing report consumers keep working. See [MIGRATION.md](MIGRATION.md).
 
@@ -39,7 +39,7 @@ python -m pip install versionsec
 Or pin the exact release:
 
 ```bash
-python -m pip install versionsec==0.7.0
+python -m pip install versionsec==0.7.1
 ```
 
 ## Usage

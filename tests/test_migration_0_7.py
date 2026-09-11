@@ -24,8 +24,8 @@ ROOT = Path(__file__).parents[1]
 
 
 def test_canonical_import_and_version():
-    assert versionsec.__version__ == "0.7.0"
-    assert distribution_version("versionsec") == "0.7.0"
+    assert versionsec.__version__ == "0.7.1"
+    assert distribution_version("versionsec") == "0.7.1"
 
 
 def test_legacy_import_resolves_to_canonical_implementation():
@@ -257,7 +257,7 @@ def test_markdown_report_uses_new_brand(tmp_path):
 def test_user_agent_is_rebranded():
     from versionsec.client import _UA
 
-    assert _UA.startswith("VersionSec-by-Gexiro/0.7.0")
+    assert _UA.startswith("VersionSec-by-Gexiro/0.7.1")
 
 
 def test_no_unintended_active_forgeguard_branding_in_package():

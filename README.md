@@ -16,7 +16,11 @@
 
 Read-only posture assessment for one explicitly authorized self-hosted Gitea or Forgejo instance, or an explicitly supplied anonymized configuration snapshot.
 
-## VersionSec — 0.7.2
+## Current release — 0.7.2
+
+A metadata and documentation patch. Documentation links embedded in the published package description are now absolute canonical URLs, so they resolve from PyPI as well as from GitHub. 0.7.1 fixed the `--version` flag. Neither release changed scanning, configuration review, runner review, scoring, schemas, finding IDs or the compatibility surface. See [CHANGELOG.md](https://github.com/gexiro-global/versionsec/blob/main/CHANGELOG.md).
+
+## VersionSec — 0.7.0
 
 The ForgeGuard → VersionSec rebrand. No capability was removed: the separate Gitea or Forgejo providers, read-only live posture assessment, offline configuration review, offline runner review, Markdown/JSON/SARIF exports and deterministic completeness semantics all carry over unchanged. Canonical CLI is `versionsec`, canonical import is `versionsec`; the `forgeguard` CLI and `import forgeguard` continue to work through a compatibility shim that resolves to the same implementation. Machine-readable schema identifiers (`forgeguard.assessment.v1`, `forgeguard.config-snapshot.v1`, `forgeguard.runner-snapshot.v1`) and all `FG-*` finding IDs are deliberately unchanged so existing report consumers keep working. See [MIGRATION.md](https://github.com/gexiro-global/versionsec/blob/main/MIGRATION.md).
 
@@ -61,7 +65,7 @@ The operator declares product identity. Compatible APIs and inventory versions a
 
 HTTP 200 on a checked path is only a status observation, not proof of repository readability, private data access or loaded configuration. Public-by-design status observations are informational. Private intent creates a bounded review warning. HTTP 401/403 may support denial on that path only. Errors, redirects, 404, 429, malformed version JSON, timeouts and truncation remain incomplete.
 
-Incomplete assessments have null score, N/A grade and assessed=false, even when another check warns. Skipped checks remain listed. Version 2 scores are not comparable with 0.2.2. No score is security certification or a claim of no vulnerabilities.
+Incomplete assessments have null score, N/A grade and assessed=false, even when another check warns. Skipped checks remain listed. Scoring version 2 is not comparable with 0.2.2 scores. No score is security certification or a claim of no vulnerabilities.
 
 Offline review performs zero requests and evaluates only the supplied snapshot. It supports a closed key list for registration, sign-in, new-repository privacy and product-specific MFA. It never reads app.ini, production files, tokens, databases or private keys. See [config review](https://github.com/gexiro-global/versionsec/blob/main/docs/CONFIG_REVIEW.md).
 

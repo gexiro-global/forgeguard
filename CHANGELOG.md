@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog, and this project adheres to semantic versioning.
 
+## [0.7.2] - 2026-09-12
+
+A metadata and documentation patch. No scanning, configuration-review,
+runner-review, scoring, schema, finding-ID or compatibility behaviour changed.
+0.7.1 remains functionally valid; 0.7.2 is the preferred current release because
+its distribution metadata and public documentation are fully corrected.
+
+### Fixed
+
+- Documentation links in the PyPI long description. The README is published as the
+  long description, and PyPI renders it on its own domain, so a relative link such
+  as `[MIGRATION.md](MIGRATION.md)` resolved to
+  `https://pypi.org/project/versionsec/MIGRATION.md` and returned 404. Fifteen
+  links were affected, including `MIGRATION.md`, `LICENSE`, `AUTHORIZED_USE.md`
+  and every document under `docs/`. They are now absolute canonical GitHub URLs,
+  which render correctly on both surfaces. The 0.7.1 distribution metadata is
+  immutable and keeps the relative links; that is why this release exists.
+- `docs/INTEGRATION_TESTING.md` named a wheel filename from before the rebrand, so
+  the documented command asked the lab for a file no build produces.
+
+### Added
+
+- `tests/test_long_description_links.py`: the README is checked for relative links,
+  for repository documents linked through anything other than the canonical blob
+  URL, and for links that point at paths which no longer exist. The check is
+  structural and needs no network access, so this class of defect cannot return
+  unnoticed.
+
+### Changed
+
+- `forgeguard` compatibility bridge moves to 0.7.2 and pins `versionsec==0.7.2`.
+  It remains metadata-only: no code of its own, and the `forgeguard` command and
+  `import forgeguard` continue to resolve to the same implementation.
+- Release checklist records that the repository social preview carries the version
+  number and can only be refreshed through the GitHub web UI, since no API exposes
+  it.
+
 ## [0.7.1] - 2026-09-11
 
 ### Fixed

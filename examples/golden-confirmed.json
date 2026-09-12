@@ -490,6 +490,6 @@
     "name": "VersionSec",
     "positioning": "Bounded forge posture assessment.",
     "schema": "forgeguard.assessment.v1",
-    "version": "0.7.1"
+    "version": "0.7.2"
   }
 }

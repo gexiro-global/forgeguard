@@ -17,3 +17,4 @@ ARCHITECT_VERIFICATION.md
 packaging/forgeguard-bridge/dist/
 packaging/forgeguard-bridge/build/
 packaging/forgeguard-bridge/*.egg-info/
+.hypothesis/

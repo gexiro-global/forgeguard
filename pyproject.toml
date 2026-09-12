@@ -49,6 +49,7 @@ dev = [
   "pytest-cov==7.1.0",
   "jsonschema==4.26.0",
   "PyYAML==6.0.3",
+  "hypothesis==6.145.1",
 ]
 
 [tool.setuptools.packages.find]

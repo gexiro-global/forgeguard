@@ -1,0 +1,41 @@
+# Fuzz the code a pull request changes, before it is merged.
+#
+# The harnesses are built inside the ClusterFuzzLite container image rather than
+# on the runner directly: Atheris needs libFuzzer from clang and publishes no
+# wheel for this platform, so a plain `pip install atheris` on ubuntu-latest
+# fails. See docs/FUZZING.md.
+name: cflite-pr
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz:
+    name: Fuzz changed code
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cflite-pr-${{ matrix.sanitizer }}-${{ github.ref }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [address]
+    steps:
+      - name: Build fuzzers (${{ matrix.sanitizer }})
+        id: build
+        uses: google/clusterfuzzlite/actions/build_fuzzers@884713a6c30a92e5e8544c39945cd7cb630abcd1 # v1
+        with:
+          language: python
+          sanitizer: ${{ matrix.sanitizer }}
+      - name: Run fuzzers (${{ matrix.sanitizer }})
+        id: run
+        uses: google/clusterfuzzlite/actions/run_fuzzers@884713a6c30a92e5e8544c39945cd7cb630abcd1 # v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fuzz-seconds: 300
+          mode: code-change
+          sanitizer: ${{ matrix.sanitizer }}
+          output-sarif: true

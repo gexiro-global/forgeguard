@@ -1,0 +1,17 @@
+{
+  "schema_id": "forgeguard.config-snapshot.v1",
+  "product": "gitea",
+  "version": "1.27.3",
+  "instance_alias": "synthetic-gitea",
+  "snapshot_at": "2026-09-10T12:00:00Z",
+  "provenance": "Synthetic fixture; not a runtime observation.",
+  "settings": {
+    "service.DISABLE_REGISTRATION": false,
+    "service.REGISTER_EMAIL_CONFIRM": false,
+    "service.REGISTER_MANUAL_CONFIRM": false,
+    "service.REQUIRE_SIGNIN_VIEW": false,
+    "repository.FORCE_PRIVATE": false,
+    "repository.DEFAULT_PRIVATE": "last",
+    "security.TWO_FACTOR_AUTH": ""
+  }
+}

@@ -8,7 +8,7 @@ an evidence directory, never a customer target URL.
 ```bash
 python -m pip install -e ".[dev]"
 python -m build
-python tools/integration_lab.py --wheel dist/forgeguard-0.5.0rc1-py3-none-any.whl --evidence-dir /your/private/new-lab-evidence
+python tools/integration_lab.py --wheel dist/versionsec-0.7.1-py3-none-any.whl --evidence-dir /your/private/new-lab-evidence
 ```
 
 The Python client first installs the exact wheel and runtime dependencies, then

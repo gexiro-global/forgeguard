@@ -41,3 +41,15 @@ in the future, a maintainer must:
 Inputs are validated as data (never interpolated into a shell). `attestation_verified`
 is not a sufficient input: a real verifier result is required. Covered by
 `tests/test_release_workflow.py`.
+
+## Public surfaces to refresh after a version bump
+
+The repository social preview carries the version number and is the card every
+social platform renders when the repo is shared. GitHub exposes it only through
+Settings -> Social preview; there is no REST or GraphQL field for it, and web
+routes do not accept a token, so it cannot be scripted. Regenerate
+`assets/versionsec_social_1280x640.png` with the new version and re-upload it by
+hand, or the card silently advertises the previous release.
+
+The same generated mark is served from versionsec.com and from the Gexiro product
+page. Those two rebuild from source, so they only need a deploy.

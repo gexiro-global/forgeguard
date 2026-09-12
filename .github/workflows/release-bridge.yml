@@ -50,7 +50,7 @@ jobs:
       - name: Build the metadata-only distribution
         working-directory: packaging/forgeguard-bridge
         run: |
-          python -m pip install --upgrade build twine
+          python -m pip install --require-hashes -r "$GITHUB_WORKSPACE/requirements/build.txt"
           python -m build
           ls -l dist
       - name: Verify the bridge contract before anything is uploaded

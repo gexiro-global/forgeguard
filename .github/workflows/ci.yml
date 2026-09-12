@@ -19,8 +19,10 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install
-        run: python -m pip install -e ".[dev]"
+      - name: Install hash-pinned development dependencies
+        run: python -m pip install --require-hashes -r requirements/dev.txt
+      - name: Install the project itself without resolving dependencies
+        run: python -m pip install --no-deps -e .
       - name: Lint
         run: ruff check .
       - name: Format
@@ -40,8 +42,8 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - name: Install build tools
-        run: python -m pip install "build==1.6.1" "twine==6.2.0" "jsonschema==4.26.0"
+      - name: Install hash-pinned build tools
+        run: python -m pip install --require-hashes -r requirements/build.txt
       - name: Build distributions
         run: python -m build
       - name: Check distributions
@@ -49,7 +51,8 @@ jobs:
       - name: Install exact wheel in clean environment
         run: |
           python -m venv .wheel-smoke
-          .wheel-smoke/bin/python -m pip install dist/*.whl
+          .wheel-smoke/bin/python -m pip install --require-hashes -r requirements/runtime.txt
+          .wheel-smoke/bin/python -m pip install --no-deps dist/*.whl
           .wheel-smoke/bin/python -m pip check
       - name: Built-wheel CLI smoke
         run: |

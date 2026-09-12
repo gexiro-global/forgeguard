@@ -51,6 +51,25 @@ The build installs runtime dependencies from the same hash-locked
 fuzzing environment therefore cannot silently resolve a different `httpx` or
 `pydantic` than the one under test.
 
+## Pinning
+
+The ClusterFuzzLite base image is pinned by digest, not by the `latest` tag, so
+the fuzzing toolchain cannot change under a build. To move to a newer base:
+
+```bash
+docker pull gcr.io/oss-fuzz-base/base-builder-python
+docker inspect gcr.io/oss-fuzz-base/base-builder-python --format '{{index .RepoDigests 0}}'
+```
+
+Put the resulting digest in `.clusterfuzzlite/Dockerfile` and rebuild.
+`tests/test_dependency_pinning.py` fails if any `FROM` loses its digest.
+
+The `pip3 install --no-deps .` in `build.sh` is deliberately unhashed: it
+installs the checked-out source, not an index artifact, exactly like the
+`dist/*.whl` step in CI. OpenSSF Scorecard still reports it under
+`Pinned-Dependencies`; that report is accurate about what it sees and wrong
+about the risk, because there is no downloaded artifact to pin.
+
 ## Running locally
 
 ```bash

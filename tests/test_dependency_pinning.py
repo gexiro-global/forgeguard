@@ -107,3 +107,16 @@ def test_no_automation_installs_an_unverified_package():
         "pip install without --require-hashes (index fetch) or --no-deps "
         f"(local artifact): {offenders}"
     )
+
+
+def test_container_base_images_are_pinned_by_digest():
+    """A floating tag can change under the build; a digest cannot."""
+    dockerfile = ROOT / ".clusterfuzzlite" / "Dockerfile"
+    if not dockerfile.is_file():
+        return
+    unpinned = [
+        line.strip()
+        for line in dockerfile.read_text(encoding="utf-8").splitlines()
+        if line.strip().upper().startswith("FROM ") and "@sha256:" not in line
+    ]
+    assert not unpinned, f"container base image not pinned by digest: {unpinned}"

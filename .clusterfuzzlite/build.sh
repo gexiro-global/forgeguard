@@ -7,6 +7,8 @@
 # because its dependencies are already pinned above.
 
 pip3 install --require-hashes -r requirements/runtime.txt
+# The project itself, from the checked-out source rather than an index. There
+# is no artifact to hash here; --no-deps keeps the pinned layer above intact.
 pip3 install --no-deps .
 
 for harness in "$SRC"/versionsec/fuzz/fuzz_*.py; do

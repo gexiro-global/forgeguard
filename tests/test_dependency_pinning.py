@@ -82,17 +82,27 @@ def test_dev_extra_in_pyproject_matches_the_dev_input():
     assert not mismatched, f"pyproject dev extra drifted from dev.in: {mismatched}"
 
 
-def test_no_workflow_installs_an_unverified_package():
+def _install_sites():
+    """Every file that can run pip during CI or a fuzzing build."""
+    yield from sorted(WORKFLOWS.glob("*.yml"))
+    build = ROOT / ".clusterfuzzlite" / "build.sh"
+    if build.is_file():
+        yield build
+
+
+def test_no_automation_installs_an_unverified_package():
     offenders = []
-    for workflow in sorted(WORKFLOWS.glob("*.yml")):
-        for number, line in enumerate(
-            workflow.read_text(encoding="utf-8").splitlines(), 1
-        ):
-            if "pip install" not in line:
+    for path in _install_sites():
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            stripped = line.strip()
+            # Prose about pip is not an install; only inspect real commands.
+            if stripped.startswith("#"):
                 continue
-            if "--require-hashes" in line or "--no-deps" in line:
+            if "pip install" not in stripped and "pip3 install" not in stripped:
                 continue
-            offenders.append(f"{workflow.name}:{number}: {line.strip()}")
+            if "--require-hashes" in stripped or "--no-deps" in stripped:
+                continue
+            offenders.append(f"{path.name}:{number}: {stripped}")
     assert not offenders, (
         "pip install without --require-hashes (index fetch) or --no-deps "
         f"(local artifact): {offenders}"

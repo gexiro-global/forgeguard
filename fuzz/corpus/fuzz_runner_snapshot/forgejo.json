@@ -1,0 +1,20 @@
+{
+  "schema_id": "forgeguard.runner-snapshot.v1",
+  "product": "forgejo",
+  "server_version": "16.0.4",
+  "runner_product": "forgejo-runner",
+  "runner_version": "13.1.0",
+  "instance_alias": "synthetic-forgejo",
+  "runner_alias": "synthetic-runner-01",
+  "snapshot_at": "2026-09-10T12:00:00Z",
+  "provenance": "Synthetic fixture; not a runtime observation.",
+  "runner_scope": "dedicated",
+  "workload_trust": "trusted-only",
+  "ephemeral": "ephemeral",
+  "execution_engine": "docker",
+  "privileged": false,
+  "docker_socket": "not-exposed",
+  "valid_volumes": [],
+  "network": "isolated",
+  "plugin_usage": "unused"
+}

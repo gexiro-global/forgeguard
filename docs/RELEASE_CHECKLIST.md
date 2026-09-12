@@ -122,3 +122,9 @@ Every index install in CI runs under `--require-hashes`. Before tagging:
       `--no-deps`.
 
 Procedure: `docs/DEPENDENCY_PINNING.md`.
+
+## Fuzzing
+
+- [ ] `cflite-batch` has run since the last release and reported no crash.
+- [ ] If a harness or a parsed model changed, the harnesses were rebuilt and run
+      locally (`docs/FUZZING.md`) before tagging.

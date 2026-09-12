@@ -91,3 +91,19 @@ environment.
 
 PEP 740 provenance proves which identity published a given file. It does not tell
 you what else is currently allowed to publish.
+
+### After a rename, a release or a tool upgrade, re-check the trust surface
+
+Documentation-only step; it must not trigger a release.
+
+1. Repository identity: the numeric repo id is unchanged and the former name still
+   redirects.
+2. The Scorecard workflow ran on the new head and succeeded.
+3. The **official service** reflects it: `api.scorecard.dev` returns the new commit
+   and date, and the badge renders that score. A green workflow alone is not proof of
+   publication, and the old repository name keeps its own stale entry.
+4. If a Best Practices Badge project exists, its name and repository URL still point
+   at this project.
+5. `docs/SECURITY-TRUST.md` carries the current score with its commit and date, and
+   still separates historical measurements from current ones.
+6. Public marketing wording matches what the evidence supports.

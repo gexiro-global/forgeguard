@@ -1181,7 +1181,7 @@ def test_release_publish_is_fail_closed_on_full_quality_gate() -> None:
         "python -m compileall versionsec",
         "twine check dist/*",
         "python -m build",
-        ".wheel-smoke/bin/python -m pip install dist/*.whl",
+        ".wheel-smoke/bin/python -m pip install --no-deps dist/*.whl",
         ".wheel-smoke/bin/versionsec scan --help",
     ]:
         assert command in ci, command

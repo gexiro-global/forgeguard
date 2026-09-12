@@ -107,3 +107,18 @@ Documentation-only step; it must not trigger a release.
 5. `docs/SECURITY-TRUST.md` carries the current score with its commit and date, and
    still separates historical measurements from current ones.
 6. Public marketing wording matches what the evidence supports.
+
+## Dependency locks
+
+Every index install in CI runs under `--require-hashes`. Before tagging:
+
+- [ ] `requirements/*.txt` are current for `requirements/*.in`, and the `dev`
+      extra in `pyproject.toml` matches `requirements/dev.in`
+      (`tests/test_dependency_pinning.py` proves both).
+- [ ] If a lock was regenerated, it was resolved on **Python 3.11** and then
+      installed on 3.11 **and** 3.12. A lock resolved on 3.12 omits
+      `backports.tarfile` and fails `--require-hashes` on 3.11.
+- [ ] No workflow gained a `pip install` without `--require-hashes` or
+      `--no-deps`.
+
+Procedure: `docs/DEPENDENCY_PINNING.md`.

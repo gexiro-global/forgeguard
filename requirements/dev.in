@@ -1,0 +1,10 @@
+# Development and test toolchain. Includes the runtime layer so a single
+# hash-locked file installs everything the test job needs.
+-r runtime.in
+build==1.6.1
+pytest==9.1.1
+ruff==0.16.6
+twine==6.2.0
+pytest-cov==7.1.0
+jsonschema==4.26.0
+PyYAML==6.0.3

@@ -53,3 +53,41 @@ hand, or the card silently advertises the previous release.
 
 The same generated mark is served from versionsec.com and from the Gexiro product
 page. Those two rebuild from source, so they only need a deploy.
+
+## Things that have actually gone wrong
+
+Each of these cost a failed run or a silently wrong artefact. They are conditions
+of the current process, not future ideas.
+
+### The candidate branch must be allowed before it is qualified
+
+`candidate-provenance` and `qualification-evidence` in `ci.yml` are gated on an
+explicit list of branch refs, and `tools/release_preflight.py` checks the same ref
+against `ALLOWED_SOURCE_REFS`. A release branch missing from either produces a
+candidate with **no attestation and no evidence bundle**, and the preflight then
+refuses to promote it. Add the branch to both before pushing the candidate.
+
+Do not widen or remove the gate to make a run pass. It is what keeps an arbitrary
+branch from minting a publishable candidate.
+
+### Hash the manifest bytes the workflow actually writes
+
+`release.yml` materialises the manifest with `printf '%s' "$FG_MANIFEST_JSON"`,
+which appends **no trailing newline**. `manifest_sha256` must be computed over
+exactly those bytes. A digest taken over a pretty-printed file that ends in `\n`
+fails `manifest_hash_verified`, and because later checks depend on it every gate
+reports `ok:false` at once, which reads like a much larger failure than it is.
+
+Do not reformat or re-serialise the JSON after computing its digest.
+
+### Checking publishers means checking for extra ones too
+
+Confirming that the correct Trusted Publisher exists is only half of it. PyPI
+allows several grants per project, and a stale one from a renamed repository, or
+the canonical `release.yml` left pointing at the bridge project, keeps working
+silently. Review the whole list for each project and remove anything that is not
+needed, matching on the full tuple: owner, repository, workflow filename and
+environment.
+
+PEP 740 provenance proves which identity published a given file. It does not tell
+you what else is currently allowed to publish.

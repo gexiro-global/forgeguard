@@ -34,6 +34,7 @@ ALLOWED_SOURCE_REFS = {
     "refs/heads/feat/forgeguard-v0.6-control-plane-hardening",
     "refs/heads/feat/versionsec-0.7-rebrand",
     "refs/heads/fix/versionsec-0.7.1-release-contract",
+    "refs/heads/release/versionsec-0.7.2-metadata-docs",
 }
 _SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 _DIGEST_RE = re.compile(r"^[0-9a-f]{64}$")

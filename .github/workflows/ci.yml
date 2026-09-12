@@ -74,7 +74,7 @@ jobs:
           retention-days: 5
 
   candidate-provenance:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge' || github.ref == 'refs/heads/feat/forgeguard-v0.6-control-plane-hardening' || github.ref == 'refs/heads/feat/versionsec-0.7-rebrand' || github.ref == 'refs/heads/fix/versionsec-0.7.1-release-contract')
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge' || github.ref == 'refs/heads/feat/forgeguard-v0.6-control-plane-hardening' || github.ref == 'refs/heads/feat/versionsec-0.7-rebrand' || github.ref == 'refs/heads/fix/versionsec-0.7.1-release-contract' || github.ref == 'refs/heads/release/versionsec-0.7.2-metadata-docs')
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -109,7 +109,7 @@ jobs:
           retention-days: 5
 
   qualification-evidence:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge' || github.ref == 'refs/heads/feat/forgeguard-v0.6-control-plane-hardening' || github.ref == 'refs/heads/feat/versionsec-0.7-rebrand' || github.ref == 'refs/heads/fix/versionsec-0.7.1-release-contract')
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/feat/forgeguard-v0.5-multiforge' || github.ref == 'refs/heads/feat/forgeguard-v0.6-control-plane-hardening' || github.ref == 'refs/heads/feat/versionsec-0.7-rebrand' || github.ref == 'refs/heads/fix/versionsec-0.7.1-release-contract' || github.ref == 'refs/heads/release/versionsec-0.7.2-metadata-docs')
     needs: build
     runs-on: ubuntu-latest
     permissions:
